@@ -26,21 +26,13 @@ sub descend
 
 	my %data = (type => $self, vals =>[$d1, $self->{val}]);
 
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	my $ok = UNIVERSAL::isa($d1, $self->{val});
 
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 
 	return $ok;
-}
-
-sub render_stack
-{
-	my $self = shift;
-	my $var = shift;
-
-	return $var;
 }
 
 sub compare

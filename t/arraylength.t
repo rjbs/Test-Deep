@@ -39,8 +39,8 @@ Test::Deep::builder(Test::Tester::capture());
 				actual_ok => 0,
 				diag => <<EOM,
 Compared array length of \$data
-   got : 'array with 1 element(s)'
-expect : 'array with 2 element(s)'
+   got : array with 1 element(s)
+expect : array with 2 element(s)
 EOM
 			},
 		],
@@ -83,8 +83,8 @@ EOM
 				actual_ok => 0,
 				diag => <<EOM,
 Compared array length of \$data->[0]
-   got : 'array with 1 element(s)'
-expect : 'array with 2 element(s)'
+   got : array with 1 element(s)
+expect : array with 2 element(s)
 EOM
 			},
 		],

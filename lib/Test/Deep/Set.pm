@@ -36,7 +36,7 @@ sub descend
 
 	my %data = (type => $self);
 
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	my $diag;
 
@@ -99,7 +99,7 @@ EOM
 		$ok = 1;
 	}
 
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 
 	return $ok;
 }
@@ -176,14 +176,6 @@ sub nice_list
 		(map {"'$_'"} sort @scalars),
 		@ref_string
 	);
-}
-
-sub render_stack
-{
-	my $self = shift;
-	my $var = shift;
-
-	return $var;
 }
 
 sub compare

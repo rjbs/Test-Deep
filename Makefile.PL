@@ -1,4 +1,4 @@
-# $Header: /home/fergal/my/cvs/Test-Deep/Makefile.PL,v 1.7 2003/07/12 14:48:27 fergal Exp $
+# $Header: /home/fergal/my/cvs/Test-Deep/Makefile.PL,v 1.8 2003/09/16 23:33:50 fergal Exp $
 
 use ExtUtils::MakeMaker;
 
@@ -14,12 +14,3 @@ WriteMakefile(
 		List::Util => '1.09', # apparently CPAN doesn't get the version of Scalar::Util
 	}
 );
-
-if ($Scalar::Util::VERSION < 1.10)
-{
-	print <<EOM
-
-*** Scalar::Util's version is less than 1.10, you will be missing some
-*** functionality from number() comparisons
-EOM
-}

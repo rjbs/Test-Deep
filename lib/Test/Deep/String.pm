@@ -21,25 +21,17 @@ sub init
 sub descend
 {
 	my $self = shift;
-	my $d1 = shift;
+	my $d1 = shift()."";
 
 	my %data = (type => $self, vals => [$d1, $self->{val}]);
 
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	my $ok = $d1 eq $self->{val};
 
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 
 	return $ok;
-}
-
-sub render_stack
-{
-	my $self = shift;
-	my $var = shift;
-
-	return $var;
 }
 
 sub compare
@@ -51,25 +43,13 @@ sub compare
 	return 1 if $self->{val} eq $other->{val};
 }
 
-sub diagnostics
+sub diag_message
 {
 	my $self = shift;
-	my ($where, $last) = @_;
 
-	my $vals = $last->{vals};
-	my ($got, $expect) = @$vals;
+	my $where = shift;
 
-	$got = Test::Deep::render_val($got);
-	$expect = Test::Deep::render_val($expect);
-
-	my $diag = <<EOM;
-Comparing $where as a string (eq)
-got      : $got
-expected : $expect
-EOM
-
-	$diag =~ s/\n+$/\n/;
-	return $diag;
+	return "Comparing $where as a string";
 }
 
 1;

@@ -19,7 +19,7 @@ sub init
 {
 	my $self = shift;
 
-	my @list = @_;
+	my @list = map {Test::Deep::wrap($_)} @_;
 
 	$self->{val} = \@list;
 }
@@ -31,7 +31,7 @@ sub descend
 
 	my %data = (type => $self, vals => [$d1, $self->{val}]);
 
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	my $ok = 0;
 
@@ -44,17 +44,9 @@ sub descend
 		}
 	}
 
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 
 	return $ok;
-}
-
-sub render_stack
-{
-	my $self = shift;
-	my $var = shift;
-
-	return $var;
 }
 
 sub compare
@@ -74,8 +66,8 @@ sub diagnostics
 	my $vals = $last->{vals};
 	my ($got, $expect) = @$vals;
 
-	$got = Test::Deep::render_val($got);
-	my $things = join(", ", map {Test::Deep::render_val($_)} @$expect);
+	$got = $self->renderGot($got);
+	my $things = join(", ", map {$_->renderExp($_)} @$expect);
 
 	my $diag = <<EOM;
 Comparing $where with Any
@@ -92,7 +84,7 @@ sub add
 	my $self = shift;
 	my $expect = shift;
 
-	push(@{$self->{val}}, $expect);
+	push(@{$self->{val}}, Test::Deep::wrap($expect));
 
 	return $self;
 }

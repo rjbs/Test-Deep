@@ -31,12 +31,12 @@ sub descend
 	my $blessed = blessed($d1);
 
 	my %data = (type => $self, vals => [$blessed, $exp]);
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	my $cmp = Test::Deep::shallow($exp);
 	my $ok = $cmp->descend($blessed);
 	
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 
 	return $ok;
 }

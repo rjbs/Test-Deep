@@ -1,3 +1,22 @@
+0.081
+
+Got rid of struct mode for num()
+
+Large internal changes, now using a stack object rather than just an array.
+This handles rendering the stack.
+
+The comparisons handle rendering the got and expected values now.
+
+num() and str() numify/stringify before comparing, this makes overload of ==
+or eq irrelevant. This also prevents problems with the diag when something
+stringifies differently to it's numificiation or differently each time you
+look.
+
+fixed diag of overloaded refs to display the ref value, not the overloaded
+value
+
+nicer diags for booleans
+
 0.08
 
 Slight doc fix

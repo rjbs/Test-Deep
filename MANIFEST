@@ -23,6 +23,7 @@ lib/Test/Deep/HashKeys.pm
 lib/Test/Deep/Ignore.pm
 lib/Test/Deep/Isa.pm
 lib/Test/Deep/Methods.pm
+lib/Test/Deep/MM.pm
 lib/Test/Deep/Number.pm
 lib/Test/Deep/Ref.pm
 lib/Test/Deep/RefType.pm
@@ -32,6 +33,7 @@ lib/Test/Deep/ScalarRef.pm
 lib/Test/Deep/Set.pm
 lib/Test/Deep/Shallow.pm
 lib/Test/Deep/String.pm
+lib/Test/Deep/Stack.pm
 t/array_each.t
 t/all.t
 t/any.t

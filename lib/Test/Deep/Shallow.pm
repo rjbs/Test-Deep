@@ -55,18 +55,10 @@ sub descend
 	{
 		my %data = (type => $self, vals => [$d1, $d2]);
 
-		push(@Test::Deep::Stack, \%data);
+		$Test::Deep::Stack->push(\%data)
 	}
 
 	return $ok;
-}
-
-sub render_stack
-{
-	my $self = shift;
-	my $var = shift;
-
-	return $var;
 }
 
 sub compare

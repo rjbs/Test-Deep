@@ -5,6 +5,7 @@ package Test::Deep;
 use Carp qw( confess );
 
 use Test::Deep::Cache;
+use Test::Deep::Stack;
 require overload;
 use Scalar::Util;
 
@@ -16,11 +17,11 @@ use Data::Dumper qw(Dumper);
 
 use vars qw(
 	$VERSION @EXPORT @EXPORT_OK @ISA
-	@Stack %Compared $CompareCache
-	$Snobby $Expects $DNE $DNE_ADDR $Shallow $DidArrow
+	$Stack %Compared $CompareCache
+	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.08';
+$VERSION = '0.081';
 
 require Exporter;
 @ISA = qw( Exporter );
@@ -45,14 +46,14 @@ sub cmp_deeply
 {
 	my ($d1, $d2, $name) = @_;
 
-	local @Stack = ();
+	local $Stack = Test::Deep::Stack->new;
 	local $CompareCache = Test::Deep::Cache->new;
 
 	my $ok = descend($d1, $d2);
 
 	if (not $Test->ok($ok, $name))
 	{
-		my $diag = deep_diag(@Stack);
+		my $diag = deep_diag($Stack);
 		$Test->diag($diag);
 	}
 
@@ -63,7 +64,7 @@ sub eq_deeply
 {
 	my ($d1, $d2, $name) = @_;
 
-	local @Stack = ();
+	local $Stack = Test::Deep::Stack->new;
 	local $CompareCache = Test::Deep::Cache->new;
 
 	my $ok = descend($d1, $d2);
@@ -82,7 +83,7 @@ sub eq_deeply_cache
 
 	my ($d1, $d2, $name) = @_;
 
-	local @Stack = ();
+	local $Stack = Test::Deep::Stack->new;
 	$CompareCache->local;
 
 	my $ok = descend($d1, $d2);
@@ -94,29 +95,30 @@ sub eq_deeply_cache
 
 sub deep_diag
 {
-	my @stack = @_;
-	my $where = render_stack('$data', @stack);
+	my $stack = shift;
+	my $where = render_stack('$data', $stack);
 
-	confess "No stack to diagnose" unless @Stack;
-	my $last = $stack[-1];
+	confess "No stack to diagnose" unless $stack;
+	my $last = $stack->getLast;
 
 	my $diag;
 	my $message;
 	my $got;
 	my $expected;
 
-	if (ref $last->{type})
+	my $type = $last->{type};
+	if (ref $type)
 	{
-		if ($last->{type}->can("diagnostics"))
+		if ($type->can("diagnostics"))
 		{
-			$diag = $last->{type}->diagnostics($where, $last);
+			$diag = $type->diagnostics($where, $last);
 			$diag =~ s/\n+$/\n/;
 		}
 		else
 		{
-			if ($last->{type}->can("diag_message"))
+			if ($type->can("diag_message"))
 			{
-				$message = $last->{type}->diag_message($where);
+				$message = $type->diag_message($where);
 			}
 		}
 	}
@@ -124,8 +126,8 @@ sub deep_diag
 	if (not defined $diag)
 	{
 		my $vals = $last->{vals};
-		$got = render_val($vals->[0]) unless defined $got;
-		$expected = render_val($vals->[1]) unless defined $expected;
+		$got = $type->renderGot($vals->[0]) unless defined $got;
+		$expected = $type->renderExp($vals->[1]) unless defined $expected;
 		$message = "Compared $where" unless defined $message;
 
 		$diag = <<EOM
@@ -149,7 +151,7 @@ sub render_val
 	 	$rendered = ref($val) ?
 	 		(Scalar::Util::refaddr($val) eq $DNE_ADDR ?
 	 			"Does not exist" :
-	      $val
+	      overload::StrVal($val)
 	    ) :
       qq('$val');
 	}
@@ -167,7 +169,7 @@ sub descend
 
 	if (! $Expects and ref($d1) and UNIVERSAL::isa($d1, "Test::Deep::Cmp"))
 	{
-		my $where = render_stack('$data', @Stack);
+		my $where = render_stack('$data', $Stack);
 		confess "Found a special comparison in $where\nYou can only the specials in the expects structure";
 	}
 
@@ -276,31 +278,9 @@ sub class_base
 
 sub render_stack
 {
-	my ($var, @stack) = @_;
+	my ($var, $stack) = @_;
 
-	local $DidArrow = 0;
-
-	for my $i (0..$#Stack)
-	{
-		my $data = $Stack[$i];
-
-		if (UNIVERSAL::isa($data->{type}, "Test::Deep::Cmp"))
-		{
-			$var = $data->{type}->render_stack($var, $data);
-
-			$DidArrow = 0 if $data->{type}->reset_arrow;
-		}
-		elsif ($data->{type} eq 'scalar')
-		{
-			# don't do anything for a plain scalar
-		}
-		else
-		{
-			confess "Don't know how to render '$data->{type}'";
-		}
-	}
-
-	return $var;
+	return $stack->render($var);
 }
 
 sub methods

@@ -40,7 +40,7 @@ sub descend
 
 	my %data = (type => $self);
 
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	foreach my $method (@{$self->{methods}})
 	{
@@ -60,7 +60,7 @@ sub descend
 		}
 	}
 
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 
 	return $ok;
 }

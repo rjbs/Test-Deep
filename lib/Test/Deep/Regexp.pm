@@ -29,22 +29,14 @@ sub descend
 
 	my %data = (type => $self, vals => [$d1, $self->{val}]);
 
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	my $ok = ($d1 =~ $self->{val}) ? 1 : 0;
 
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 
 	return $ok;
 	scalar ($d1 =~ $self->{val});
-}
-
-sub render_stack
-{
-	my $self = shift;
-	my $var = shift;
-
-	return $var;
 }
 
 sub compare
@@ -63,6 +55,13 @@ sub diag_message
 	my $where = shift;
 
 	return "Using Regexp on $where";
+}
+
+sub renderExp
+{
+	my $self = shift;
+
+	return "$self->{val}";
 }
 
 1;

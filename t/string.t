@@ -30,9 +30,9 @@ use Test::NoWarnings;
 		{
 			actual_ok => 0,
 			diag => <<EOM,
-Comparing \$data as a string (eq)
-got      : 'wine'
-expected : 'wind'
+Comparing \$data as a string
+   got : 'wine'
+expect : 'wind'
 EOM
 		},
 		"string not eq"
@@ -62,9 +62,9 @@ EOM
 		{
 			actual_ok => 0,
 			diag => <<EOM,
-Comparing \$data as a string (eq)
-got      : wine
-expected : 'wind'
+Comparing \$data as a string
+   got : 'wine'
+expect : 'wind'
 EOM
 		},
 		"over string not eq"

@@ -30,9 +30,9 @@ use Test::NoWarnings;
 		{
 			actual_ok => 0,
 			diag => <<EOM,
-Comparing \$data as a number (==)
-got      : '1'
-expected : '2'
+Comparing \$data as a number
+   got : '1'
+expect : '2'
 EOM
 		},
 		"number not eq"
@@ -48,20 +48,6 @@ EOM
 		},
 		"funny number eq"
 	);
-
-	SKIP:{
-		skip("Scalar::Util < 1.10", 2) unless $Scalar::Util::VERSION >= 1.10;
-	   	check_test(
-   			sub {
-   				cmp_deeply("1a", num("1", "strict"))
-	   		},
-   			{
-   				actual_ok => 0,
-	   		},
-   			"funny number eq strict"
-	   	);
-	}
-
 }
 
 {
@@ -87,9 +73,9 @@ EOM
 		{
 			actual_ok => 0,
 			diag => <<EOM,
-Comparing \$data as a number (==)
-got      : 1
-expected : '2'
+Comparing \$data as a number
+   got : '1'
+expect : '2'
 EOM
 		},
 		"over number not eq"

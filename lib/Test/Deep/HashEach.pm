@@ -33,21 +33,13 @@ sub descend
 
 	@d2{keys %$d1} = ($self->{val}) x (keys %$d1);
 
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	$ok = Test::Deep::descend($d1, \%d2);
 
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 
 	return $ok;
-}
-
-sub render_stack
-{
-	my $self = shift;
-	my ($var, $data) = @_;
-
-	return $var;
 }
 
 sub compare

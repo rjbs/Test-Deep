@@ -30,12 +30,12 @@ sub descend
 	my $reftype = reftype($d1);
 
 	my %data = (type => $self, vals => [$reftype, $exp]);
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	my $cmp = Test::Deep::shallow($exp);
 	my $ok = $cmp->descend($reftype);
 	
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 
 	return $ok;
 }

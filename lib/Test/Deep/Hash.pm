@@ -37,7 +37,7 @@ sub descend
 
 	my %data = (type => $self);
 
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	my $bigger = keys %$h1 > keys %$h2 ? $h1 : $h2;
 
@@ -57,7 +57,7 @@ sub descend
 		}
 	}
 
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 	return $ok;
 }
 
@@ -65,7 +65,7 @@ sub render_stack
 {
 	my $self = shift;
 	my ($var, $data) = @_;
-	$var .= "->" unless $Test::Deep::DidArrow++;
+	$var .= "->" unless $Test::Deep::Stack->incArrow;
 	$var .= '{"'.quotemeta($data->{index}).'"}';
 
 	return $var;

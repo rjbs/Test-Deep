@@ -81,6 +81,28 @@ sub string
 	return overload::StrVal($self);
 }
 
+sub render_stack
+{
+	my $self = shift;
+	my $var = shift;
+
+	return $var;
+}
+
+sub renderExp
+{
+	my $self = shift;
+
+	return $self->renderGot($self->{val});
+}
+
+sub renderGot
+{
+	my $self = shift;
+
+	return Test::Deep::render_val(@_);
+}
+
 sub reset_arrow
 {
 	return 1;

@@ -27,13 +27,13 @@ sub descend
 
 	my %data = (type => $self);
 
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	my ($ok, $diag) = &{$self->{code}}($d1);
 
 	if ($ok)
 	{
-		pop @Test::Deep::Stack;
+		$Test::Deep::Stack->pop;
 	}
 	else
 	{
@@ -49,8 +49,6 @@ sub diagnostics
 	my $self = shift;
 	my ($where, $last) = @_;
 
-	my $type = $self->{IgnoreDupes} ? "Set" : "Bag";
-
 	my $error = $last->{diag};
 	my $data = Test::Deep::render_val($last->{data});
 	my $diag = <<EOM;
@@ -63,14 +61,6 @@ $error
 EOM
 
 	return $diag;
-}
-
-sub render_stack
-{
-	my $self = shift;
-	my $var = shift;
-
-	return $var;
 }
 
 sub compare

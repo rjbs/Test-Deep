@@ -31,11 +31,11 @@ sub descend
 
 	my %data = (type => $self, vals => [$$r1, $$r2]);
 
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	my $ok = Test::Deep::descend($$r1, $$r2);
 
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 
 	return $ok;
 }

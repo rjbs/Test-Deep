@@ -35,7 +35,7 @@ sub descend
 
 	my %data = (type => $self);
 
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	for my $i (0..$#{$a2})
 	{
@@ -53,7 +53,7 @@ sub descend
 		}
 	}
 
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 
 	return $ok;
 }
@@ -62,7 +62,7 @@ sub render_stack
 {
 	my $self = shift;
 	my ($var, $data) = @_;
-	$var .= "->" unless $Test::Deep::DidArrow++;
+	$var .= "->" unless $Test::Deep::Stack->incArrow;
 	$var .= "[$data->{index}]";
 
 	return $var;

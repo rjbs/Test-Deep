@@ -25,21 +25,13 @@ sub descend
 
 	my %data = (type => $self, vals => [$d1, $self->{val}]);
 
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	my $ok = !( $d1 xor $self->{val} );
 
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 
 	return $ok;
-}
-
-sub render_stack
-{
-	my $self = shift;
-	my $var = shift;
-
-	return $var;
 }
 
 sub compare
@@ -51,25 +43,27 @@ sub compare
 	return !( $self->{val} xor $other->{val} );
 }
 
-sub diagnostics
+sub diag_message
 {
 	my $self = shift;
-	my ($where, $last) = @_;
+	my $where = shift;
+	return "Comparing $where as a boolean";
+}
 
-	my $vals = $last->{vals};
-	my ($got, $expect) = @$vals;
+sub renderExp
+{
+	my $self = shift;
 
-	$got = Test::Deep::render_val($got);
-	$expect = Test::Deep::render_val($expect);
+	$self->renderGot($self->{val});
+}
 
-	my $diag = <<EOM;
-Comparing $where as a boolean
-got      : $got
-expected : $expect
-EOM
+sub renderGot
+{
+	my $self = shift;
 
-	$diag =~ s/\n+$/\n/;
-	return $diag;
+	my $val = shift;
+
+	return ($val ? "true" : "false")." (".Test::Deep::render_val($val).")";
 }
 
 1;

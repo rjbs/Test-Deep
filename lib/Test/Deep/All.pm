@@ -19,7 +19,7 @@ sub init
 {
 	my $self = shift;
 
-	my @list = @_;
+	my @list = map {Test::Deep::wrap($_)} @_;
 
 	$self->{val} = \@list;
 }
@@ -31,7 +31,7 @@ sub descend
 
 	my %data = (type => $self, vals => [$d1, $self->{val}]);
 
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	my $ok = 1;
 
@@ -48,7 +48,7 @@ sub descend
 		}
 	}
 
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 
 	return $ok;
 }
@@ -78,7 +78,7 @@ sub add
 	my $self = shift;
 	my $expect = shift;
 
-	push(@{$self->{val}}, $expect);
+	push(@{$self->{val}}, Test::Deep::wrap($expect));
 
 	return $self;
 }

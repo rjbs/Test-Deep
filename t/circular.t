@@ -35,8 +35,8 @@ use Test::NoWarnings;
 			actual_ok => 0,
 			diag => <<EOM,
 Compared array length of \$data
-   got : 'array with 4 element(s)'
-expect : 'array with 3 element(s)'
+   got : array with 4 element(s)
+expect : array with 3 element(s)
 EOM
 		},
 		"2 layers broken"
@@ -77,8 +77,8 @@ EOM
 			actual_ok => 0,
 			diag => <<EOM,
 Compared array length of \$data
-   got : 'array with 4 element(s)'
-expect : 'array with 3 element(s)'
+   got : array with 4 element(s)
+expect : array with 3 element(s)
 EOM
 		},
 		"2 and 3 layers broken"
@@ -92,8 +92,8 @@ EOM
 			actual_ok => 0,
 			diag => <<EOM,
 Compared array length of \$data->[2][2]
-   got : 'array with 4 element(s)'
-expect : 'array with 3 element(s)'
+   got : array with 4 element(s)
+expect : array with 3 element(s)
 EOM
 		},
 		"2 and 3 layers not fixed"

@@ -61,7 +61,7 @@ sub descend
 	if (@diags)
 	{
 		my $diag = join("\n", @diags);
-		push(@Test::Deep::Stack, {type => $self, diag => $diag});
+		$Test::Deep::Stack->push({type => $self, diag => $diag});
 		return 0;
 	}
 

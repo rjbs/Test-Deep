@@ -24,14 +24,6 @@ sub descend
 	return 1;
 }
 
-sub render_stack
-{
-	my $self = shift;
-	my $var = shift;
-
-	return $var;
-}
-
 sub compare
 {
 	return 1;

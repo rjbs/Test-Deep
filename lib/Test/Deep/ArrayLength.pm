@@ -31,10 +31,10 @@ sub descend
 
 	if (@$a1 != $len)
 	{
-		push(@Test::Deep::Stack,
+		$Test::Deep::Stack->push(
 			{
 				type => $self,
-				vals => [map {"array with ".$_." element(s)"} (@$a1 + 0, $len)],
+				vals => [$a1, $len],
 			}
 		);
 		return 0;
@@ -51,6 +51,31 @@ sub render_stack
 	my ($var, $data) = @_;
 
 	return "array length of $var";
+}
+
+sub renderVal
+{
+	my $self = shift;
+
+	my $val = shift;
+
+	return "array with $val element(s)"
+}
+
+sub renderGot
+{
+	my $self = shift;
+
+	my $got = shift;
+
+	return $self->renderVal(@$got + 0);
+}
+
+sub renderExp
+{
+	my $self = shift;
+
+	return $self->renderVal($self->{val});
 }
 
 sub reset_arrow

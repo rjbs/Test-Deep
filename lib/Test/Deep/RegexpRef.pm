@@ -30,11 +30,11 @@ sub descend
 
 	my %data = (type => $self, vals => [$r1, $r2]);
 
-	push(@Test::Deep::Stack, \%data);
+	$Test::Deep::Stack->push(\%data);
 
 	my $ok = $r1 eq $r2;
 
-	pop @Test::Deep::Stack if $ok;
+	$Test::Deep::Stack->pop if $ok;
 
 	return $ok;
 }
@@ -54,6 +54,13 @@ sub compare
 	my $other = shift;
 
 	return Test::Deep::descend($self->{val}, $other->{val});
+}
+
+sub renderGot
+{
+	my $self = shift;
+
+	return shift()."";
 }
 
 1;

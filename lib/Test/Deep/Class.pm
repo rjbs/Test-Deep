@@ -32,14 +32,6 @@ sub descend
 	return Test::Deep::descend($d1, $self->{val});
 }
 
-sub render_stack
-{
-	my $self = shift;
-	my $var = shift;
-
-	return $var;
-}
-
 sub compare
 {
 	my $self = shift;
