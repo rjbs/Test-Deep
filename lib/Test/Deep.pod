@@ -420,7 +420,7 @@ a string which will be used to construct a regular expression.
 
 This simply compares $got_v with the regular expression provided.
 
-  cmp_deeply($got, [ re(/ferg/i) ])
+  cmp_deeply($got, [ re("/ferg/i") ])
 
 is the equivalent of
 

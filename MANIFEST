@@ -16,6 +16,7 @@ lib/Test/Deep/Cache.pm
 lib/Test/Deep/Cache/Simple.pm
 lib/Test/Deep/Class.pm
 lib/Test/Deep/Cmp.pm
+lib/Test/Deep/Code.pm
 lib/Test/Deep/Hash.pm
 lib/Test/Deep/HashEach.pm
 lib/Test/Deep/HashKeys.pm
@@ -41,6 +42,7 @@ t/boolean.t
 t/cache.t
 t/circular.t
 t/class.t
+t/code.t
 t/deep_utils.t
 t/descend.t
 t/error.t

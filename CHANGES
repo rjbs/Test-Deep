@@ -1,3 +1,9 @@
+0.08
+
+Slight doc fix
+
+Added coderef calling as a test
+
 0.07
 
 Fixed number.t to skip strict test when if Scalar::Util is not right

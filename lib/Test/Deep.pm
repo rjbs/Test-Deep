@@ -20,7 +20,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow $DidArrow
 );
 
-$VERSION = '0.07';
+$VERSION = '0.08';
 
 require Exporter;
 @ISA = qw( Exporter );
@@ -28,7 +28,7 @@ require Exporter;
 @EXPORT = qw( eq_deeply cmp_deeply cmp_set cmp_bag cmp_methods
 	methods shallow useclass noclass ignore set bag re any all isa array_each
 	hash_each str num bool scalref array hash regexpref reftype blessed
-	arraylength hashkeys
+	arraylength hashkeys code
 );
 
 @EXPORT_OK = qw( descend render_stack deep_diag class_base );
@@ -515,6 +515,13 @@ sub hashkeys
 	require Test::Deep::HashKeys;
 
 	return Test::Deep::HashKeys->new(@_);
+}
+
+sub code
+{
+	require Test::Deep::Code;
+
+	return Test::Deep::Code->new(@_);
 }
 
 sub builder

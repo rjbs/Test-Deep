@@ -50,8 +50,6 @@ cmpvar
 
 * add < > lt gt
 
-* add something to call coderefs
-
 * add label() to allow labelling of sections
 
 * fix add for sets so that ignore dupes doesn't kick in too early
