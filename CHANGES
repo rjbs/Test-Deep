@@ -1,3 +1,8 @@
+0.087
+
+cmp_methods, cmp_bag and cmp_set weren't passing on the test name. Thanks to
+Alex Kapranoff for the patch.
+
 0.086
 
 Add $tolerance to Number so now you can check that 2 numbers are equal, give

@@ -171,6 +171,28 @@ EOM
 		},
 		"cmp_bag not eq"
 	);
+
+	check_test(
+		sub {
+			cmp_bag([1], [1], 'name1');
+		},
+		{
+			actual_ok => 1,
+			name => 'name1',
+		},
+		"cmp_bag returns name"
+	);
+
+	check_test(
+		sub {
+			cmp_bag([1], [2], 'name2');
+		},
+		{
+			actual_ok => 0,
+			name => 'name2',
+		},
+		"cmp_bag returns name"
+	);
 		
 	check_test(
 		sub {

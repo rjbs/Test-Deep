@@ -21,7 +21,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.086';
+$VERSION = '0.087';
 
 require Exporter;
 @ISA = qw( Exporter );
@@ -364,7 +364,7 @@ sub render_stack
 
 sub cmp_methods
 {
-	return cmp_deeply(shift, methods(@{shift()}));
+	return cmp_deeply(shift, methods(@{shift()}), shift);
 }
 
 sub requireclass
@@ -408,7 +408,7 @@ sub subsetof
 
 sub cmp_set
 {
-	return cmp_deeply(shift, set(@{shift()}));
+	return cmp_deeply(shift, set(@{shift()}), shift);
 }
 
 sub bag
@@ -434,7 +434,7 @@ sub subbagof
 
 sub cmp_bag
 {
-	return cmp_deeply(shift, bag(@{shift()}));
+	return cmp_deeply(shift, bag(@{shift()}), shift);
 }
 
 sub superhashof
