@@ -480,6 +480,8 @@ giving us something like
 There is a buglet in set and bag compare to do with competing SCs, it's
 documented in the bag() docs.
 
+Putting bags or sets inside bags or sets is currently fragile.
+
 =head1 SEE ALSO
 
 L<Test::More>

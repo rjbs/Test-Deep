@@ -5,6 +5,7 @@ use Carp qw( confess );
 
 use Test::Deep::Cache;
 require overload;
+use Scalar::Util;
 
 use Test::Builder;
 
@@ -18,14 +19,14 @@ use vars qw(
 	$Snobby $Expects $DNE $Shallow
 );
 
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 require Exporter;
 @ISA = qw( Exporter );
 
-@EXPORT = qw( cmp_deeply cmp_set cmp_bag cmp_methods
+@EXPORT = qw( eq_deeply cmp_deeply cmp_set cmp_bag cmp_methods
 	methods shallow useclass noclass ignore set bag re any all isa array_each
-	hash_each str num
+	hash_each str num bool
 );
 @EXPORT_OK = qw( descend render_stack deep_diag class_base );
 
@@ -197,17 +198,18 @@ sub descend
 	{
 		# d2 is a reference, the fun starts
 
-		my $s1 = overload::StrVal($d1);
-		my $s2 = overload::StrVal($d2);
 		if (ref $d1)
 		{
+			my $s1 = overload::StrVal($d1);
+			my $s2 = overload::StrVal($d2);
+
 			if ($s1 eq $s2)
 			{
 				return 1;
 			}
 			if ($CompareCache->cmp($s1, $s2))
 			{
-				# we've tried comapring these already so either they turned out to
+				# we've tried comparing these already so either they turned out to
 				# be the same or we must be in a loop and we have to assume they're
 				# the same
 
@@ -381,19 +383,13 @@ sub class_base
 {
 	my $val = shift;
 
-	my $class = ref($val);
-	my $base = "";
-
-	foreach my $type (qw( ARRAY HASH Regexp SCALAR REF ))
+	my $blessed = Scalar::Util::blessed($val);
+	my $reftype = Scalar::Util::reftype($val);
+	if (defined($blessed) and $blessed eq "Regexp" and $reftype eq "SCALAR")
 	{
-		if (UNIVERSAL::isa($val, $type))
-		{
-			$base = $type;
-			last;
-		}
+		$reftype = "Regexp"
 	}
-
-	return ($class, $base);
+	return ($blessed, $reftype);
 }
 
 sub render_stack
@@ -581,6 +577,15 @@ sub num
 	my $val = shift;
 
 	return Test::Deep::Number->new($val);
+}
+
+sub bool
+{
+	require Test::Deep::Boolean;
+
+	my $val = shift;
+
+	return Test::Deep::Boolean->new($val);
 }
 
 sub builder

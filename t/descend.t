@@ -277,3 +277,16 @@ EOM
 		"equal refs"
 	);
 }
+
+{
+	my @a;
+	check_test(
+		sub {
+			cmp_deeply(undef, \@a);
+		},
+		{
+			actual_ok => 0,
+		},
+		"not calling StrVal on undef"
+	);
+}

@@ -34,3 +34,11 @@ will only work if they don't also look inside the object
 * use sets in all and any's compare method
 
 * make shallow use descend_scalar when I create one...
+
+* add eval to methods()
+
+* add not()
+
+* give a way to name tests so that they can be reused
+
+* use set/bag in set/bag compare()
