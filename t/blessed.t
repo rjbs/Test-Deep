@@ -1,13 +1,7 @@
 use strict;
+use warnings;
 
-use Test::More qw(no_plan);
-
-use Test::Deep;
-
-use Test::Tester;
-use Test::NoWarnings;
-
-Test::Deep::builder(Test::Tester::capture());
+use t::std;
 
 {
 	my $b = bless [], "class";

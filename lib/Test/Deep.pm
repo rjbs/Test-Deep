@@ -21,17 +21,16 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.085';
+$VERSION = '0.086';
 
 require Exporter;
 @ISA = qw( Exporter );
 
 @EXPORT = qw( eq_deeply cmp_deeply cmp_set cmp_bag cmp_methods
-	methods shallow useclass noclass ignore set bag re any all isa array_each
-	hash_each str num bool scalref array hash regexpref reftype blessed
-	arraylength hashkeys code subbagof superbagof subsetof supersetof
-	superhashof subhashof listmethods
+	useclass noclass set bag subbagof superbagof subsetof supersetof
+	superhashof subhashof
 );
+	# plus all the ones generated from %constructors below
 
 @EXPORT_OK = qw( descend render_stack deep_diag class_base );
 
@@ -43,6 +42,62 @@ $DNE_ADDR = Scalar::Util::refaddr($DNE);
 
 my %WrapCache;
 
+# if no sub name is supplied then we use the package name in lower case
+my %constructors = (
+	Number => "num",
+	Methods => "",
+	ListMethods => "",
+	String => "str",
+	Boolean => "bool",
+	ScalarRef => "scalref",
+	ScalarRefOnly => "",
+	Array => "",
+	ArrayEach => "array_each",
+	ArrayElementsOnly => "",
+	Hash => "",
+	HashEach => "hash_each",
+	Regexp => "re",
+	RegexpMatches => "",
+	RegexpOnly => "",
+	RegexpRef => "",
+	Ignore => "",
+	Shallow => "",
+	Any => "",
+	All => "",
+	Isa => "",
+	RegexpRefOnly => "",
+	RefType => "",
+	Blessed => "",
+	ArrayLength => "",
+	ArrayLengthOnly => "",
+	HashKeys => "",
+	HashKeysOnly => "",
+	Code => "",
+);
+
+while (my ($pkg, $name) = each %constructors)
+{
+	$name = lc($pkg) unless $name;
+	my $full_pkg = "Test::Deep::$pkg";
+	my $file = "$full_pkg.pm";
+	$file =~ s#::#/#g;
+	my $sub = sub {
+		require $file;
+		return $full_pkg->new(@_);
+	};
+	{
+		no strict 'refs';
+		*{$name} = $sub;
+	}
+	push(@EXPORT, $name);
+}
+my %count;
+foreach my $e (@EXPORT)
+{
+	$count{$e}++;
+}
+
+print join("\n", (grep {$count{$_} > 1} keys %count), "");
 sub cmp_deeply
 {
 	my ($d1, $d2, $name) = @_;
@@ -307,31 +362,9 @@ sub render_stack
 	return $stack->render($var);
 }
 
-sub methods
-{
-	require Test::Deep::Methods;
-
-	return Test::Deep::Methods->new(@_);
-}
-
-sub listmethods
-{
-	require Test::Deep::ListMethods;
-
-	return Test::Deep::ListMethods->new(@_);
-}
-
 sub cmp_methods
 {
 	return cmp_deeply(shift, methods(@{shift()}));
-}
-
-sub shallow
-{
-	require Test::Deep::Shallow;
-
-	my $val = shift;
-	return Test::Deep::Shallow->new($val);
 }
 
 sub requireclass
@@ -350,13 +383,6 @@ sub noclass
 	my $val = shift;
 
 	return Test::Deep::Class->new(0, $val);
-}
-
-sub ignore
-{
-	require Test::Deep::Ignore;
-
-	return Test::Deep::Ignore->new;
 }
 
 sub set
@@ -411,126 +437,6 @@ sub cmp_bag
 	return cmp_deeply(shift, bag(@{shift()}));
 }
 
-sub re
-{
-	require Test::Deep::Regexp;
-
-	my $re = shift;
-
-	return Test::Deep::Regexp->new($re);
-}
-
-sub any
-{
-	require Test::Deep::Any;
-
-	return Test::Deep::Any->new(@_);
-}
-
-sub all
-{
-	require Test::Deep::All;
-
-	return Test::Deep::All->new(@_);
-}
-
-sub isa
-{
-	require Test::Deep::Isa;
-
-	my $class = shift;
-
-	return Test::Deep::Isa->new($class);
-}
-
-sub array_each
-{
-	require Test::Deep::ArrayEach;
-
-	my $val = shift;
-
-	return Test::Deep::ArrayEach->new($val);
-}
-
-sub hash_each
-{
-	require Test::Deep::HashEach;
-
-	my $val = shift;
-
-	return Test::Deep::HashEach->new($val);
-}
-
-sub str
-{
-	require Test::Deep::String;
-
-	my $val = shift;
-
-	return Test::Deep::String->new($val);
-}
-
-sub num
-{
-	require Test::Deep::Number;
-
-	return Test::Deep::Number->new(@_);
-}
-
-sub bool
-{
-	require Test::Deep::Boolean;
-
-	my $val = shift;
-
-	return Test::Deep::Boolean->new($val);
-}
-
-sub scalref
-{
-	require Test::Deep::ScalarRef;
-
-	my $val = shift;
-
-	return Test::Deep::ScalarRef->new($val);
-}
-
-sub scalarrefonly
-{
-	require Test::Deep::ScalarRefOnly;
-
-	my $val = shift;
-
-	return Test::Deep::ScalarRefOnly->new($val);
-}
-
-sub array
-{
-	require Test::Deep::Array;
-
-	my $val = shift;
-
-	return Test::Deep::Array->new($val);
-}
-
-sub arrayelementsonly
-{
-	require Test::Deep::ArrayElementsOnly;
-
-	my $val = shift;
-
-	return Test::Deep::ArrayElementsOnly->new($val);
-}
-
-sub hash
-{
-	require Test::Deep::Hash;
-
-	my $val = shift;
-
-	return Test::Deep::Hash->new($val);
-}
-
 sub superhashof
 {
 	require Test::Deep::Hash;
@@ -547,81 +453,6 @@ sub subhashof
 	my $val = shift;
 
 	return Test::Deep::SubHash->new($val);
-}
-
-sub regexpref
-{
-	require Test::Deep::RegexpRef;
-
-	my $val = shift;
-
-	return Test::Deep::RegexpRef->new($val);
-}
-
-sub regexprefonly
-{
-	require Test::Deep::RegexpRefOnly;
-
-	my $val = shift;
-
-	return Test::Deep::RegexpRefOnly->new($val);
-}
-
-sub reftype
-{
-	require Test::Deep::RefType;
-
-	my $val = shift;
-	my $regex = shift;
-	return Test::Deep::RefType->new($val, $regex);
-}
-
-sub blessed
-{
-	require Test::Deep::Blessed;
-
-	my $val = shift;
-
-	return Test::Deep::Blessed->new($val);
-}
-
-sub arraylength
-{
-	require Test::Deep::ArrayLength;
-
-	my $val = shift;
-
-	return Test::Deep::ArrayLength->new($val);
-}
-
-sub arraylengthonly
-{
-	require Test::Deep::ArrayLengthOnly;
-
-	my $val = shift;
-
-	return Test::Deep::ArrayLengthOnly->new($val);
-}
-
-sub hashkeys
-{
-	require Test::Deep::HashKeys;
-
-	return Test::Deep::HashKeys->new(@_);
-}
-
-sub hashkeysonly
-{
-	require Test::Deep::HashKeysOnly;
-
-	return Test::Deep::HashKeysOnly->new(@_);
-}
-
-sub code
-{
-	require Test::Deep::Code;
-
-	return Test::Deep::Code->new(@_);
 }
 
 sub builder

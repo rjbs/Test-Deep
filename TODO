@@ -1,6 +1,5 @@
 * compare handlers:
 	hash/array slice
-	sub(set/bag) super(set/bag)
 	can
 	
 * warn about noclass in a circular structure... dunno now...
@@ -10,10 +9,6 @@
 * rename diagnostics to diag_full
 
 * add Data::Dumper features, including dumping with errors highlighted
-
-* add context to method calls
-
-* add matches to Regexp
 
 * get any to generate diags for each part and splurge all if none match
 
@@ -50,13 +45,11 @@ cmpvar
 
 * fix add for sets so that ignore dupes doesn't kick in too early
 
-* add deep() explicitly request deep
+* add deep() explicitly request deep - why?
 
 * clean up quoting
 
 * fix Test::Deep::Set::add - I'll do that with the set cleanup
-
-* add float() and a tolerance to test equality for floats
 
 * worry about what happens when a temp array ref gets the address of a
 previous temp array ref and we check them in the cache. Do we need a class
@@ -82,7 +75,7 @@ isomorphisms (or possibly a class of homomorphisms, that preserve the
 distinctness of containers). We need a cache that can answer "assuming a=b,
 are these two cache-equal?" and can keep track of dependencies. Shouldn't be
 too hard to make it possible but making it fast could be a problem. Would
-naming things help?
+naming things help? Is this getting prological?
 
 * use Class::ISA for ISA stuff, especially under 5.6.0
 
@@ -95,7 +88,7 @@ if nothing passes
 
 * get set using some standard subtests
 
-* split String into String and is_eq
+* split String into String and is_eq or streq
 
 * make an iterator comparator that can run over an array or whatever use it
 for Array, ArrayEach, ArrayAny
@@ -111,7 +104,8 @@ it
 
 * glob comparison
 
-* code comparison using B::Deparse?
+* code comparison using B::Deparse? sounds like a bad idea due to private
+data in closures
 
 * add eval at the outler layer to catch all nasties and report them along
 with the data path at which they occured

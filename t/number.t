@@ -1,14 +1,7 @@
 use strict;
+use warnings;
 
-use Test::More qw(no_plan);
-
-use Test::Deep;
-
-use Test::Tester;
-
-Test::Deep::builder(Test::Tester::capture());
-
-use Test::NoWarnings;
+use t::std;
 
 {
 	check_test(
@@ -30,8 +23,8 @@ use Test::NoWarnings;
 			actual_ok => 0,
 			diag => <<EOM,
 Comparing \$data as a number
-   got : '1'
-expect : '2'
+   got : 1
+expect : 2
 EOM
 		},
 		"number not eq"
@@ -46,6 +39,50 @@ EOM
 			diag => "",
 		},
 		"funny number eq"
+	);
+
+	check_test(
+		sub {
+			cmp_deeply("1a", num(2))
+		},
+		{
+			actual_ok => 0,
+			diag => <<EOM,
+Comparing \$data as a number
+   got : 1 ('1a')
+expect : 2
+EOM
+		},
+		"funny number not eq"
+	);
+
+}
+
+{
+	check_test(
+		sub {
+			cmp_deeply(1, num(1, 1));
+		},
+		{
+			actual_ok => 1,
+			diag => "",
+		},
+		"number tolerance eq"
+	);
+
+	check_test(
+		sub {
+			cmp_deeply(1, num(2, .5))
+		},
+		{
+			actual_ok => 0,
+			diag => <<EOM,
+Comparing \$data as a number
+   got : 1
+expect : 2 +/- 0.5
+EOM
+		},
+		"number tolerance not eq"
 	);
 }
 
@@ -73,8 +110,8 @@ EOM
 			actual_ok => 0,
 			diag => <<EOM,
 Comparing \$data as a number
-   got : '1'
-expect : '2'
+   got : 1
+expect : 2
 EOM
 		},
 		"over number not eq"

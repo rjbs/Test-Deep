@@ -1,3 +1,19 @@
+0.086
+
+Add $tolerance to Number so now you can check that 2 numbers are equal, give
+or take a little bit.
+
+Autogenerating most of the convenience constructor routines, deleted nearly
+200 lines of boilerplate. Why didn't I think of that before?
+
+Almost every test script had the same lines at the beginning. These are now
+in t/std.pm, another 200 lines of code (well 50% whitespace) gone. Happy.
+
+Added use warnings to the test scripts, didn't make a difference.
+
+Added inspection of strings captured from a regex and fixed up some re() doc
+errors.
+
 0.085
 
 When a hash or array value or amethod does not exist and the expected value
