@@ -108,3 +108,9 @@ for Array, ArrayEach, ArrayAny
 it
 
 * think about merging test_class and test_reftype into 1
+
+* fix compare for Ignore, All and Code
+
+* glob comparison
+
+* code comparison using B::Deparse?

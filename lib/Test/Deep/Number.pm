@@ -2,14 +2,8 @@ use strict;
 use warnings;
 
 package Test::Deep::Number;
-use Carp qw( confess );
 
 use Test::Deep::Cmp;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Cmp );
-
-use Data::Dumper qw(Dumper);
 
 use Scalar::Util;
 
@@ -23,24 +17,15 @@ sub init
 sub descend
 {
 	my $self = shift;
-	my $d1 = shift;
+	my $got = shift;
 	{
 		no warnings 'numeric';
-		$d1 += 0;
+		$got += 0;
 	}
 
-	$self->push($d1);
+	$self->data->{got} = $got;
 
-	return $d1 == $self->{val};
-}
-
-sub compare
-{
-	my $self = shift;
-
-	my $other = shift;
-
-	return $self->{val} == $other->{val};
+	return $got == $self->{val};
 }
 
 sub diag_message

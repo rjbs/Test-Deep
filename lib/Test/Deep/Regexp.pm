@@ -2,14 +2,8 @@ use strict;
 use warnings;
 
 package Test::Deep::Regexp;
-use Carp qw( confess );
 
 use Test::Deep::Cmp;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Cmp );
-
-use Data::Dumper qw(Dumper);
 
 sub init
 {
@@ -25,20 +19,9 @@ sub init
 sub descend
 {
 	my $self = shift;
-	my $d1 = shift;
+	my $got = shift;
 
-	$self->push($d1);
-
-	return ($d1 =~ $self->{val}) ? 1 : 0;
-}
-
-sub compare
-{
-	my $self = shift;
-
-	my $other = shift;
-
-	return Test::Deep::descend($self->{val}, $other->{val});
+	return ($got =~ $self->{val}) ? 1 : 0;
 }
 
 sub diag_message

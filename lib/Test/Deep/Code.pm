@@ -2,14 +2,8 @@ use strict;
 use warnings;
 
 package Test::Deep::Code;
-use Carp qw( confess );
 
 use Test::Deep::Cmp;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Cmp );
-
-use Data::Dumper qw(Dumper);
 
 sub init
 {
@@ -23,11 +17,11 @@ sub init
 sub descend
 {
 	my $self = shift;
-	my $d1 = shift;
+	my $got = shift;
 
-	my ($ok, $diag) = &{$self->{code}}($d1);
+	my ($ok, $diag) = &{$self->{code}}($got);
 
-	$self->push($d1, diag => $diag);
+	$self->data->{diag} = $diag;
 
 	return $ok;
 }
@@ -49,14 +43,6 @@ $error
 EOM
 
 	return $diag;
-}
-
-sub compare
-{
-	my $self = shift;
-	my $other = shift;
-
-	return Test::Deep::descend($self->{code}, shallow($other->{code}));
 }
 
 1;

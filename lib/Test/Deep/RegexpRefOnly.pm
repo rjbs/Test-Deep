@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-package Test::Deep::RegexpRef;
+package Test::Deep::RegexpRefOnly;
 
 use Test::Deep::Ref;
 
@@ -22,10 +22,15 @@ sub descend
 
 	my $exp = $self->{val};
 
-	return 0 unless $self->test_class($got, "Regexp");
-	return 0 unless $self->test_reftype($got, "SCALAR");
+	return $got eq $exp;
+}
 
-	return Test::Deep::descend($got, Test::Deep::regexprefonly($exp));
+sub render_stack
+{
+	my $self = shift;
+	my ($var, $data) = @_;
+
+	return "m/$var/";
 }
 
 sub renderGot

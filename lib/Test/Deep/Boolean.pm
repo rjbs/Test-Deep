@@ -2,39 +2,22 @@ use strict;
 use warnings;
 
 package Test::Deep::Boolean;
-use Carp qw( confess );
 
 use Test::Deep::Cmp;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Cmp );
-
-use Data::Dumper qw(Dumper);
 
 sub init
 {
 	my $self = shift;
 
-	$self->{val} = shift;
+	$self->{val} = shift() ? 1 : 0;
 }
 
 sub descend
 {
 	my $self = shift;
-	my $d1 = shift;
+	my $got = shift;
 
-	$self->push($d1);
-
-	return !( $d1 xor $self->{val} );
-}
-
-sub compare
-{
-	my $self = shift;
-
-	my $other = shift;
-
-	return !( $self->{val} xor $other->{val} );
+	return !( $got xor $self->{val} );
 }
 
 sub diag_message

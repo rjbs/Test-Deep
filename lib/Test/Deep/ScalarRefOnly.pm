@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-package Test::Deep::Isa;
+package Test::Deep::ScalarRefOnly;
 
 use Test::Deep::Cmp;
 
@@ -10,24 +10,27 @@ sub init
 	my $self = shift;
 
 	my $val = shift;
+
 	$self->{val} = $val;
 }
 
 sub descend
 {
 	my $self = shift;
+
 	my $got = shift;
 
-	return UNIVERSAL::isa($got, $self->{val});
+	my $exp = $self->{val};
+
+	return Test::Deep::descend($$got, $$exp);
 }
 
-sub diag_message
+sub render_stack
 {
 	my $self = shift;
+	my ($var, $data) = @_;
 
-	my $where = shift;
-
-	return "Checking class of $where with isa()";
+	return "\${$var}";
 }
 
 1;

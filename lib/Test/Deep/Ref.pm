@@ -2,25 +2,21 @@ use strict;
 use warnings;
 
 package Test::Deep::Ref;
-use Carp qw( confess );
 
 use Test::Deep::Cmp;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Cmp );
 
 use Scalar::Util qw( blessed );
 
 sub test_class
 {
 	my $self = shift;
-	my $d1 = shift;
+	my $got = shift;
 
 	my $exp = $self->{val};
 	
 	if ($Test::Deep::Snobby)
 	{
-		return Test::Deep::descend($d1, Test::Deep::blessed(blessed($exp)));
+		return Test::Deep::descend($got, Test::Deep::blessed(blessed($exp)));
 	}
 	else
 	{
@@ -31,10 +27,10 @@ sub test_class
 sub test_reftype
 {
 	my $self = shift;
-	my $ref = shift;
+	my $got = shift;
 	my $reftype = shift;
 
-	return Test::Deep::descend($ref, Test::Deep::reftype($reftype));
+	return Test::Deep::descend($got, Test::Deep::reftype($reftype));
 }
 
 1;

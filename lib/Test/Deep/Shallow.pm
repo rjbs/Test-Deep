@@ -2,14 +2,8 @@ use strict;
 use warnings;
 
 package Test::Deep::Shallow;
-use Carp qw( confess );
 
 use Test::Deep::Cmp;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Cmp );
-
-use Data::Dumper qw(Dumper);
 
 use Scalar::Util qw( refaddr );
 
@@ -25,44 +19,33 @@ sub descend
 {
 	my $self = shift;
 
-	my $d1 = shift;
-	my $d2 = $self->{val};
-
-	$self->push($d1);
+	my $got = shift;
+	my $exp = $self->{val};
 
 	my $ok;
 
-	if (!defined $d1 and !defined $d2)
+	if (!defined $got and !defined $exp)
 	{
 		$ok = 1;
 	}
-	elsif (defined $d1 xor defined $d2)
+	elsif (defined $got xor defined $exp)
 	{
 		$ok = 0;
 	}
-	elsif (ref $d1 and ref $d2)
+	elsif (ref $got and ref $exp)
 	{
-		$ok = refaddr($d1) == refaddr($d2);
+		$ok = refaddr($got) == refaddr($exp);
 	}
-	elsif (ref $d1 xor ref $d2)
+	elsif (ref $got xor ref $exp)
 	{
 		$ok = 0;
 	}
 	else
 	{
-		$ok = $d1 eq $d2;
+		$ok = $got eq $exp;
 	}
 
 	return $ok;
-}
-
-sub compare
-{
-	my $self = shift;
-
-	my $other = shift;
-
-	return $self->descend($other->{val});
 }
 
 1;

@@ -426,6 +426,37 @@ is the equivalent of
 
   $got->[0] =~ /ferg/i
 
+=head3 superhashof(\%hash)
+
+This will check that the hash C<%$got> is a "super-hash" of C<%hash>. That
+is that all the key and value pairs in C<%hash> appear in C<%$got> but
+C<%$got> can have extra ones also.
+
+For example
+
+  cmp_deeply({a => 1, b => 2}, superhashof({a => 1}))
+
+will pass but
+
+  cmp_deeply({a => 1, b => 2}, superhashof({a => 1, c => 3}))
+
+will fail.
+
+=head3 subhashof(\%hash)
+
+This will check that the hash C<%$got> is a "sub-hash" of C<%hash>. That is
+that all the key and value pairs in C<%$got> also appear in C<%hash>.
+
+For example
+
+  cmp_deeply({a => 1}, subhashof({a => 1, b => 2}))
+
+will pass but
+
+  cmp_deeply({a => 1, c => 3}, subhashof({a => 1, b => 2}))
+
+will fail.
+
 =head3 bag(@elements)
 
 @elements is an array of elements.
@@ -721,6 +752,11 @@ other bag comparison, giving us something like
       {Name => "Bill", Age => 47, ID => ignore(), Movies => bag(...)}
     )
   );
+
+=head1 LIMITITATIONS
+
+Currently any CODE, GLOB or IO refs will be compared using shallow(), which
+means only their memory addresses are compared.
 
 =head1 BUGS
 

@@ -4,6 +4,8 @@ use warnings;
 package Test::Deep::Cache::Simple;
 use Carp qw( confess );
 
+use Scalar::Util qw( weaken refaddr );
+
 sub new
 {
 	my $pkg = shift;
@@ -18,16 +20,35 @@ sub add
 	my $self = shift;
 
 	my ($d1, $d2) = @_;
-	$self->{$d1}->{$d2} = 1;
-	$self->{$d2}->{$d1} = 1;
+	{
+		local $SIG{__DIE__};
+
+		# cannot weaken read only refs, no harm if we can't as they never
+		# disappear
+		eval{weaken($d1)};
+		eval{weaken($d2)};
+	}
+
+	$self->{fn_get_key(@_)} = [$d1, $d2];
 }
 
 sub cmp
 {
 	my $self = shift;
 
-	my ($d1, $d2) = @_;
-	return $self->{$d1}->{$d2};
+	my $key = fn_get_key(@_);
+	my $pair = $self->{$key};
+
+	# are both weakened refs still valid, if not delete this entry
+	if (ref($pair->[0]) and ref($pair->[1]))
+	{
+		return 1;
+	}
+	else
+	{
+		delete $self->{$key};
+		return 0;
+	}
 }
 
 sub absorb
@@ -36,10 +57,11 @@ sub absorb
 
 	my $other = shift;
 
-	while (my ($d1, $d2s) = each %$other)
-	{
-		@{$self->{$d1}}{keys %$d2s} = values %$d2s;
-	}
+	@{$self}{keys %$other} = values %$other;
 }
 
+sub fn_get_key
+{
+	return join(",", sort (map {refaddr($_)} @_));
+}
 1;

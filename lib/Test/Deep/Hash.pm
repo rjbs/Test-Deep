@@ -2,14 +2,8 @@ use strict;
 use warnings;
 
 package Test::Deep::Hash;
-use Carp qw( confess );
 
 use Test::Deep::Ref;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Ref );
-
-use Data::Dumper qw(Dumper);
 
 sub init
 {
@@ -24,41 +18,36 @@ sub descend
 {
 	my $self = shift;
 
-	my $h1 = shift;
+	my $got = shift;
 
-	my $h2 = $self->{val};
+	my $exp = $self->{val};
 
-	return 0 unless Test::Deep::descend($h1, Test::Deep::hashkeys(keys %$h2));
+	my $data = $self->data;
 
-	return 0 unless $self->test_class($h1);
+	return 0 unless Test::Deep::descend($got, $self->hash_keys($exp));
 
-	my $data = $self->push;
+	return 0 unless $self->test_class($got);
 
-	my $bigger = keys %$h1 > keys %$h2 ? $h1 : $h2;
-
-	foreach my $key (keys %$bigger)
-	{
-		$data->{index} = $key;
-
-		my $got = exists $h1->{$key} ? $h1->{$key} : $Test::Deep::DNE;
-		my $expected = exists $h2->{$key} ? $h2->{$key} : $Test::Deep::DNE;
-
-		next if Test::Deep::descend($got, $expected);
-
-		return 0;
-	}
-
-	return 1;
+	return Test::Deep::descend($got, $self->hash_elements($exp));
 }
 
-sub render_stack
+sub hash_elements
 {
-	my $self = shift;
-	my ($var, $data) = @_;
-	$var .= "->" unless $Test::Deep::Stack->incArrow;
-	$var .= '{"'.quotemeta($data->{index}).'"}';
+	require Test::Deep::HashElements;
 
-	return $var;
+	my $self = shift;
+
+	return Test::Deep::HashElements->new(@_);
+}
+
+sub hash_keys
+{
+	require Test::Deep::HashKeys;
+
+	my $self = shift;
+	my $exp = shift;
+
+	return Test::Deep::HashKeys->new(keys %$exp);
 }
 
 sub reset_arrow
@@ -66,13 +55,50 @@ sub reset_arrow
 	return 0;
 }
 
-sub compare
+package Test::Deep::SuperHash;
+
+use base 'Test::Deep::Hash';
+
+sub hash_elements
 {
+	require Test::Deep::HashElements;
+
 	my $self = shift;
 
-	my $other = shift;
+	return Test::Deep::SuperHashElements->new(@_);
+}
 
-	return Test::Deep::descend($self->{val}, $other->{val});
+sub hash_keys
+{
+	require Test::Deep::HashKeys;
+
+	my $self = shift;
+	my $exp = shift;
+
+	return Test::Deep::SuperHashKeys->new(keys %$exp);
+}
+
+package Test::Deep::SubHash;
+
+use base 'Test::Deep::Hash';
+
+sub hash_elements
+{
+	require Test::Deep::HashElements;
+
+	my $self = shift;
+
+	return Test::Deep::SubHashElements->new(@_);
+}
+
+sub hash_keys
+{
+	require Test::Deep::HashKeys;
+
+	my $self = shift;
+	my $exp = shift;
+
+	return Test::Deep::SubHashKeys->new(keys %$exp);
 }
 
 1;

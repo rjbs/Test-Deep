@@ -2,14 +2,8 @@ use strict;
 use warnings;
 
 package Test::Deep::Array;
-use Carp qw( confess );
 
 use Test::Deep::Ref;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Ref );
-
-use Data::Dumper qw(Dumper);
 
 sub init
 {
@@ -23,55 +17,20 @@ sub init
 sub descend
 {
 	my $self = shift;
-	my $a1 = shift;
+	my $got = shift;
 
-	my $a2 = $self->{val};
+	my $exp = $self->{val};
 
-	return 0 unless Test::Deep::descend($a1, Test::Deep::arraylength(scalar @$a2));
+	return 0 unless Test::Deep::descend($got, Test::Deep::arraylength(scalar @$exp));
 
-	return 0 unless $self->test_class($a1);
+	return 0 unless $self->test_class($got);
 
-	my $data = $self->push;
-
-	for my $i (0..$#{$a2})
-	{
-		$data->{index} = $i;
-
-		my $got = $a1->[$i];
-		my $expected = $a2->[$i];
-
-		if (Test::Deep::descend($got, $expected))
-		{
-			next;
-		}
-		return 0;
-	}
-
-	return 1;
-}
-
-sub render_stack
-{
-	my $self = shift;
-	my ($var, $data) = @_;
-	$var .= "->" unless $Test::Deep::Stack->incArrow;
-	$var .= "[$data->{index}]";
-
-	return $var;
+	return Test::Deep::descend($got, Test::Deep::arrayelementsonly($exp));
 }
 
 sub reset_arrow
 {
 	return 0;
-}
-
-sub compare
-{
-	my $self = shift;
-
-	my $other = shift;
-
-	return Test::Deep::descend($self->{val}, $other->{val});
 }
 
 1;

@@ -2,14 +2,8 @@ use strict;
 use warnings;
 
 package Test::Deep::HashKeys;
-use Carp qw( confess );
 
 use Test::Deep::Ref;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Ref );
-
-use Data::Dumper qw(Dumper);
 
 sub init
 {
@@ -24,90 +18,51 @@ sub init
 sub descend
 {
 	my $self = shift;
-	my $hash = shift;
-
-	return 0 unless $self->test_reftype($hash, "HASH");
+	my $got = shift;
 
 	my $exp = $self->{val};
-	my %got;
-	@got{keys %$hash} = ();
 
-	my @missing;
-	my @extra;
+	return 0 unless $self->test_reftype($got, "HASH");
 
-	while (my ($key, $value) = each %$exp)
-	{
-		if (exists $got{$key})
-		{
-			delete $got{$key};
-		}
-		else
-		{
-			push(@missing, $key);
-		}
-	}
-
-	my @diags;
-	if (@missing)
-	{
-		push(@diags, "Missing: ".nice_list(\@missing));
-	}
-
-	if (%got)
-	{
-		push(@diags, "Extra: ".nice_list([keys %got]));
-	}
-
-	$self->push($hash, diag => join("\n", @diags));
-
-	if (@diags)
-	{
-		return 0;
-	}
-
-	return 1;
+	return Test::Deep::descend($got, $self->hashkeysonly($exp));
 }
 
-sub render_stack
+sub hashkeysonly
 {
+	require Test::Deep::HashKeysOnly;
+
 	my $self = shift;
-	my ($var, $data) = @_;
+	my $exp = shift;
 
-	return "hash keys of $var";
+	return Test::Deep::HashKeysOnly->new(keys %$exp)
 }
 
-sub compare
+package Test::Deep::SuperHashKeys;
+
+use base 'Test::Deep::HashKeys';
+
+sub hashkeysonly
 {
+	require Test::Deep::HashKeysOnly;
+
 	my $self = shift;
+	my $exp = shift;
 
-	my $other = shift;
-
-	return Test::Deep::descend($self->{keys}, $other->{keys});
+	return Test::Deep::SuperHashKeysOnly->new(keys %$exp)
 }
 
-sub diagnostics
+package Test::Deep::SubHashKeys;
+
+use base 'Test::Deep::HashKeys';
+
+sub hashkeysonly
 {
+	require Test::Deep::HashKeysOnly;
+
 	my $self = shift;
-	my ($where, $last) = @_;
+	my $exp = shift;
 
-	my $type = $self->{IgnoreDupes} ? "Set" : "Bag";
-
-	my $error = $last->{diag};
-	my $diag = <<EOM;
-Comparing hash keys of $where
-$error
-EOM
-
-	return $diag;
-}
-
-sub nice_list
-{
-	my $list = shift;
-
-	return join(", ",
-		(map {"'$_'"} sort @$list),
-	);
+	return Test::Deep::SubHashKeysOnly->new(keys %$exp)
 }
 
 1;

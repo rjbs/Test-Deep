@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 package Test::Deep::Stack;
+
 use Carp qw( confess );
 
 use Test::Deep::MM qw( new init Stack Arrow );

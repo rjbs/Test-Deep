@@ -2,7 +2,6 @@ use strict;
 use warnings;
 
 package Test::Deep::MM;
-use Carp qw( confess );
 
 sub import
 {

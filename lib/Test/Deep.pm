@@ -21,7 +21,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.082';
+$VERSION = '0.084';
 
 require Exporter;
 @ISA = qw( Exporter );
@@ -30,6 +30,7 @@ require Exporter;
 	methods shallow useclass noclass ignore set bag re any all isa array_each
 	hash_each str num bool scalref array hash regexpref reftype blessed
 	arraylength hashkeys code subbagof superbagof subsetof supersetof
+	superhashof subhashof
 );
 
 @EXPORT_OK = qw( descend render_stack deep_diag class_base );
@@ -207,14 +208,18 @@ sub descend
 
 	$d2 = wrap($d2);
 
+	$Stack->push({exp => $d2, got => $d1});
+
 	if ($d2->descend($d1))
 	{
+#		print "d1 = $d1, d2 = $d2\nok\n";
 		$Stack->pop;
 
 		return 1;
 	}
 	else
 	{
+#		print "d1 = $d1, d2 = $d2\nnot ok\n";
 		return 0;
 	}
 }
@@ -257,7 +262,7 @@ sub wrap
 		}
 		else
 		{
-			confess "I don't know how to wrap '$base'";
+			$cmp = shallow($data);
 		}
 
 		$WrapCache{$addr} = $cmp;
@@ -279,7 +284,7 @@ sub class_base
 		{
 			$reftype = "Regexp"
 		}
-#		print "$blessed, $reftype\n";
+
 		return ($blessed, $reftype);
 	}
 	else
@@ -476,6 +481,15 @@ sub scalref
 	return Test::Deep::ScalarRef->new($val);
 }
 
+sub scalarrefonly
+{
+	require Test::Deep::ScalarRefOnly;
+
+	my $val = shift;
+
+	return Test::Deep::ScalarRefOnly->new($val);
+}
+
 sub array
 {
 	require Test::Deep::Array;
@@ -483,6 +497,15 @@ sub array
 	my $val = shift;
 
 	return Test::Deep::Array->new($val);
+}
+
+sub arrayelementsonly
+{
+	require Test::Deep::ArrayElementsOnly;
+
+	my $val = shift;
+
+	return Test::Deep::ArrayElementsOnly->new($val);
 }
 
 sub hash
@@ -494,6 +517,24 @@ sub hash
 	return Test::Deep::Hash->new($val);
 }
 
+sub superhashof
+{
+	require Test::Deep::Hash;
+
+	my $val = shift;
+
+	return Test::Deep::SuperHash->new($val);
+}
+
+sub subhashof
+{
+	require Test::Deep::Hash;
+
+	my $val = shift;
+
+	return Test::Deep::SubHash->new($val);
+}
+
 sub regexpref
 {
 	require Test::Deep::RegexpRef;
@@ -501,6 +542,15 @@ sub regexpref
 	my $val = shift;
 
 	return Test::Deep::RegexpRef->new($val);
+}
+
+sub regexprefonly
+{
+	require Test::Deep::RegexpRefOnly;
+
+	my $val = shift;
+
+	return Test::Deep::RegexpRefOnly->new($val);
 }
 
 sub reftype
@@ -530,11 +580,27 @@ sub arraylength
 	return Test::Deep::ArrayLength->new($val);
 }
 
+sub arraylengthonly
+{
+	require Test::Deep::ArrayLengthOnly;
+
+	my $val = shift;
+
+	return Test::Deep::ArrayLengthOnly->new($val);
+}
+
 sub hashkeys
 {
 	require Test::Deep::HashKeys;
 
 	return Test::Deep::HashKeys->new(@_);
+}
+
+sub hashkeysonly
+{
+	require Test::Deep::HashKeysOnly;
+
+	return Test::Deep::HashKeysOnly->new(@_);
 }
 
 sub code

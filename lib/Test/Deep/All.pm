@@ -2,14 +2,8 @@ use strict;
 use warnings;
 
 package Test::Deep::All;
-use Carp qw( confess );
 
 use Test::Deep::Cmp;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Cmp );
-
-use Data::Dumper qw(Dumper);
 
 use overload
 	'&' => \&add,
@@ -27,11 +21,9 @@ sub init
 sub descend
 {
 	my $self = shift;
-	my $d1 = shift;
+	my $got = shift;
 
-	my $data = $self->push($d1);
-
-	my $ok = 1;
+	my $data = $self->data;
 
 	my $index = 1;
 
@@ -40,7 +32,7 @@ sub descend
 		$data->{index} = $index;
 		$index++;
 
-		next if Test::Deep::descend($d1, $cmp);
+		next if Test::Deep::descend($got, $cmp);
 		return 0
 	}
 
@@ -56,15 +48,6 @@ sub render_stack
 	my $max = @{$self->{val}};
 
 	return "(Part $data->{index} of $max in $var)";
-}
-
-sub compare
-{
-	my $self = shift;
-
-	my $other = shift;
-
-	return Test::Deep::descend($self->{val}, $other->{val});
 }
 
 sub add

@@ -2,14 +2,8 @@ use strict;
 use warnings;
 
 package Test::Deep::Set;
-use Carp qw( confess );
 
 use Test::Deep::Cmp;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Cmp );
-
-use Data::Dumper qw(Dumper);
 
 sub init
 {
@@ -31,11 +25,12 @@ sub descend
 	my $d2 = $self->{val};
 
 	my $IgnoreDupes = $self->{IgnoreDupes};
+
+	my $data = $self->data;
+
 	my $SubSup = $self->{SubSup};
 
 	my $type = $IgnoreDupes ? "Set" : "Bag";
-
-	my $data = $self->push;
 
 	my $diag;
 

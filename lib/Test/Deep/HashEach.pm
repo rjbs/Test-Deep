@@ -2,14 +2,8 @@ use strict;
 use warnings;
 
 package Test::Deep::HashEach;
-use Carp qw( confess );
 
 use Test::Deep::Cmp;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Cmp );
-
-use Data::Dumper qw(Dumper);
 
 sub init
 {
@@ -23,24 +17,13 @@ sub init
 sub descend
 {
 	my $self = shift;
-	my $d1 = shift;
+	my $got = shift;
 
-	$self->push($d1);
+	my %exp;
 
-	my %d2;
+	@exp{keys %$got} = ($self->{val}) x (keys %$got);
 
-	@d2{keys %$d1} = ($self->{val}) x (keys %$d1);
-
-	return Test::Deep::descend($d1, \%d2);
-}
-
-sub compare
-{
-	my $self = shift;
-
-	my $other = shift;
-
-	return Test::Deep::descend($self->{val}, $other->{val});
+	return Test::Deep::descend($got, \%exp);
 }
 
 1;

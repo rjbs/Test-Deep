@@ -2,7 +2,6 @@ use strict;
 use warnings;
 
 package Test::Deep::Cmp;
-use Carp qw( confess );
 
 use overload
 	'&' => \&make_all,
@@ -10,6 +9,19 @@ use overload
 	'""' => \&string,
 	fallback => 1,
 ;
+
+sub import
+{
+	my $pkg = shift;
+
+	my $callpkg = caller();
+	if ($callpkg =~ /^Test::Deep::/)
+	{
+		no strict 'refs';
+
+		push @{$callpkg."::ISA"}, $pkg;
+	}
+}
 
 sub new
 {
@@ -108,18 +120,20 @@ sub reset_arrow
 	return 1;
 }
 
-sub push
+sub data
 {
 	my $self = shift;
 
-	# if there is another argument, use it as the value for got and then 
-	# use any more as name value pairs
+	return $Test::Deep::Stack->getLast;
+}
 
-	my $data = {exp => $self, (@_ ? (got => @_) : ())};
+sub compare
+{
+	my $self = shift;
 
-	$Test::Deep::Stack->push($data);
+	my $other = shift;
 
-	return $data;
+	return Test::Deep::descend($self, $other);
 }
 
 1;

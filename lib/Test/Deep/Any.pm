@@ -2,14 +2,8 @@ use strict;
 use warnings;
 
 package Test::Deep::Any;
-use Carp qw( confess );
 
 use Test::Deep::Cmp;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Cmp );
-
-use Data::Dumper qw(Dumper);
 
 use overload
 	'&' => \&add,
@@ -27,25 +21,14 @@ sub init
 sub descend
 {
 	my $self = shift;
-	my $d1 = shift;
-
-	$self->push($d1);
+	my $got = shift;
 
 	foreach my $cmp (@{$self->{val}})
 	{
-		return 1 if Test::Deep::eq_deeply_cache($d1, $cmp);
+		return 1 if Test::Deep::eq_deeply_cache($got, $cmp);
 	}
 
 	return 0;
-}
-
-sub compare
-{
-	my $self = shift;
-
-	my $other = shift;
-
-	return Test::Deep::descend($self->{val}, $other->{val});
 }
 
 sub diagnostics

@@ -45,7 +45,7 @@ EOM
 			name => "hash got DNE",
 			actual_ok => 0,
 			diag => <<EOM,
-Comparing hash keys of hash keys of \$data
+Comparing hash keys of \$data
 Missing: 'key2'
 EOM
 		}
@@ -59,9 +59,33 @@ EOM
 			name => "hash expected DNE",
 			actual_ok => 0,
 			diag => <<EOM,
-Comparing hash keys of hash keys of \$data
+Comparing hash keys of \$data
 Extra: 'key2'
 EOM
+		}
+	);
+
+	check_test(
+		sub {
+			cmp_deeply({key1 => "a", key2 => "c"}, superhashof({key1 => "a"}),
+				"superhash ok");
+		},
+		{
+			name => "superhash ok",
+			actual_ok => 1,
+			diag => "",
+		}
+	);
+
+	check_test(
+		sub {
+			cmp_deeply({key1 => "a"}, subhashof({key1 => "a", key2 => "c"}),
+				"subhash ok");
+		},
+		{
+			name => "subhash ok",
+			actual_ok => 1,
+			diag => "",
 		}
 	);
 }

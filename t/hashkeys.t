@@ -37,7 +37,7 @@ Test::Deep::builder(Test::Tester::capture());
 			{
 				actual_ok => 0,
 				diag => <<EOM,
-Comparing hash keys of hash keys of \$data
+Comparing hash keys of \$data
 Missing: 'c'
 Extra: 'b'
 EOM

@@ -2,14 +2,8 @@ use strict;
 use warnings;
 
 package Test::Deep::Methods;
-use Carp qw( confess );
 
 use Test::Deep::Cmp;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Cmp );
-
-use Data::Dumper qw(Dumper);
 
 sub init
 {
@@ -34,22 +28,20 @@ sub init
 sub descend
 {
 	my $self = shift;
-	my $d1 = shift;
+	my $got = shift;
 
-	my $ok = 1;
-
-	my $data = $self->push;
+	my $data = $self->data;
 
 	foreach my $method (@{$self->{methods}})
 	{
 		$data->{method} = $method;
 
-		my ($call, $expected) = @$method;
+		my ($call, $exp_res) = @$method;
 		my ($name, @args) = @$call;
 
-		my $got = UNIVERSAL::can($d1, $name) ? $d1->$name(@args) : $Test::Deep::DNE;
+		my $got_res = UNIVERSAL::can($got, $name) ? $got->$name(@args) : $Test::Deep::DNE;
 
-		next if Test::Deep::descend($got, $expected);
+		next if Test::Deep::descend($got_res, $exp_res);
 
 		return 0;
 	}
@@ -70,15 +62,6 @@ sub render_stack
 	$var .= "->$name$args";
 
 	return $var;
-}
-
-sub compare
-{
-	my $self = shift;
-
-	my $other = shift;
-
-	return Test::Deep::descend($self->{methods}, $other->{methods});
 }
 
 1;

@@ -1,3 +1,37 @@
+0.084
+
+Added subhashof and superhashof, restructured various Hash modules to handle
+sub and super.
+
+Got rid of unexported hash_elements from Test::Deep.
+
+Fixed a problem with circular set comparisons.
+
+0.083
+
+The cache is more efficient, using a single layer and weak refs, also
+previously it could be fooled by reused addresses for objects (this is not
+just theoretical).
+
+Now Test::Deep::descend is responsible for pushing onto the stack as well as
+pulling, this means most tests don't need to think about the stack at all
+
+For the stack stuff, had to create lots of "only" modules these are tests
+that should never be called on their own as they make assumptions about the
+validity of the data, they are used as subtests inside others
+
+cleaned up lots of copy and paste Data::Dumper and confess and various other
+bits and pieces
+
+Test::Deep::Cmp (and it's descendants) autopush themselves onto the stack of
+any Test::Deep::* that uses them. Cuts even more cruft.
+
+Now everything uses the compare in Test::Deep::Cmp which just does a deep
+comparison. This is not perfect for All and Set but it's as good as what was
+happeneing before now.
+
+Wrapping unknown reftypes as shallow
+
 0.082
 
 Got rid of silly use lib in the tests, shouldn't have been in public

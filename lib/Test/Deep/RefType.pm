@@ -2,14 +2,8 @@ use strict;
 use warnings;
 
 package Test::Deep::RefType;
-use Carp qw( confess );
 
 use Test::Deep::Cmp;
-
-use vars qw( @ISA );
-@ISA = qw( Test::Deep::Cmp );
-
-use Data::Dumper qw(Dumper);
 
 use Scalar::Util qw( reftype );
 
@@ -24,15 +18,12 @@ sub descend
 {
 	my $self = shift;
 
-	my $d1 = shift;
+	my $got = shift;
 
 	my $exp = $self->{val};
-	my $reftype = reftype($d1);
+	my $reftype = reftype($got);
 
-	$self->push($reftype);
-
-	my $cmp = Test::Deep::shallow($exp);
-	return Test::Deep::descend($reftype, $cmp);
+	return Test::Deep::descend($reftype, Test::Deep::shallow($exp));
 }
 
 sub render_stack
@@ -43,13 +34,13 @@ sub render_stack
 	return "reftype($var)";
 }
 
-sub compare
+sub renderGot
 {
 	my $self = shift;
 
-	my $other = shift;
+	my $got = shift;
 
-	return $self->descend($other->{val});
+	$self->SUPER::renderGot(reftype($got));
 }
 
 1;
