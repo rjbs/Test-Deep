@@ -325,14 +325,19 @@ The methods will be called in the order supplied. If you want to pass
 arguments to the method you should wrap the method name and arguments in an
 array reference.
 
-  cmp_deeply($obj, methods(name => 'John', ['favourite, 'food'] => 'taco');
+  cmp_deeply(
+    $obj,
+    methods(name => "John", ["favourite", "food"] => "taco")
+  );
 
-is the equivalent of checking that
+is roughly the equivalent of checking that
 
-  $obj->name eq 'John'
-  $obj->favourite('food') eq 'taco'
+  $obj->name eq "John"
+  $obj->favourite("food") eq "taco"
 
-The methods will be called in the order you supply them.
+The methods will be called in the order you supply them and will be called
+in scalar context. If you need to test methods called in list context then
+you should use listmethods().
 
 B<NOTE> Just as in a normal test script, you need to be careful if the
 methods you call have side effects like changing the object or other objects
@@ -347,6 +352,31 @@ some other tests is not so if $expected is
 there is no way to know which if manager and coder will be tested first. If
 the methods you are testing depend on and alter global variables or if
 manager and coder are the same object then you may run into problems.
+
+=head3 listmethods(%hash)
+
+%hash is a hash of method call => expected value pairs.
+
+This is almost identical to methods() except the methods are called in list
+context instead of scalar context. This means that the expected values
+supplied must be an array reference.
+
+  cmp_deeply(
+    $obj,
+    listmethods(
+      name => "John",
+      ["favourites", "food"] => ["Mapo tofu", "Gongbao chicken"]
+    )
+  );
+
+is the equivalent of checking that
+
+  $obj->name eq "John"
+  cmp_deeply([$obj->favourites("food")], ["Mapo tofu", "Gongbao chicken"]);
+
+The methods will be called in the order you supply them.
+
+B<NOTE> The same caveats apply as for methods().
 
 =head3 shallow($thing)
 
@@ -684,11 +714,11 @@ which gives an explanation of why it's a fail.
     my $name = shift;
     if ($boss->likes($name))
     {
-    	return 1;
+      return 1;
     }
     else
     {
-    	return (0, "the boss doesn't like your name");
+      return (0, "the boss doesn't like your name");
     }
   }
 

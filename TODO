@@ -31,8 +31,6 @@ will only work if they don't also look inside the object
 
 * use sets in all and any's compare method
 
-* add eval to methods()
-
 * add not()
 
 * give a way to name tests so that they can be reused
@@ -114,3 +112,6 @@ it
 * glob comparison
 
 * code comparison using B::Deparse?
+
+* add eval at the outler layer to catch all nasties and report them along
+with the data path at which they occured

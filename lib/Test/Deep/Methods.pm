@@ -37,9 +37,11 @@ sub descend
 		$data->{method} = $method;
 
 		my ($call, $exp_res) = @$method;
-		my ($name, @args) = @$call;
+		my ($name) = @$call;
 
-		my $got_res = UNIVERSAL::can($got, $name) ? $got->$name(@args) : $Test::Deep::DNE;
+		my $got_res = UNIVERSAL::can($got, $name) ?
+			$self->call_method($got, $call) :
+			$Test::Deep::DNE;
 
 		next if Test::Deep::descend($got_res, $exp_res);
 
@@ -47,6 +49,15 @@ sub descend
 	}
 
 	return 1;
+}
+
+sub call_method
+{
+	my $self = shift;
+	my ($got, $call) = @_;
+	my ($name, @args) = @$call;
+
+	return $got->$name(@args);
 }
 
 sub render_stack

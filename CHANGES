@@ -1,3 +1,11 @@
+0.085
+
+When a hash or array value or amethod does not exist and the expected value
+was a reference, the diagnostics were wrong because it headed into Reftype
+tests. Now Test::Deep::descend catches "Does not exist" early on.
+
+Added listmethods()
+
 0.084
 
 Added subhashof and superhashof, restructured various Hash modules to handle

@@ -24,6 +24,7 @@ lib/Test/Deep/HashKeys.pm
 lib/Test/Deep/Hash.pm
 lib/Test/Deep/Ignore.pm
 lib/Test/Deep/Isa.pm
+lib/Test/Deep/ListMethods.pm
 lib/Test/Deep/Methods.pm
 lib/Test/Deep/MM.pm
 lib/Test/Deep/Number.pm
@@ -61,6 +62,7 @@ t/hashkeys.t
 t/hash.t
 t/ignore.t
 t/isa.t
+t/listmethods.t
 t/methods.t
 t/number.t
 t/over.pm

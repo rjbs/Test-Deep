@@ -21,7 +21,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.084';
+$VERSION = '0.085';
 
 require Exporter;
 @ISA = qw( Exporter );
@@ -30,7 +30,7 @@ require Exporter;
 	methods shallow useclass noclass ignore set bag re any all isa array_each
 	hash_each str num bool scalref array hash regexpref reftype blessed
 	arraylength hashkeys code subbagof superbagof subsetof supersetof
-	superhashof subhashof
+	superhashof subhashof listmethods
 );
 
 @EXPORT_OK = qw( descend render_stack deep_diag class_base );
@@ -210,6 +210,13 @@ sub descend
 
 	$Stack->push({exp => $d2, got => $d1});
 
+	if (ref($d1) and (Scalar::Util::refaddr($d1) == $DNE_ADDR))
+	{
+		# whatever it was suposed to be, it didn't exist and so it's an
+		# automatic fail
+		return 0;
+	}
+
 	if ($d2->descend($d1))
 	{
 #		print "d1 = $d1, d2 = $d2\nok\n";
@@ -305,6 +312,13 @@ sub methods
 	require Test::Deep::Methods;
 
 	return Test::Deep::Methods->new(@_);
+}
+
+sub listmethods
+{
+	require Test::Deep::ListMethods;
+
+	return Test::Deep::ListMethods->new(@_);
 }
 
 sub cmp_methods
