@@ -482,6 +482,30 @@ will result in a set containing 1, 2, 3, 4, 5, 5.
 C<NOTE> See the NOTE on the bag() comparison for some dangers in using
 special comparisons inside set()
 
+=head3 superbagof(@elements)
+
+=head3 subbagof(@elements)
+
+=head3 supersetof(@elements)
+
+=head3 subsetof(@elements)
+
+@elements is an array of elements.
+
+These do exactly what you'd expect them to do, so for example
+
+  cmp_deeply($data, subbagof(1, 1, 3, 4));
+
+checks that @$data contains at most 2 "1"s, 1 "3" and 1 "4" and
+
+  cmp_deeply($data, supsersetof(1, 4));
+
+check that @$data contains at least 1 "1" and 1 "4".
+
+These are just special cases of the Set and Bag comparisons so the also give
+you an add() method and they also have the same limitations when using
+special comparisons inside them (see the NOTE in the bag() section).
+
 =head3 all(@expecteds)
 
 @expecteds is an array of expected structures.

@@ -10,6 +10,11 @@ Individual descend()s no longer pop their data from the stack, that's taken
 care of by Test::Deep::descend. This made things simpler in all the
 comparisons.
 
+Added support for sub/super se/bag comparisons, thanks to Boris Sukholitko
+<bobatonhu@yahoo.co.uk>
+
+Added scalarref.t
+
 0.081
 
 Got rid of struct mode for num()

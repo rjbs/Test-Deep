@@ -21,7 +21,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.082_beta1';
+$VERSION = '0.082';
 
 require Exporter;
 @ISA = qw( Exporter );
@@ -29,7 +29,7 @@ require Exporter;
 @EXPORT = qw( eq_deeply cmp_deeply cmp_set cmp_bag cmp_methods
 	methods shallow useclass noclass ignore set bag re any all isa array_each
 	hash_each str num bool scalref array hash regexpref reftype blessed
-	arraylength hashkeys code
+	arraylength hashkeys code subbagof superbagof subsetof supersetof
 );
 
 @EXPORT_OK = qw( descend render_stack deep_diag class_base );
@@ -344,7 +344,21 @@ sub set
 {
 	require Test::Deep::Set;
 
-	return Test::Deep::Set->new(1, @_);
+	return Test::Deep::Set->new(1, "", @_);
+}
+
+sub supersetof
+{
+	require Test::Deep::Set;
+
+	return Test::Deep::Set->new(1, "sup", @_);
+}
+
+sub subsetof
+{
+	require Test::Deep::Set;
+
+	return Test::Deep::Set->new(1, "sub", @_);
 }
 
 sub cmp_set
@@ -356,7 +370,21 @@ sub bag
 {
 	require Test::Deep::Set;
 
-	return Test::Deep::Set->new(0, @_);
+	return Test::Deep::Set->new(0, "", @_);
+}
+
+sub superbagof
+{
+	require Test::Deep::Set;
+
+	return Test::Deep::Set->new(0, "sup", @_);
+}
+
+sub subbagof
+{
+	require Test::Deep::Set;
+
+	return Test::Deep::Set->new(0, "sub", @_);
 }
 
 sub cmp_bag

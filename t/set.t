@@ -197,7 +197,10 @@ EOM
 
 	TODO:
 	{
-	local $TODO = "Because I want to get it out the door";
+	todo_skip(
+		"Because I want to get it out the door see notes on bags and sets",
+		5
+	);
 	check_test(
 		sub {
 			cmp_deeply([[\'a', \'b']], set(set($a2, $b1), set($b2, $a1)))
@@ -209,4 +212,54 @@ EOM
 		"set compare()"
 	);
 	}
+
+	check_test(
+		sub {
+			cmp_deeply(['a', 'b', 'c', 'a'], supersetof('b', 'a', 'b'));
+		},
+		{
+			actual_ok => 1,
+			diag => "",
+		},
+		"supersetof yes"
+	);
+
+	check_test(
+		sub {
+			cmp_deeply(['a', 'b', 'c', 'a'], supersetof('d', 'b', 'd'));
+		},
+		{
+			actual_ok => 0,
+			diag => <<'EOM',
+Comparing $data as a SuperSet
+Missing: 'd'
+EOM
+		},
+		"supersetof no"
+	);
+
+	check_test(
+		sub {
+			cmp_deeply(['b', 'a', 'b'], subsetof('a', 'b', 'c', 'a'));
+		},
+		{
+			actual_ok => 1,
+			diag => "",
+		},
+		"subsetof yes"
+	);
+
+	check_test(
+		sub {
+			cmp_deeply(['d', 'b', 'd'], subsetof('a', 'b', 'c', 'a'));
+		},
+		{
+			actual_ok => 0,
+			diag => <<'EOM',
+Comparing $data as a SubSet
+Extra: 'd'
+EOM
+		},
+		"subsetof no"
+	);
 }

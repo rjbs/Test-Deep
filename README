@@ -7,5 +7,4 @@ make
 make test
 make install
 
-This is a beta release, large internal changes nothing much going on
-outside. Just want get a bit of testing.
+See the pod for full deatils of how to use this.

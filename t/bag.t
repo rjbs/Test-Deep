@@ -179,4 +179,53 @@ EOM
 		"cmp_bag not eq"
 	);
 		
+	check_test(
+		sub {
+			cmp_deeply(['a', 'b', 'c', 'a', 'a', 'b'], superbagof('b', 'a', 'b'));
+		},
+		{
+			actual_ok => 1,
+			diag => "",
+		},
+		"superbagof yes"
+	);
+
+	check_test(
+		sub {
+			cmp_deeply(['a', 'b', 'c', 'a'], superbagof('d', 'b', 'd', 'b'));
+		},
+		{
+			actual_ok => 0,
+			diag => <<'EOM',
+Comparing $data as a SuperBag
+Missing: 'b', 'd', 'd'
+EOM
+		},
+		"superbagof no"
+	);
+
+	check_test(
+		sub {
+			cmp_deeply(['b', 'a', 'b'], subbagof('a', 'b', 'c', 'a', 'a', 'b' ));
+		},
+		{
+			actual_ok => 1,
+			diag => "",
+		},
+		"subbagof yes"
+	);
+
+	check_test(
+		sub {
+			cmp_deeply(['d', 'b', 'd','b'], subbagof('a', 'b', 'c', 'a'));
+		},
+		{
+			actual_ok => 0,
+			diag => <<'EOM',
+Comparing $data as a SubBag
+Extra: 'b', 'd', 'd'
+EOM
+		},
+		"subbagof no"
+	);
 }

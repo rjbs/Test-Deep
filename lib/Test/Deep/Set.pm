@@ -15,9 +15,9 @@ sub init
 {
 	my $self = shift;
 
-	my $dupes = shift;
+	$self->{IgnoreDupes} = shift;
+	$self->{SubSup} = shift;
 
-	$self->{IgnoreDupes} = $dupes;
 	$self->{val} = [];
 
 	$self->add(@_);
@@ -31,6 +31,7 @@ sub descend
 	my $d2 = $self->{val};
 
 	my $IgnoreDupes = $self->{IgnoreDupes};
+	my $SubSup = $self->{SubSup};
 
 	my $type = $IgnoreDupes ? "Set" : "Bag";
 
@@ -69,16 +70,16 @@ EOM
 			push(@missing, $expect) unless $found;
 		}
 
-		my $got = __PACKAGE__->new($IgnoreDupes, @got);
 
 		my @diags;
-		if (@missing)
+		if (@missing and $SubSup ne "sub")
 		{
 			push(@diags, "Missing: ".nice_list(\@missing));
 		}
 
-		if (@got)
+		if (@got and $SubSup ne "sup")
 		{
+			my $got = __PACKAGE__->new($IgnoreDupes, "", @got);
 			push(@diags, "Extra: ".nice_list($got->{val}));
 		}
 
@@ -103,6 +104,8 @@ sub diagnostics
 	my ($where, $last) = @_;
 
 	my $type = $self->{IgnoreDupes} ? "Set" : "Bag";
+	$type = "Sub$type" if $self->{SubSup} eq "sub";
+	$type = "Super$type" if $self->{SubSup} eq "sup";
 
 	my $error = $last->{diag};
 	my $diag = <<EOM;
