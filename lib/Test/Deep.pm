@@ -16,10 +16,10 @@ use Data::Dumper qw(Dumper);
 use vars qw(
 	$VERSION @EXPORT @EXPORT_OK @ISA
 	@Stack %Compared $CompareCache
-	$Snobby $Expects $DNE $Shallow
+	$Snobby $Expects $DNE $DNE_ADDR  $Shallow
 );
 
-$VERSION = '0.04';
+$VERSION = '0.05';
 
 require Exporter;
 @ISA = qw( Exporter );
@@ -35,6 +35,7 @@ $Expects = 0; # are we comparing got vs expect or expect vs expect
 $Shallow = 0;
 
 $DNE = \"";
+$DNE_ADDR = Scalar::Util::refaddr($DNE);
 
 sub cmp_deeply
 {
@@ -141,9 +142,12 @@ sub render_val
 	my $rendered;
 	if (defined $val)
 	{
-	 	$rendered = ref($val) ? overload::StrVal($val) eq $DNE ? "Does not exist"
-	                                                         : $val
-                          : qq('$val');
+	 	$rendered = ref($val) ?
+	 		(Scalar::Util::refaddr($val) eq $DNE_ADDR ?
+	 			"Does not exist" :
+	      $val
+	    ) :
+      qq('$val');
 	}
 	else
 	{
@@ -200,8 +204,8 @@ sub descend
 
 		if (ref $d1)
 		{
-			my $s1 = overload::StrVal($d1);
-			my $s2 = overload::StrVal($d2);
+			my $s1 = Scalar::Util::refaddr($d1);
+			my $s2 = Scalar::Util::refaddr($d2);
 
 			if ($s1 eq $s2)
 			{
@@ -383,13 +387,23 @@ sub class_base
 {
 	my $val = shift;
 
-	my $blessed = Scalar::Util::blessed($val);
-	my $reftype = Scalar::Util::reftype($val);
-	if (defined($blessed) and $blessed eq "Regexp" and $reftype eq "SCALAR")
+	if (ref $val)
 	{
-		$reftype = "Regexp"
+		my $blessed = Scalar::Util::blessed($val);
+		$blessed = defined($blessed) ? $blessed : "";
+		my $reftype = Scalar::Util::reftype($val);
+
+		if ($blessed eq "Regexp" and $reftype eq "SCALAR")
+		{
+			$reftype = "Regexp"
+		}
+#		print "$blessed, $reftype\n";
+		return ($blessed, $reftype);
 	}
-	return ($blessed, $reftype);
+	else
+	{
+		return ("", "");
+	}
 }
 
 sub render_stack

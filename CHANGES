@@ -1,3 +1,8 @@
+0.05
+
+No longer using overload::StrVal() for looking behind overloads as it's
+broken for Regexp refs in some versions of Perl.
+
 0.04
 
 Documented bool and included the files!!

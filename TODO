@@ -42,3 +42,23 @@ will only work if they don't also look inside the object
 * give a way to name tests so that they can be reused
 
 * use set/bag in set/bag compare()
+
+* add a holder like Code::Perl's
+
+* add variables so { key1 => var("this"), key2 => var("this")} makes sure
+that $h->{key1} equals $h->{key2}. Make sure they are implemented using
+local for scoping
+
+* add < > lt gt
+
+* add something to call coderefs
+
+* add label() to allow labelling of sections
+
+* fix add for sets so that ignore dupes doesn't kick in too early
+
+* add deep() explicitly request deep
+
+* clean up quoting
+
+* fix Test::Deep::Set::add - I'll do that with the set cleanup

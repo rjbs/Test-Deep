@@ -8,7 +8,7 @@ use Test::Deep qw( cmp_deeply descend render_stack methods deep_diag class_base 
 	my $a = [];
 
 	my ($class, $base) = class_base($a);
-	is($class, undef, "class_base class ref");
+	is($class, "", "class_base class ref");
 	is($base, "ARRAY", "class_base base ref");
 }
 
