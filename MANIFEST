@@ -1,5 +1,6 @@
 MANIFEST
 Makefile.PL
+README
 TODO
 lib/Test/Deep.pm
 lib/Test/Deep.pod

@@ -94,6 +94,11 @@ Is shorthand for cmp_deeply(\@got, set(@set), $name)
 
 Is shorthand for cmp_deeply(\@got, methods(@methods), $name)
 
+=head3 $ok = eq_deeply($got, $expected, $name)
+
+This is the same as cmp_deeply() but it never outputs any diagnostics, it
+just returns true or false.
+
 =head1 VARIABLES
 
 C<$Test::Deep::Snobby> controls whether the blessed class $got_v and
