@@ -28,16 +28,11 @@ sub descend
 	my $r2 = $self->{val};
 
 	return 0 unless $self->test_class($r1);
+	return 0 unless $self->test_reftype($r1, Scalar::Util::reftype($r2));
 
-	my %data = (type => $self, vals => [$$r1, $$r2]);
+	$self->push($$r1);
 
-	$Test::Deep::Stack->push(\%data);
-
-	my $ok = Test::Deep::descend($$r1, $$r2);
-
-	$Test::Deep::Stack->pop if $ok;
-
-	return $ok;
+	return Test::Deep::descend($$r1, $$r2);
 }
 
 sub render_stack

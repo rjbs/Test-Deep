@@ -29,15 +29,10 @@ sub descend
 	my $exp = $self->{val};
 	my $reftype = reftype($d1);
 
-	my %data = (type => $self, vals => [$reftype, $exp]);
-	$Test::Deep::Stack->push(\%data);
+	$self->push($reftype);
 
 	my $cmp = Test::Deep::shallow($exp);
-	my $ok = $cmp->descend($reftype);
-	
-	$Test::Deep::Stack->pop if $ok;
-
-	return $ok;
+	return Test::Deep::descend($reftype, $cmp);
 }
 
 sub render_stack

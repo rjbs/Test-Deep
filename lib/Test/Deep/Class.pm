@@ -29,7 +29,7 @@ sub descend
 
 	local $Test::Deep::Snobby = $self->{snobby};
 
-	return Test::Deep::descend($d1, $self->{val});
+	Test::Deep::wrap($self->{val})->descend($d1);
 }
 
 sub compare

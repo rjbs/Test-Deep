@@ -28,15 +28,10 @@ sub descend
 		no warnings 'numeric';
 		$d1 += 0;
 	}
-	my %data = (type => $self, vals => [$d1, $self->{val}]);
 
-	$Test::Deep::Stack->push(\%data);
+	$self->push($d1);
 
-	my $ok = $d1 == $self->{val};
-
-	$Test::Deep::Stack->pop if $ok;
-
-	return $ok;
+	return $d1 == $self->{val};
 }
 
 sub compare

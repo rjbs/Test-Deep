@@ -20,10 +20,21 @@ sub test_class
 	
 	if ($Test::Deep::Snobby)
 	{
-		return 0 unless Test::Deep::blessed(blessed($exp))->descend($d1);
+		return Test::Deep::descend($d1, Test::Deep::blessed(blessed($exp)));
 	}
+	else
+	{
+		return 1;
+	}
+}
 
-	return 1;
+sub test_reftype
+{
+	my $self = shift;
+	my $ref = shift;
+	my $reftype = shift;
+
+	return Test::Deep::descend($ref, Test::Deep::reftype($reftype));
 }
 
 1;

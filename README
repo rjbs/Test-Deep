@@ -1,1 +1,11 @@
 This module gives you lots of flexibility when testing deep structres.
+
+Install as usual - untar it the
+
+perl Makefile.PL
+make
+make test
+make install
+
+This is a beta release, large internal changes nothing much going on
+outside. Just want get a bit of testing.

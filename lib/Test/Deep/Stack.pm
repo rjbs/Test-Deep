@@ -40,16 +40,16 @@ sub render
 
 	foreach my $data (@$stack)
 	{
-		my $type = $data->{type};
-		if (UNIVERSAL::isa($type, "Test::Deep::Cmp"))
+		my $exp = $data->{exp};
+		if (UNIVERSAL::isa($exp, "Test::Deep::Cmp"))
 		{			
-			$var = $type->render_stack($var, $data);
+			$var = $exp->render_stack($var, $data);
 
-			$self->setArrow(0) if $data->{type}->reset_arrow;
+			$self->setArrow(0) if $exp->reset_arrow;
 		}
 		else
 		{
-			confess "Don't know how to render '$data->{type}'";
+			confess "Don't know how to render '$exp'";
 		}
 	}
 
@@ -71,6 +71,13 @@ sub incArrow
 	$self->setArrow($a + 1);
 
 	return $a;
+}
+
+sub length
+{
+	my $self = shift;
+
+	return @{$self->getStack} + 0;
 }
 
 1;

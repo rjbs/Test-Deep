@@ -4,10 +4,10 @@ use warnings;
 package Test::Deep::RegexpRef;
 use Carp qw( confess );
 
-use Test::Deep::Cmp;
+use Test::Deep::Ref;
 
 use vars qw( @ISA );
-@ISA = qw( Test::Deep::Cmp );
+@ISA = qw( Test::Deep::Ref );
 
 use Data::Dumper qw(Dumper);
 
@@ -26,17 +26,14 @@ sub descend
 
 	my $r1 = shift;
 
+	return 0 unless $self->test_class($r1, "Regexp");
+	return 0 unless $self->test_reftype($r1, "SCALAR");
+
 	my $r2 = $self->{val};
 
-	my %data = (type => $self, vals => [$r1, $r2]);
+	$self->push($r1);
 
-	$Test::Deep::Stack->push(\%data);
-
-	my $ok = $r1 eq $r2;
-
-	$Test::Deep::Stack->pop if $ok;
-
-	return $ok;
+	return $r1 eq $r2;
 }
 
 sub render_stack

@@ -21,7 +21,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.081';
+$VERSION = '0.082_beta1';
 
 require Exporter;
 @ISA = qw( Exporter );
@@ -106,28 +106,27 @@ sub deep_diag
 	my $got;
 	my $expected;
 
-	my $type = $last->{type};
-	if (ref $type)
+	my $exp = $last->{exp};
+	if (ref $exp)
 	{
-		if ($type->can("diagnostics"))
+		if ($exp->can("diagnostics"))
 		{
-			$diag = $type->diagnostics($where, $last);
+			$diag = $exp->diagnostics($where, $last);
 			$diag =~ s/\n+$/\n/;
 		}
 		else
 		{
-			if ($type->can("diag_message"))
+			if ($exp->can("diag_message"))
 			{
-				$message = $type->diag_message($where);
+				$message = $exp->diag_message($where);
 			}
 		}
 	}
 
 	if (not defined $diag)
 	{
-		my $vals = $last->{vals};
-		$got = $type->renderGot($vals->[0]) unless defined $got;
-		$expected = $type->renderExp($vals->[1]) unless defined $expected;
+		$got = $exp->renderGot($last->{got}) unless defined $got;
+		$expected = $exp->renderExp unless defined $expected;
 		$message = "Compared $where" unless defined $message;
 
 		$diag = <<EOM
@@ -169,15 +168,19 @@ sub descend
 
 	if (! $Expects and ref($d1) and UNIVERSAL::isa($d1, "Test::Deep::Cmp"))
 	{
-		my $where = render_stack('$data', $Stack);
+		my $where = $Stack->render('$data');
 		confess "Found a special comparison in $where\nYou can only the specials in the expects structure";
 	}
 
 	if (ref $d1 and ref $d2)
 	{
+		# this check is only done when we're comparing 2 expecteds against each
+		# other
+
 		if ($Expects and UNIVERSAL::isa($d1, "Test::Deep::Cmp"))
 		{
-			return 0 unless blessed(Scalar::Util::blessed($d2))->descend($d1);
+			# check they are the same class
+			return 0 unless Test::Deep::blessed(Scalar::Util::blessed($d2))->descend($d1);
 			return $d1->compare($d2);
 		}
 
@@ -204,7 +207,16 @@ sub descend
 
 	$d2 = wrap($d2);
 
-	return $d2->descend($d1);
+	if ($d2->descend($d1))
+	{
+		$Stack->pop;
+
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 sub wrap

@@ -38,31 +38,23 @@ sub descend
 
 	my $ok = 1;
 
-	my %data = (type => $self);
-
-	$Test::Deep::Stack->push(\%data);
+	my $data = $self->push;
 
 	foreach my $method (@{$self->{methods}})
 	{
-		$data{method} = $method;
+		$data->{method} = $method;
 
 		my ($call, $expected) = @$method;
 		my ($name, @args) = @$call;
 
 		my $got = UNIVERSAL::can($d1, $name) ? $d1->$name(@args) : $Test::Deep::DNE;
 
-		$ok = Test::Deep::descend($got, $expected);
+		next if Test::Deep::descend($got, $expected);
 
-		if (! $ok)
-		{
-			$data{vals} = [$got, $expected];
-			last;
-		}
+		return 0;
 	}
 
-	$Test::Deep::Stack->pop if $ok;
-
-	return $ok;
+	return 1;
 }
 
 sub render_stack

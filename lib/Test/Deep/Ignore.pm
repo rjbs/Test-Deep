@@ -21,6 +21,8 @@ sub descend
 	my $self = shift;
 	my $d1 = shift;
 
+	$self->push($d1);
+
 	return 1;
 }
 

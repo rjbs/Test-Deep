@@ -4,7 +4,6 @@ use Test::More qw(no_plan);
 
 use Test::Deep;
 
-use lib '../Test-Tester/lib';
 use Test::Tester;
 use Test::NoWarnings;
 
@@ -29,6 +28,22 @@ Test::Deep::builder(Test::Tester::capture());
 			}
 		],
 		"len ok"
+	);
+	check_tests(
+		sub {
+			cmp_deeply({}, arraylength(2));
+		},
+		[
+			{
+				actual_ok => 0,
+				diag => <<EOM,
+Compared reftype(\$data)
+   got : 'HASH'
+expect : 'ARRAY'
+EOM
+			},
+		],
+		"bad reftype"
 	);
 	check_tests(
 		sub {

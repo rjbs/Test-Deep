@@ -65,3 +65,4 @@ t/array.t
 t/arraylength.t
 t/hash.t
 t/hashkeys.t
+META.yml                                 Module meta-data (added by MakeMaker)

@@ -28,6 +28,8 @@ sub descend
 	my $d1 = shift;
 	my $d2 = $self->{val};
 
+	$self->push($d1);
+
 	my $ok;
 
 	if (!defined $d1 and !defined $d2)
@@ -49,13 +51,6 @@ sub descend
 	else
 	{
 		$ok = $d1 eq $d2;
-	}
-
-	if (not $ok)
-	{
-		my %data = (type => $self, vals => [$d1, $d2]);
-
-		$Test::Deep::Stack->push(\%data)
 	}
 
 	return $ok;

@@ -27,35 +27,27 @@ sub descend
 
 	my $a2 = $self->{val};
 
-	return 0 unless Test::Deep::arraylength(scalar @$a2)->descend($a1);
+	return 0 unless Test::Deep::descend($a1, Test::Deep::arraylength(scalar @$a2));
 
 	return 0 unless $self->test_class($a1);
 
-	my $ok = 1;
-
-	my %data = (type => $self);
-
-	$Test::Deep::Stack->push(\%data);
+	my $data = $self->push;
 
 	for my $i (0..$#{$a2})
 	{
-		$data{index} = $i;
+		$data->{index} = $i;
 
 		my $got = $a1->[$i];
 		my $expected = $a2->[$i];
 
-		$ok = Test::Deep::descend($got, $expected);
-
-		if (! $ok)
+		if (Test::Deep::descend($got, $expected))
 		{
-			$data{vals} = [$got, $expected];
-			last;
+			next;
 		}
+		return 0;
 	}
 
-	$Test::Deep::Stack->pop if $ok;
-
-	return $ok;
+	return 1;
 }
 
 sub render_stack

@@ -29,9 +29,7 @@ sub descend
 	my $self = shift;
 	my $d1 = shift;
 
-	my %data = (type => $self, vals => [$d1, $self->{val}]);
-
-	$Test::Deep::Stack->push(\%data);
+	my $data = $self->push($d1);
 
 	my $ok = 1;
 
@@ -39,18 +37,14 @@ sub descend
 
 	foreach my $cmp (@{$self->{val}})
 	{
-		$data{index} = $index;
+		$data->{index} = $index;
 		$index++;
-		if (! Test::Deep::descend($d1, $cmp))
-		{
-			$ok = 0;
-			last;
-		}
+
+		next if Test::Deep::descend($d1, $cmp);
+		return 0
 	}
 
-	$Test::Deep::Stack->pop if $ok;
-
-	return $ok;
+	return 1;
 }
 
 sub render_stack

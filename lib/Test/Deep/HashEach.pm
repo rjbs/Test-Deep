@@ -25,21 +25,13 @@ sub descend
 	my $self = shift;
 	my $d1 = shift;
 
-	my $ok = 1;
-
-	my %data = (type => $self);
+	$self->push($d1);
 
 	my %d2;
 
 	@d2{keys %$d1} = ($self->{val}) x (keys %$d1);
 
-	$Test::Deep::Stack->push(\%data);
-
-	$ok = Test::Deep::descend($d1, \%d2);
-
-	$Test::Deep::Stack->pop if $ok;
-
-	return $ok;
+	return Test::Deep::descend($d1, \%d2);
 }
 
 sub compare

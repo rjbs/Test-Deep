@@ -31,8 +31,6 @@ will only work if they don't also look inside the object
 
 * use sets in all and any's compare method
 
-* make shallow use descend_scalar when I create one...
-
 * add eval to methods()
 
 * add not()
@@ -72,7 +70,7 @@ for temps?
 
 * test the compare methods
 
-* make String as good as Shallow
+* make String check definedness 
 
 * make regexprefs work by using some more general overload mechanism
 
@@ -87,3 +85,26 @@ distinctness of containers). We need a cache that can answer "assuming a=b,
 are these two cache-equal?" and can keep track of dependencies. Shouldn't be
 too hard to make it possible but making it fast could be a problem. Would
 naming things help?
+
+* use Class::ISA for ISA stuff, especially under 5.6.0
+
+* get methods to emit better diags for non existant methods, including class
+of object
+
+* all() doesn't need to tell you part n, what matters is the test that was
+going on. Also any() should diags for each failure so they can be displayed
+if nothing passes
+
+* get set using some standard subtests
+
+* split String into String and is_eq
+
+* make an iterator comparator that can run over an array or whatever use it
+for Array, ArrayEach, ArrayAny
+
+* need to differentiate between UNIVERSAL::isa and ->isa
+
+* beef up the reftype checking for ScalarRef so bad $self->{val} won't break
+it
+
+* think about merging test_class and test_reftype into 1

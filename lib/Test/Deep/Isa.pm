@@ -24,15 +24,9 @@ sub descend
 	my $self = shift;
 	my $d1 = shift;
 
-	my %data = (type => $self, vals =>[$d1, $self->{val}]);
+	$self->push($d1);
 
-	$Test::Deep::Stack->push(\%data);
-
-	my $ok = UNIVERSAL::isa($d1, $self->{val});
-
-	$Test::Deep::Stack->pop if $ok;
-
-	return $ok;
+	return UNIVERSAL::isa($d1, $self->{val});
 }
 
 sub compare

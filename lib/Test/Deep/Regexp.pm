@@ -27,16 +27,9 @@ sub descend
 	my $self = shift;
 	my $d1 = shift;
 
-	my %data = (type => $self, vals => [$d1, $self->{val}]);
+	$self->push($d1);
 
-	$Test::Deep::Stack->push(\%data);
-
-	my $ok = ($d1 =~ $self->{val}) ? 1 : 0;
-
-	$Test::Deep::Stack->pop if $ok;
-
-	return $ok;
-	scalar ($d1 =~ $self->{val});
+	return ($d1 =~ $self->{val}) ? 1 : 0;
 }
 
 sub compare

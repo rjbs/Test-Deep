@@ -34,9 +34,7 @@ sub descend
 
 	my $type = $IgnoreDupes ? "Set" : "Bag";
 
-	my %data = (type => $self);
-
-	$Test::Deep::Stack->push(\%data);
+	my $data = $self->push;
 
 	my $diag;
 
@@ -87,21 +85,16 @@ EOM
 		$diag = join("\n", @diags);
 	}
 
-	my $ok;
 	if ($diag)
 	{
-		$ok = 0;
+		$data->{diag} = $diag;
 
-		$data{diag} = $diag;
+		return 0;
 	}
 	else
 	{
-		$ok = 1;
+		return 1;
 	}
-
-	$Test::Deep::Stack->pop if $ok;
-
-	return $ok;
 }
 
 sub diagnostics

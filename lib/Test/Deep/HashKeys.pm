@@ -26,7 +26,7 @@ sub descend
 	my $self = shift;
 	my $hash = shift;
 
-	return 0 unless Test::Deep::reftype("HASH")->descend($hash);
+	return 0 unless $self->test_reftype($hash, "HASH");
 
 	my $exp = $self->{val};
 	my %got;
@@ -58,10 +58,10 @@ sub descend
 		push(@diags, "Extra: ".nice_list([keys %got]));
 	}
 
+	$self->push($hash, diag => join("\n", @diags));
+
 	if (@diags)
 	{
-		my $diag = join("\n", @diags);
-		$Test::Deep::Stack->push({type => $self, diag => $diag});
 		return 0;
 	}
 

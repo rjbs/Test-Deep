@@ -30,15 +30,10 @@ sub descend
 	my $exp = $self->{val};
 	my $blessed = blessed($d1);
 
-	my %data = (type => $self, vals => [$blessed, $exp]);
-	$Test::Deep::Stack->push(\%data);
+	$self->push($blessed);
 
 	my $cmp = Test::Deep::shallow($exp);
-	my $ok = $cmp->descend($blessed);
-	
-	$Test::Deep::Stack->pop if $ok;
-
-	return $ok;
+	return Test::Deep::descend($blessed, $cmp);
 }
 
 sub render_stack

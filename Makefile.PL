@@ -1,4 +1,4 @@
-# $Header: /home/fergal/my/cvs/Test-Deep/Makefile.PL,v 1.8 2003/09/16 23:33:50 fergal Exp $
+# $Header: /home/fergal/my/cvs/Test-Deep/Makefile.PL,v 1.9 2003/10/20 22:25:42 fergal Exp $
 
 use ExtUtils::MakeMaker;
 
@@ -8,6 +8,7 @@ WriteMakefile(
 	VERSION_FROM => './lib/Test/Deep.pm',
 	INSTALLDIRS => 'perl',
 	PREREQ_PM => {
+		Test::More => '0',
 		Test::Tester => '0.04',
 		Test::NoWarnings => '0.02',
 		Scalar::Util => '1.09',

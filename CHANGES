@@ -1,3 +1,15 @@
+0.082
+
+Got rid of silly use lib in the tests, shouldn't have been in public
+
+Added dependency on Test::More
+
+Moved from type =>, vals => to exp =>, got => in stack entries
+
+Individual descend()s no longer pop their data from the stack, that's taken
+care of by Test::Deep::descend. This made things simpler in all the
+comparisons.
+
 0.081
 
 Got rid of struct mode for num()

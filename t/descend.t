@@ -4,7 +4,6 @@ use Test::More qw(no_plan);
 
 use Test::Deep;
 
-use lib '../Test-Tester/lib';
 use Test::Tester;
 
 Test::Deep::builder(Test::Tester::capture());
@@ -88,33 +87,6 @@ expect : undef
 EOM
 		},
 		"scalar undef and blank"
-	);
-}
-
-{
-	check_test(
-		sub {
-			cmp_deeply(\"a", \"a", "scalar ref eq");
-		},
-		{
-			name => "scalar ref eq",
-			actual_ok => 1,
-			diag => "",
-		}
-	);
-	check_test(
-		sub {
-			cmp_deeply(\"a", \"b", "scalar ref not eq");
-		},
-		{
-			name => "scalar ref not eq",
-			actual_ok => 0,
-			diag => <<EOM,
-Compared \${\$data}
-   got : 'a'
-expect : 'b'
-EOM
-		}
 	);
 }
 

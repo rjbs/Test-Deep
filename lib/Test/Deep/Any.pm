@@ -29,24 +29,14 @@ sub descend
 	my $self = shift;
 	my $d1 = shift;
 
-	my %data = (type => $self, vals => [$d1, $self->{val}]);
-
-	$Test::Deep::Stack->push(\%data);
-
-	my $ok = 0;
+	$self->push($d1);
 
 	foreach my $cmp (@{$self->{val}})
 	{
-		if (Test::Deep::eq_deeply_cache($d1, $cmp))
-		{
-			$ok = 1;
-			last;
-		}
+		return 1 if Test::Deep::eq_deeply_cache($d1, $cmp);
 	}
 
-	$Test::Deep::Stack->pop if $ok;
-
-	return $ok;
+	return 0;
 }
 
 sub compare
@@ -63,11 +53,10 @@ sub diagnostics
 	my $self = shift;
 	my ($where, $last) = @_;
 
-	my $vals = $last->{vals};
-	my ($got, $expect) = @$vals;
+	my $expect = $self->{val};
 
-	$got = $self->renderGot($got);
-	my $things = join(", ", map {$_->renderExp($_)} @$expect);
+	my $got = $self->renderGot($last->{got});
+	my $things = join(", ", map {$_->renderExp} @$expect);
 
 	my $diag = <<EOM;
 Comparing $where with Any

@@ -4,7 +4,6 @@ use Test::More qw(no_plan);
 
 use Test::Deep;
 
-use lib '../Test-Tester/lib';
 use Test::Tester;
 
 Test::Deep::builder(Test::Tester::capture());

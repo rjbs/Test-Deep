@@ -108,4 +108,18 @@ sub reset_arrow
 	return 1;
 }
 
+sub push
+{
+	my $self = shift;
+
+	# if there is another argument, use it as the value for got and then 
+	# use any more as name value pairs
+
+	my $data = {exp => $self, (@_ ? (got => @_) : ())};
+
+	$Test::Deep::Stack->push($data);
+
+	return $data;
+}
+
 1;

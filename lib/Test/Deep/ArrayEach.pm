@@ -27,16 +27,11 @@ sub descend
 
 	my $ok = 1;
 
-	my %data = (type => $self);
+	$self->push($d1);
 
 	my $d2 = [ ($self->{val}) x @$d1 ];
-	$Test::Deep::Stack->push(\%data);
 
-	$ok = Test::Deep::descend($d1, $d2);
-
-	$Test::Deep::Stack->pop if $ok;
-
-	return $ok;
+	return Test::Deep::descend($d1, $d2);
 }
 
 sub compare

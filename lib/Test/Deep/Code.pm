@@ -25,21 +25,9 @@ sub descend
 	my $self = shift;
 	my $d1 = shift;
 
-	my %data = (type => $self);
-
-	$Test::Deep::Stack->push(\%data);
-
 	my ($ok, $diag) = &{$self->{code}}($d1);
 
-	if ($ok)
-	{
-		$Test::Deep::Stack->pop;
-	}
-	else
-	{
-		$data{diag} = $diag;
-		$data{data} = $d1;
-	}
+	$self->push($d1, diag => $diag);
 
 	return $ok;
 }
