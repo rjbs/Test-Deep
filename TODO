@@ -1,0 +1,36 @@
+* compare handlers:
+	hash/array slice
+	sub(set/bag) super(set/bag)
+	can
+	
+* figure out how to get the genuine base class - Scalar::Util
+
+* warn about noclass in a circular structure... dunno now...
+
+* add tests for Sets of various things
+
+* rename diagnostics to diag_full
+
+* add Data::Dumper features, including dumping with errors highlighted
+
+* add context to method calls
+
+* add matches to Regexp
+
+* get any to generate diags for each part and splurge all if none match
+
+* add tests for useclass
+
+* will set call methods an unknown number of times? Isn't the result cached
+already?
+
+* cache method calls so that multiple call won't make a difference. This
+will only work if they don't also look inside the object
+
+* fix the compare() system so I can use descend
+
+* protect against dieing in slices
+
+* use sets in all and any's compare method
+
+* make shallow use descend_scalar when I create one...
