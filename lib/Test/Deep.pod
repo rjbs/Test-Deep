@@ -7,63 +7,262 @@ Test::Deep - Extremely flexible deep comparison
   use Test::More tests => $Num_Tests;
   use Test::Deep;
 
-  cmp_deeply($actual, $expected, "equal");
+  cmp_deeply(
+    $actual_horrible_nested_data_structure,
+    $expected_horrible_nested_data_structure,
+    "got the right horrible nested data structure"
+  );
 
-  cmp_deeply(\@result, set('a', 'b', {key => [1, 2]});
-  cmp_bag(\@result, ['a', 'b', {key => [1, 2]}]);
+  cmp_deeply(
+    $object,
+    methods(name => "John", phone => "55378008"),
+    "object methods ok"
+  );
 
-  cmp_deeply($object, methods(name => "John", phone => "55378008");
+  cmp_deeply(
+    \@array,
+    [$hash1, $hash2, ignore()],
+    "first 2 elements are as expected, ignoring 3"
+  );
 
-  cmp_deeply($structure, [$hash1, $hash2, ignore()]);
+  cmp_deeply(
+    $object,
+    noclass({value => 5}),
+    "object looks ok, not checking it's class"
+  );
 
-  cmp_deeply($object, noclass({value => 5}));
+  cmp_deeply(
+    \@result,
+    bag('a', 'b', {key => [1, 2]}),
+    "array has the 3 things we wanted in some order"
+  );
 
 =head1 DESCRIPTION
 
 If you don't know anything about automated testing in Perl then you should
-probably read about Test::Simple and Test::More before preceeding.
+probably read about Test::Simple and Test::More before preceding.
 Test::Deep uses the Test::Builder framework.
 
 Test::Deep gives you very flexible ways to check that the result you got is
 the result you were expecting. At it's simplest it compares two structures
 by going through each level, ensuring that the values match, that arrays and
 hashes have the same elements and that references are blessed into the
-correct class. It also check circular data structures.
+correct class. It also handles circular data structures without getting
+caught in an infinite loop.
 
 Where it becomes more interesting is in allowing you to do something besides
-simple comparisons at any level of the structure comparison. So you can
-check that a function returned an array containing a string matching a
-pattern and an object with certain properties like this
+simple exact comparisons. With strings, the C<eq> operator checks that 2
+strings are exactly equal but sometimes that's not what you want. When you
+don't know exactly what the string should be but you do know some things
+about how it should look, C<eq> is no good and you must use pattern matching
+instead. Test::Deep provides pattern matching for complex data structures
 
+=head1 EXAMPLES
+
+How Test::Deep works is much easier to understand by seeing some examples.
+
+=head2 Without Test::Deep
+
+Say you want to test a function which returns a string. You know that your
+string should be a 7 digit number beginning with 0, C<eq> is no good in this
+situation, you need a regular expression. So you could use Test::More's
+C<like()> function:
+
+  like($string, '/^0d{6}$/', "number looks good");
+
+Similarly, to check that a string looks like a name, you could do:
+
+  like($string, '/^(Mr|Mrs|Miss) \w+ \w+$/',
+    "got title, first and last name");
+
+Now imagine your function produces a hash with some personal details in it.
+You want to make sure that there are 2 keys, Name and Phone and that the
+name looks like a name and the phone number looks like a phone number. You
+could do:
+
+  $hash = make_person();
+  like($hash->{Name}, '/^(Mr|Mrs|Miss) \w+ \w+$/', "name ok");
+  like($hash->{Phone}, '/^0d{6}$/', "phone ok");
+  is(scalar keys %$hash, 2, "correct number of keys");
+
+But that's not quite right, what if make_person has a serious problem and
+didn't even return a hash? We really need to write
+
+  if (ref($hash) eq "HASH")
+  {
+    like($hash->{Name}, '/^(Mr|Mrs|Miss) \w+ \w+$/', "name ok");
+    like($hash->{Phone}, '/^0d{6}$/', "phone ok");    
+    is(scalar keys %$hash, 2, "correct number of keys");
+  }
+  else
+  {
+    fail("person not a hash");
+    fail("person not a hash");
+    fail("person not a hash"); # need 3 to keep the plan correct
+  }
+
+Already this is getting messy, now imagine another entry in the hash, an
+array of children's names. This would require
+
+
+  if (ref($hash) eq "HASH")
+  {
+    like($hash->{Name}, $name_pat, "name ok");
+    like($hash->{Phone}, '/^0d{6}$/', "phone ok");
+    my $cn = $hash->{ChildNames};
+    if (ref($cn) eq "ARRAY")
+    {
+      foreach my $child (@$cn)
+      {
+        like($child, $name_pat);
+      }
+    }
+    else
+    {
+        fail("child names not an array")
+    }
+  }
+  else
+  {
+    fail("person not a hash");
+  }
+
+This is a horrible mess and because we don't know in advance how many
+children's names there will be, we can't make a plan for our test anymore
+(actually, we could but it would make things even more complicated).
+
+Test::Deep to the rescue.
+
+=head2 With Test::Deep
+
+  my $name_re = re('/^(Mr|Mrs|Miss) \w+ \w+$/');
   cmp_deeply(
-    $got,
-    [
-      re('^OK '),
-      methods(filename => 'file.txt', handle => isa("IO::Handle"))
-    ]
+    $person,
+    {
+      Name => $name_re,
+      Phone => re('/^0d{6}$/'),
+      ChildNames => array_each($name_re)
+    },
+    "person ok"
   );
 
-This will check that all of the following are true
+This will do everything that the messy code above does and it will give a
+sensible message telling you exactly what went wrong if it finds a part of
+$person that doesn't match the pattern. C<re()> and C<array_each()> are
+special function imported from Test::Deep. They create a marker that tells
+Test::Deep that something different is happening here. Instead of just doing
+a simple comparison and checking are two things exactly equal, it should do
+something else.
 
-  $got is an array reference
-  $got->[0] =~ /^OK /
-  $got->[1]->filename eq "file.txt"
-  $got->[1]->handle->isa("IO::Handle")
+If a person was asked to check that 2 structures are equal, they could print
+them both out and compare them line by line. The markers above are similar
+to writing a note in red pen on one of the printouts telling the person that
+for this piece of the structure, they should stop doing simple line by line
+comparison and do something else.
 
-If, for example, the wrong file had been read, causing the second condtion
-to fail, you get some diagnostics that look something like
+C<re($regex)> means that Test::Deep should check that the current piece of
+data matches the regex in C<$regex>. C<array_each($struct)> means that
+Test::Deep should expect the current piece of data to be an array and it
+should check that every element of that array matches C<$struct>.
+In this case, every element of C<$person->{ChildNames}> should look like a
+name. If say the 3rd one didn't you would get an error message something
+like
 
-  Compared $data->[1]->filename()
-     got : 'file.xml'
-  expect : 'file.txt'
+  Using Regexp on $data->{ChildNames}[3]
+     got    : 'Queen John Paul Sartre'
+     expect : /^(Mr|Mrs|Miss) \w+ \w+$/
+   
+
+There are lots of other special comparisons available, see
+L<SPECIAL COMPARISONS PROVIDED> below for the full list.
+
+=head2 Reusing structures
+
+Test::Deep is good for reusing test structures so you can do this
+
+  my $name_re = re('/^(Mr|Mrs|Miss) \w+ \w+$/');
+  my $person_cmp = {
+    Name => $name_re,
+    Phone => re('/^0d{6}$/'),
+    ChildNames => array_each($name_re)
+  };
+
+  cmp_deeply($person1, $person_cmp, "person ok");
+  cmp_deeply($person2, $person_cmp, "person ok");
+  cmp_deeply($person3, $person_cmp, "person ok");
+
+You can even put $person_cmp in a module and let other people use it when
+they are writing test scripts for modules that use your modules.
+
+To make things a little more difficult, lets change the person data
+structure so that instead of a list of ChildNames, it contains a list of
+hashes, one for each child. So in fact our person structure will contain
+other person structures which may contain other person structures and so on.
+This is easy to handle with Test::Deep because Test::Deep structures can
+include themselves. Simply do
+
+  my $name_re = re('/^(Mr|Mrs|Miss) \w+ \w+$/');
+  my $person_cmp = {
+    Name => $name_re,
+    Phone => re('/^0d{6}$/'),
+    # note no mention of Children here
+  };
+
+  $person_cmp->{Children} = each_array($person_cmp);
+
+  cmp_deeply($person, $person_cmp, "person ok");
+
+This will now check that $person->{Children} is an array and that every
+element of that array also matches C<$person_cmp>, this includes checking
+that it's children also match the same pattern and so on.
+
+=head2 Circular data structures
+
+A circular data structure is one which loops back on itself, you can make
+one easily by doing
+
+  my @b;
+  my @a = (1, 2, 3, \@b);
+  push(@b, \@a);
+
+now @a contains a reference to be @b and @b contains a reference to @a. This
+causes problems if you have a program that wants to look inside @a and keep
+looking deeper and deeper at every level, it could get caught in an infinite
+loop looking into @a then @b then @a then @b and so on.
+
+Test::Deep avoids this problem so we can extend our example further by
+saying that a person should also list their parents.
+
+  my $name_re = re('/^(Mr|Mrs|Miss) \w+ \w+$/');
+  my $person_cmp = {
+    Name => $name_re,
+    Phone => re('/^0d{6}$/'),
+    # note no mention of Children here
+  };
+
+  $person_cmp->{Children} = each_array($person_cmp);
+  $person_cmp->{Parents} = each_array($person_cmp);
+
+  cmp_deeply($person, $person_cmp, "person ok");
+
+So this will check that for each child C<$child> in C<$person->{Children}>
+that the C<$child->{Parents} matches C<$person_cmp> however it is smart
+enough not to get caught in an infinite loop where it keeps bouncing between
+the same Parent and Child.
 
 =head1 TERMINOLOGY
 
-cmp_deeply() takes 3 arguments, from now on when you C<$got> or
-C<$expected>, it means the first and second arguments resectively. As
-cmp_deeply() does it's work it descends into $got and $expected so that at any
-given time it is thinking about 2 values, one from $got and one from
-$exptected, I will call these $got_v and $expected_v.
+C<cmp_deeply($got, $expected, $name)> takes 3 arguments. C<$got> is the
+structure that you are checking, you must not include any special
+comparisons in this structure or you will get a fatal error. C<$expected>
+describes what Test::Deep will be looking for in $got. You can put special
+comparisons in $expected if you want to.
+
+As Test::Deep descends through the 2 structures, it compares them one piece
+at a time, so at any point in the process, Test::Deep is thinking about 2
+things - the current value from C<$got> and the current value from
+C<$expected>. In the documentation, I call them C<$got_v> and C<exp_v>
+respectively.
 
 =head1 COMPARISON FUNCTIONS
 
@@ -74,13 +273,10 @@ $got will be check. $name is the test name.
 
 This is the main comparison function, the others are just wrappers around
 this. Without any special comparisons, it will descend into $expected,
-following every reference and comparing $expected_v to $got_v (using C<eq>)
-at the same position. If $expected_v is a special comparison in then it may
-do something else besides a string comparison, exactly what it does depends
-on the spceial comparison (see below for the spceial comparisons).
-
-<B>Note: If $got_v is a ever a special comaparison you will get a fatal
-error.
+following every reference and comparing C<$expected_v> to C<$got_v> (using
+C<eq>) at the same position. If at any stage C<$expected_v> is a special
+comparison then Test::Deep may do something else besides a simple string
+comparison, exactly what it does depends on which special comparison it is.
 
 =head3 $ok = cmp_bag(\@got, \@bag, $name)
 
@@ -96,38 +292,29 @@ Is shorthand for cmp_deeply(\@got, methods(@methods), $name)
 
 =head3 $ok = eq_deeply($got, $expected, $name)
 
-This is the same as cmp_deeply() but it never outputs any diagnostics, it
-just returns true or false.
-
-=head1 VARIABLES
-
-C<$Test::Deep::Snobby> controls whether the blessed class $got_v and
-$expected_v should be considered when comparing them. A true value means
-$that class is important, false means class will be ignored.
-
-It is probably better to control this using the useclass() and noclass()
-special comparisons detailed below.
-
-=head1 WHAT ARE SPECIAL COMPARISONS?
-
-A special comparison (SC) is simply an object that inherits from
-Test::Deep::Cmp. Whenever $expected_v is an SC then instead of checking
-C<$got_v eq $expected_v>, we pass control over to the SC and let it do it's
-thing.
-
-Test::Deep exports lots of SC constructors, to make it easy for you to use
-them in $expected. For example is C<re("hello")> is just a handy way of
-creating a Test::Deep::Regexp object that will match any strig containing
-"hello". So
-
-  cmp_deeply([ 'a', 'b', 'hello world'], ['a', 'b', re("^hello")]);
-
-will check C<'a' eq 'a'>, C<'b' eq 'b'> but when it comes to comparing
-C<$got_v = 'hello world'> and C<$got_v = re("^hello")> it will see that
-$expected_v is an SC and so will do something like
-C<$expected_v->descend($got_v)>.
+This is the same as cmp_deeply() it just returns true or false, however it
+never outputs any diagnostics or talks to L<Test::Builder>, so you can use it
+in a normal program, rather than in a test script.
 
 =head1 SPECIAL COMPARISONS PROVIDED
+
+=head3 ignore()
+
+This makes Test::Deep skip tests on $got_v. No matter what value C<$got_v>
+has, Test::Deep will think it's correct. This is useful if some part of the
+structure you are testing is very complicated and already tested elsewhere,
+or is unpredictable.
+
+  cmp_deeply($got, { name => 'John', random => ignore(), address => ['5 A
+    street', 'a town', 'a country'],
+  })
+
+is the equivalent of checking
+
+  $got->{name} eq 'John';
+  exists $got->{random};
+  cmp_deeply($got->{address};
+  ['5 A street', 'a town', 'a country']);
 
 =head3 methods(%hash)
 
@@ -145,26 +332,27 @@ is the equivalent of checking that
   $obj->name eq 'John'
   $obj->favourite('food') eq 'taco'
 
-B<NOTE> You need to be careful if the methods you call have side effects
-like changing the object or other objects in the structure. The order of
-tests is not fixed and although the methods inside a methods() SC are called
-in the order you supply, there is no way to know which of 2 methods() tests
-will be carried out first, so if $expected is
+The methods will be called in the order you supply them.
+
+B<NOTE> Just as in a normal test script, you need to be careful if the
+methods you call have side effects like changing the object or other objects
+in the structure. Although the order of the methods is fixed, the order of
+some other tests is not so if $expected is
 
   {
-    manager => methods(@methods1),
-    coder => methods(@methods2)
+    manager => methods(@manager_methods),
+    coder => methods(@coder_methods)
   }
 
-Then there is no way to know if manager or coder will be tested first. If
-the methods you are testing depend on and later global variables or if
+there is no way to know which if manager and coder will be tested first. If
+the methods you are testing depend on and alter global variables or if
 manager and coder are the same object then you may run into problems.
 
 =head3 shallow($thing)
 
 $thing is a ref.
 
-This prevents C<cmp_deeply()> from looking inside $thing. It allows you to
+This prevents Test::Deep from looking inside $thing. It allows you to
 check that $got_v and $thing are references to the same variable. So
 
   my @a = @b = (1, 2, 3);
@@ -174,77 +362,61 @@ will pass because @a and @b have the same elements however
 
   cmp_deeply(\@a, shallow(\@b))
 
-will fail because although \@a and \@b are references to different arrays.
-
-=head3 ignore()
-
-This makes C<cmp_deeply()> skip tests on $got_v, matter what value $got_v has, it
-will be the right value. This is useful if some part of the structure you
-are testing is complicated and already tested elsewhere is, or is
-unpredictable.
-
-  cmp_deeply($got, {
-    name => 'John',
-    random => ignore(),
-    address => ['5 A street', 'a town', 'a country'],
-  })
-
-is the equivalent of checking
-
-  $got->{name} eq 'John'
-  exists $got->{random}
-  cmp_deeply($got->{address}, ['5 A street', 'a town', 'a country']);
+will fail because although \@a and \@b both contain C<1, 2, 3> they are
+references to different arrays.
 
 =head3 noclass($thing)
 
 $thing is a structure to be compared against.
 
-This turns off comparison of classes when comparing against blessed
-$references inside thing. Once C<cmp_deeply()> comes back out of $thing it will
-revert to it's previous setting for checking class, so if it was comparing
-class before entering $thing, it will start comparing class again.
-
-Essentially it does a C<local $Test::Deeply::Snobby = 0>.
+This makes Test::Deep ignore the class of objects, so it just looks at the
+data they contain. Class checking will be turned off until Test::Deep is
+finished comparing C<$got_v> against C<$thing>. Once Test::Deep comes out of
+C<$thing> it will go back to it's previous setting for checking class.
 
 This can be useful when you want to check that objects have been
-constructed correctly but you don't want to have to write lots of
-C<bless>es. If $people has an array of People objects then
+constructed correctly but you don't want to write lots of
+C<bless>es. If \@people is an array of Person objects then
 
-  cmp_deeply($people, noclass([
+  cmp_deeply(\@people, noclass([
     bless {name => 'John', phone => '555-5555'}, "Person",
     bless {name => 'Anne', phone => '444-4444'}, "Person",
   ]));
 
 can be replaced with
 
-  cmp_deeply($people, noclass([
+  cmp_deeply(\@people, noclass([
     {name => 'John', phone => '555-5555'},
     {name => 'Anne', phone => '444-4444'}
   ]));
 
-if you're sure all the people were correctly blessed. However, this is
-testing so you should never assume anything. You could use a map to bless
-all those hashes or you could do a second test like
+However, this is testing so you should also check that the objects are
+blessed correctly. You could use a map to bless all those hashes or you
+could do a second test like
 
-  cmp_deeply($people, all_values(isa("Person"));
-
-to make sure that all the elements of @$people have been blessed correctly.
+  cmp_deeply($people, array_each(isa("Person"));
 
 =head3 useclass($thing)
 
-This turns back on the class comparison inside a noclass().
+This turns back on the class comparison while inside a noclass().
 
-  cmp_deeply($got, noclass([useclass(bless {}, "Person")]))
+  cmp_deeply(
+    $got,
+    noclass(
+      [
+        useclass( $object )
+      ]
+    )
+  )
 
-In this example the class of $got is ignored but the class of $got->[0] is
-checked.
-
-Essentially it does a C<local $Test::Deeply::Snobby = 1>.
+In this example the class of the array reference in C<$got> is ignored but
+the class of C<$object> is checked, as is the class of everything inside
+C<$object>.
 
 =head3 re($regexp)
 
-$regexp is either a regular expression reference produced with qr/.../ or a
-$string which will be used to construct a regular expression.
+$regexp is either a regular expression reference produced with C<qr/.../> or
+a string which will be used to construct a regular expression.
 
 This simply compares $got_v with the regular expression provided.
 
@@ -272,10 +444,10 @@ The object returned by bag() has an add() method.
 
 will result in a bag containing 1, 2, 2, 3, 3, 4.
 
-C<NOTE> If you use special comparisons within a bag or set comparison there
-is a danger that a test will fail when it should have passed. It can only
-happen if two or more special comparisons in the bag are competing to match
-elements. Consider this comparison
+C<NOTE> If you use certain special comparisons within a bag or set
+comparison there is a danger that a test will fail when it should have
+passed. It can only happen if two or more special comparisons in the bag are
+competing to match elements. Consider this comparison
 
   cmp_deeply(['furry', 'furball'], bag(re("^fur"), re("furb")))
 
@@ -283,7 +455,7 @@ There are two things that could happen, hopefully C<re("^fur")> is paired with
 "furry" and C<re("^furb")> is paired with "furb" and everything is fine but it
 could happen that C<re("^fur")> is paired with "furball" and then C<re("^furb")>
 cannot find a match and so the test fails. Examples of other competing
-comparsions are C<bag(1, 2, 2)> vs C<set(1, 2)> and
+comparisons are C<bag(1, 2, 2)> vs C<set(1, 2)> and
 C<methods(m1 => "v1", m2 => "v2")> vs C<methods(m1 => "v1")>
 
 This problem is could be solved by using a slower and more complicated
@@ -296,7 +468,7 @@ algorithm for set and bag matching. Something for the future...
 This does a set comparison, that is, it compares two arrays but ignores the
 order of the elements and it ignores duplicate elements, so
 
-  cmp_deeply([1, 2, 2, 3], bag(3, 2, 1, 1))
+  cmp_deeply([1, 2, 2, 3], set(3, 2, 1, 1))
 
 will be a pass.
 
@@ -314,8 +486,8 @@ special comparisons inside set()
 
 @expecteds is an array of expected structures.
 
-This allows you compare data against multiple expected results and make sure
-each of them matches.
+This allows you to compare data against multiple expected results and make
+sure each of them matches.
 
   cmp_deeply($got, all(isa("Person"), methods(name => 'John')))
 
@@ -342,7 +514,7 @@ when there is a special comparison involved. If you write
 
   "john" | "anne" | "robert"
 
-it's the same as
+Perl will turn this into
 
   "{onort"
 
@@ -358,7 +530,7 @@ This can be used to compare data against multiple expected results and make
 sure that at least one of them matches. This is a short-circuit test so if
 a test passes then none of the tests after that will be attempted.
 
-You can also use overloading with & similarly to all().
+You can also use overloading with | similarly to all().
 
 =head3 isa($class)
 
@@ -371,11 +543,10 @@ $class.
 
 $thing is a structure to be compared against.
 
-If the data we are checking is an array then each element of it will be
-compared to $thing. If it is a hash then all values will be compared
-against it. This is useful when you have an array of similar things, for
-example objects of a known type and you don't want to have to repeat the
-same test for each one.
+<$got_v> must be an array reference. Each element of it will be compared to
+$thing. This is useful when you have an array of similar things, for example
+objects of a known type and you don't want to have to repeat the same test
+for each one.
 
   my $common_tests = all(
      isa("MyFile"),
@@ -387,14 +558,15 @@ same test for each one.
 
   cmp_deeply($got, array_each($common_tests));
 
-is something like
+is similar to 
 
   foreach my $got_v (@$got) {
     cmp_deeply($got_v, $common_tests)
   }
 
-so it will check that each of the objects in @$got is a MyFile and gives
-satisfactory results for it's methods.
+Except it will not explode is $got is not an array reference. It will check
+that each of the objects in @$got is a MyFile and that each one gives the
+correct results for it's methods.
 
 You could go further, if for example there were 3 files and you knew the
 size of each one you could do this
@@ -410,9 +582,7 @@ size of each one you could do this
       ]
     )
   )
-
-which would first check that each element of @$got passes the $common_tests
-test and then it checks the elements one by one with $got_v->methods.
+  cmp_deeply($got, array_each($structure));
 
 =head3 str($string)
 
@@ -428,7 +598,7 @@ $number is a number.
 This will check C<$got_v == $number>, even if $got_v is a ref. It is useful
 for checking the numerical value of an overloaded reference.
 
-B<Note> in Perl C<"12blah" == 12> because Perl will be smart and convert
+B<Note> in Perl, C<"12blah" == 12> because Perl will be smart and convert
 "12blah" into 12. You may not want this. If you have version 1.10 or higher
 of L<Scalar::Util> then you can pass in C<$mode> as a second argument to
 number(). C<$mode> can be "loose" or "strict". In strict mode, "12blah" will
@@ -447,22 +617,19 @@ This will check that C<$got_v> and C<$value> have the same truth value, that
 is they will give the same result when used in boolean context, like in an
 if() statement.
 
-=head2 Example
-
-Your function to be tested returns an array with three elements, the of 3
-objects hashes, each hash represents a file o
+=head1 ANOTHER EXAMPLE
 
 You've written a module to handle people and their film interests. Say you
 have a function that returns an array of people from a query, each person is
 a hash with 2 keys: Name and Age and the array is sorted by Name. You can do
 
   cmp_deeply(
-  $result,
-  [
-    {Name => 'Anne', Age => 26},
-    {Name => "Bill", Age => 47}
-    {Name => 'John', Age => 25},
-  ]
+    $result,
+    [
+      {Name => 'Anne', Age => 26},
+      {Name => "Bill", Age => 47}
+      {Name => 'John', Age => 25},
+    ]
   );
 
 Soon after, your query function changes and all the results now have an ID
@@ -472,18 +639,33 @@ you have no way of knowing what each person's ID is. With Test::Deep you can
 change your query to
 
   cmp_deeply(
-  $result,
-  bag(
-    {Name => 'John', Age => 25, ID => ignore()},
-    {Name => 'Anne', Age => 26, ID => ignore()},
-    {Name => "Bill", Age => 47, ID => ignore()}
-  )
+    $result,
+    [
+      {Name => 'John', Age => 25, ID => ignore()},
+      {Name => 'Anne', Age => 26, ID => ignore()},
+      {Name => "Bill", Age => 47, ID => ignore()}
+    ]
+  );
+
+But your test still fails. Now, because you're using a database, you no
+longer know what order the people will appear in. You could add a sort into
+the database query but that could slow down your application. Instead you
+can get Test::Deep to ignore the order of the array by doing a bag
+comparison instead.
+
+  cmp_deeply(
+    $result,
+    bag(
+      {Name => 'John', Age => 25, ID => ignore()},
+      {Name => 'Anne', Age => 26, ID => ignore()},
+      {Name => "Bill", Age => 47, ID => ignore()}
+    )
   );
 
 Finally person gets even more complicated and includes a new field called
 Movies, this is a list of movies that the person has seen recently, again
-these movies could come back in any order so we need a bag comparions again,
-giving us something like
+these movies could also come back in any order so we need a bag inside our
+other bag comparison, giving us something like
 
   cmp_deeply(
   $result,
@@ -496,10 +678,33 @@ giving us something like
 
 =head1 BUGS
 
-There is a buglet in set and bag compare to do with competing SCs, it's
-documented in the bag() docs.
+There is a bug in set and bag compare to do with competing SCs. It only
+occurs when you put certain special comparisons inside bag or set
+comparisons you don't need to worry about it. The full details are in the
+bag() docs. It will be fixed in an upcoming version.
 
-Putting bags or sets inside bags or sets is currently fragile.
+=head1 WHAT ARE SPECIAL COMPARISONS?
+
+A special comparison (SC) is simply an object that inherits from
+Test::Deep::Cmp. Whenever C<$expected_v> is an SC then instead of checking
+C<$got_v eq $expected_v>, we pass control over to the SC and let it do it's
+thing.
+
+Test::Deep exports lots of SC constructors, to make it easy for you to use
+them in you tests scripts. For example is C<re("hello")> is just a handy way
+of creating a Test::Deep::Regexp object that will match any string containing
+"hello". So
+
+  cmp_deeply([ 'a', 'b', 'hello world'], ['a', 'b', re("^hello")]);
+
+will check C<'a' eq 'a'>, C<'b' eq 'b'> but when it comes to comparing
+C<'hello world'> and C<re("^hello")> it will see that
+$expected_v is an SC and so will pass control to the Test::Deep::Regex class
+by do something like C<$expected_v->descend($got_v)>. The C<descend()>
+method should just return true or false.
+
+This gives you enough to write your own SCs but I haven't documented how
+diagnostics works because it's about to get an overhaul.
 
 =head1 SEE ALSO
 

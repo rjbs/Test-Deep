@@ -1,3 +1,10 @@
+0.07
+
+Fixed number.t to skip strict test when if Scalar::Util is not right
+
+Major improvement of docs. No longer reads like it was written by a drunken
+badger.
+
 0.06
 
 Overhaul of Test::Deep::descend, native types are now wrapped up in a

@@ -49,15 +49,18 @@ EOM
 		"funny number eq"
 	);
 
-	check_test(
-		sub {
-			cmp_deeply("1a", num("1", "strict"))
-		},
-		{
-			actual_ok => 0,
-		},
-		"funny number eq strict"
-	);
+	SKIP:{
+		skip("Scalar::Util < 1.10", 2) unless $Scalar::Util::VERSION >= 1.10;
+	   	check_test(
+   			sub {
+   				cmp_deeply("1a", num("1", "strict"))
+	   		},
+   			{
+   				actual_ok => 0,
+	   		},
+   			"funny number eq strict"
+	   	);
+	}
 
 }
 
