@@ -1,4 +1,5 @@
 use strict;
+use warnings;
 
 package Test::Deep::Cmp;
 use Carp qw( confess );
@@ -78,6 +79,11 @@ sub string
 	my $self = shift;
 
 	return overload::StrVal($self);
+}
+
+sub reset_arrow
+{
+	return 1;
 }
 
 1;

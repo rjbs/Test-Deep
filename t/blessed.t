@@ -6,63 +6,63 @@ use Test::Deep;
 
 use lib '../Test-Tester/lib';
 use Test::Tester;
+use Test::NoWarnings;
 
 Test::Deep::builder(Test::Tester::capture());
 
-use Test::NoWarnings;
+{
+	my $b = bless [], "class";
+	check_test(
+		sub {
+			cmp_deeply($b, blessed("class"));
+		},
+		{
+			actual_ok => 1,
+			diag => '',
+		},
+		"Same"
+	);
+
+	check_test(
+		sub {
+			cmp_deeply($b, blessed("other"));
+		},
+		{
+			actual_ok => 0,
+			diag => <<EOM,
+Compared blessed(\$data)
+   got : 'class'
+expect : 'other'
+EOM
+		},
+		"Same"
+	);
+}
 
 {
-	my $str = "ferg";
-	my $re = qr/$str/;
 	check_test(
 		sub {
-			cmp_deeply("fergal", re($re));
+			cmp_deeply([], blessed());
 		},
 		{
 			actual_ok => 1,
-			diag => "",
+			diag => '',
 		},
-		"re eq"
+		"Same"
 	);
 
 	check_test(
 		sub {
-			cmp_deeply("feargal", re($re));
+			cmp_deeply([], blessed("class"));
 		},
 		{
 			actual_ok => 0,
 			diag => <<EOM,
-Using Regexp on \$data
-   got : 'feargal'
-expect : $re
+Compared blessed(\$data)
+   got : undef
+expect : 'class'
 EOM
 		},
-		"re not eq"
-	);
-
-	check_test(
-		sub {
-			cmp_deeply("fergal", re($str));
-		},
-		{
-			actual_ok => 1,
-			diag => "",
-		},
-		"string re eq"
-	);
-
-	check_test(
-		sub {
-			cmp_deeply("feargal", re($str));
-		},
-		{
-			actual_ok => 0,
-			diag => <<EOM,
-Using Regexp on \$data
-   got : 'feargal'
-expect : $re
-EOM
-		},
-		"string runre not eq"
+		"Same"
 	);
 }

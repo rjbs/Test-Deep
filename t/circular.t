@@ -9,9 +9,7 @@ use Test::Tester;
 
 Test::Deep::builder(Test::Tester::capture());
 
-use Carp qw(confess);
-
-$SIG{__WARN__} = $SIG{__DIE__} = \&confess;
+use Test::NoWarnings;
 
 {
 	my $a1 = gen_layers(2);
@@ -36,9 +34,9 @@ $SIG{__WARN__} = $SIG{__DIE__} = \&confess;
 		{
 			actual_ok => 0,
 			diag => <<EOM,
-Compared \$data->[3]
-   got : 'break'
-expect : Does not exist
+Compared array length of \$data
+   got : 'array with 4 element(s)'
+expect : 'array with 3 element(s)'
 EOM
 		},
 		"2 layers broken"
@@ -78,9 +76,9 @@ EOM
 		{
 			actual_ok => 0,
 			diag => <<EOM,
-Compared \$data->[2][2][2][2][3]
-   got : 'break'
-expect : Does not exist
+Compared array length of \$data
+   got : 'array with 4 element(s)'
+expect : 'array with 3 element(s)'
 EOM
 		},
 		"2 and 3 layers broken"
@@ -93,9 +91,9 @@ EOM
 		{
 			actual_ok => 0,
 			diag => <<EOM,
-Compared \$data->[2][2][2][2][3]
-   got : 'break'
-expect : Does not exist
+Compared array length of \$data->[2][2]
+   got : 'array with 4 element(s)'
+expect : 'array with 3 element(s)'
 EOM
 		},
 		"2 and 3 layers not fixed"

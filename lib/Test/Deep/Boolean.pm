@@ -1,4 +1,5 @@
 use strict;
+use warnings;
 
 package Test::Deep::Boolean;
 use Carp qw( confess );

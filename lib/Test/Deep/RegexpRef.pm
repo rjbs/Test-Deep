@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-package Test::Deep::Regexp;
+package Test::Deep::RegexpRef;
 use Carp qw( confess );
 
 use Test::Deep::Cmp;
@@ -17,34 +17,34 @@ sub init
 
 	my $val = shift;
 
-	$val = ref $val ? $val : qr/$val/;
-
 	$self->{val} = $val;
 }
 
 sub descend
 {
 	my $self = shift;
-	my $d1 = shift;
 
-	my %data = (type => $self, vals => [$d1, $self->{val}]);
+	my $r1 = shift;
+
+	my $r2 = $self->{val};
+
+	my %data = (type => $self, vals => [$r1, $r2]);
 
 	push(@Test::Deep::Stack, \%data);
 
-	my $ok = ($d1 =~ $self->{val}) ? 1 : 0;
+	my $ok = $r1 eq $r2;
 
 	pop @Test::Deep::Stack if $ok;
 
 	return $ok;
-	scalar ($d1 =~ $self->{val});
 }
 
 sub render_stack
 {
 	my $self = shift;
-	my $var = shift;
+	my ($var, $data) = @_;
 
-	return $var;
+	return "m/$var/";
 }
 
 sub compare
@@ -54,15 +54,6 @@ sub compare
 	my $other = shift;
 
 	return Test::Deep::descend($self->{val}, $other->{val});
-}
-
-sub diag_message
-{
-	my $self = shift;
-
-	my $where = shift;
-
-	return "Using Regexp on $where";
 }
 
 1;

@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-package Test::Deep::Regexp;
+package Test::Deep::RefType;
 use Carp qw( confess );
 
 use Test::Deep::Cmp;
@@ -11,32 +11,33 @@ use vars qw( @ISA );
 
 use Data::Dumper qw(Dumper);
 
+use Scalar::Util qw( reftype );
+
 sub init
 {
 	my $self = shift;
 
-	my $val = shift;
-
-	$val = ref $val ? $val : qr/$val/;
-
-	$self->{val} = $val;
+	$self->{val} = shift;
 }
 
 sub descend
 {
 	my $self = shift;
+
 	my $d1 = shift;
 
-	my %data = (type => $self, vals => [$d1, $self->{val}]);
+	my $exp = $self->{val};
+	my $reftype = reftype($d1);
 
+	my %data = (type => $self, vals => [$reftype, $exp]);
 	push(@Test::Deep::Stack, \%data);
 
-	my $ok = ($d1 =~ $self->{val}) ? 1 : 0;
-
+	my $cmp = Test::Deep::shallow($exp);
+	my $ok = $cmp->descend($reftype);
+	
 	pop @Test::Deep::Stack if $ok;
 
 	return $ok;
-	scalar ($d1 =~ $self->{val});
 }
 
 sub render_stack
@@ -44,7 +45,7 @@ sub render_stack
 	my $self = shift;
 	my $var = shift;
 
-	return $var;
+	return "reftype($var)";
 }
 
 sub compare
@@ -53,16 +54,7 @@ sub compare
 
 	my $other = shift;
 
-	return Test::Deep::descend($self->{val}, $other->{val});
-}
-
-sub diag_message
-{
-	my $self = shift;
-
-	my $where = shift;
-
-	return "Using Regexp on $where";
+	return $self->descend($other->{val});
 }
 
 1;

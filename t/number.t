@@ -9,9 +9,7 @@ use Test::Tester;
 
 Test::Deep::builder(Test::Tester::capture());
 
-use Carp qw(confess);
-
-$SIG{__WARN__} = $SIG{__DIE__} = \&confess;
+use Test::NoWarnings;
 
 {
 	check_test(
@@ -42,7 +40,6 @@ EOM
 
 	check_test(
 		sub {
-			local $^W = 0;
 			cmp_deeply("1a", num("1"))
 		},
 		{
@@ -50,6 +47,16 @@ EOM
 			diag => "",
 		},
 		"funny number eq"
+	);
+
+	check_test(
+		sub {
+			cmp_deeply("1a", num("1", "strict"))
+		},
+		{
+			actual_ok => 0,
+		},
+		"funny number eq strict"
 	);
 
 }

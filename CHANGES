@@ -1,3 +1,17 @@
+0.06
+
+Overhaul of Test::Deep::descend, native types are now wrapped up in a
+Test::Deep:Cmp object, moves lots of logic out of descend
+
+Added ArrayLength, HashKeys, RefType, and Blessed comparisons
+
+All tests now use Test::NoWarnings
+
+Broke out descend tests into hash.t, array, regexpref.t, probably should
+break out more
+
+Updated version of Scalar::Util dependency, thanks to Steve Purkis
+
 0.05
 
 No longer using overload::StrVal() for looking behind overloads as it's

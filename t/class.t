@@ -9,9 +9,7 @@ use Test::Tester;
 
 Test::Deep::builder(Test::Tester::capture());
 
-use Carp qw(confess);
-
-$SIG{__WARN__} = $SIG{__DIE__} = \&confess;
+use Test::NoWarnings;
 
 {
 	my $bless_a = bless {}, "A::Class";
@@ -47,9 +45,9 @@ $SIG{__WARN__} = $SIG{__DIE__} = \&confess;
 		{
 			actual_ok => 0,
 			diag => <<EOM,
-Compared \$data->[0]
-   got : $bless_a
-expect : $bless_b
+Compared blessed(\$data->[0])
+   got : 'A::Class'
+expect : 'B::Class'
 EOM
 		},
 		"class not eq"
@@ -62,9 +60,9 @@ EOM
 		{
 			actual_ok => 0,
 			diag => <<EOM,
-Compared \$data->[0]
-   got : $bless_a
-expect : $nobless
+Compared blessed(\$data->[0])
+   got : 'A::Class'
+expect : undef
 EOM
 		},
 		"class not eq unblessed"

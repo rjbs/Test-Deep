@@ -10,33 +10,29 @@ use Test::NoWarnings;
 
 Test::Deep::builder(Test::Tester::capture());
 
-use Test::NoWarnings;
-
 {
-	my $re = qr/^wi/;
 	check_test(
 		sub {
-			cmp_deeply([qw( wine wind wibble winny window )], array_each( re($re) ))
+			cmp_deeply(qr/a/, qr/a/, "regexp ref eq");
 		},
 		{
+			name => "regexp ref eq",
 			actual_ok => 1,
 			diag => "",
-		},
-		"array_each eq"
+		}
 	);
-
 	check_test(
 		sub {
-			cmp_deeply([qw( wibble wobble winny window )], array_each( re($re) ))
+			cmp_deeply(qr/a/, qr/b/, "regexp ref not eq");
 		},
 		{
+			name => "regexp ref not eq",
 			actual_ok => 0,
 			diag => <<EOM,
-Using Regexp on \$data->[1]
-   got : 'wobble'
-expect : $re
+Compared m/\$data/
+   got : (?-xism:a)
+expect : (?-xism:b)
 EOM
-		},
-		"array_each not eq"
+		}
 	);
 }

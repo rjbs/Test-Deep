@@ -1,6 +1,7 @@
 use strict;
 
 use Test::More qw(no_plan);
+use Test::NoWarnings;
 
 use Test::Deep qw( cmp_deeply descend render_stack methods deep_diag class_base );
 

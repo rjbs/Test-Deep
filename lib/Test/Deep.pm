@@ -1,4 +1,5 @@
 use strict;
+use warnings;
 
 package Test::Deep;
 use Carp qw( confess );
@@ -16,26 +17,29 @@ use Data::Dumper qw(Dumper);
 use vars qw(
 	$VERSION @EXPORT @EXPORT_OK @ISA
 	@Stack %Compared $CompareCache
-	$Snobby $Expects $DNE $DNE_ADDR  $Shallow
+	$Snobby $Expects $DNE $DNE_ADDR $Shallow $DidArrow
 );
 
-$VERSION = '0.05';
+$VERSION = '0.06';
 
 require Exporter;
 @ISA = qw( Exporter );
 
 @EXPORT = qw( eq_deeply cmp_deeply cmp_set cmp_bag cmp_methods
 	methods shallow useclass noclass ignore set bag re any all isa array_each
-	hash_each str num bool
+	hash_each str num bool scalref array hash regexpref reftype blessed
+	arraylength hashkeys
 );
+
 @EXPORT_OK = qw( descend render_stack deep_diag class_base );
 
 $Snobby = 1; # should we compare classes?
 $Expects = 0; # are we comparing got vs expect or expect vs expect
-$Shallow = 0;
 
 $DNE = \"";
 $DNE_ADDR = Scalar::Util::refaddr($DNE);
+
+my %WrapCache;
 
 sub cmp_deeply
 {
@@ -69,10 +73,10 @@ sub eq_deeply
 
 sub eq_deeply_cache
 {
-	# this is like cross between eq_deeply and descend(). It doesn't with a
-	# new $CompareCache but if the comparison fails it will leave
+	# this is like cross between eq_deeply and descend(). It doesn't start
+	# with a new $CompareCache but if the comparison fails it will leave
 	# $CompareCache as if nothing happened. However, if the comparison
-	# succeeds then $CompareCache retain all the new information
+	# succeeds then $CompareCache retains all the new information
 
 	# this allows Set and Bag to handle circular refs
 
@@ -161,226 +165,90 @@ sub descend
 {
 	my ($d1, $d2) = @_;
 
-	if (!defined $d1 and !defined $d2)
-	{
-		return 1;
-	}
-
-	if (! $Expects and UNIVERSAL::isa($d1, "Test::Deep::Cmp"))
+	if (! $Expects and ref($d1) and UNIVERSAL::isa($d1, "Test::Deep::Cmp"))
 	{
 		my $where = render_stack('$data', @Stack);
 		confess "Found a special comparison in $where\nYou can only the specials in the expects structure";
 	}
 
-	my $ok;
-
-	if (! ref $d2 or $Shallow)
+	if (ref $d1 and ref $d2)
 	{
-		# $d2 is a scalar or we're doing shallow comparison
-
-		if (defined $d1 xor defined $d2)
+		if ($Expects and UNIVERSAL::isa($d1, "Test::Deep::Cmp"))
 		{
-			$ok = 0;
+			return 0 unless blessed(Scalar::Util::blessed($d2))->descend($d1);
+			return $d1->compare($d2);
 		}
-		elsif (ref $d1 xor ref $d2)
+
+		my $s1 = Scalar::Util::refaddr($d1);
+		my $s2 = Scalar::Util::refaddr($d2);
+
+		if ($s1 eq $s2)
 		{
-			$ok = 0;
+			return 1;
+		}
+		if ($CompareCache->cmp($d1, $d2))
+		{
+			# we've tried comparing these already so either they turned out to
+			# be the same or we must be in a loop and we have to assume they're
+			# the same
+
+			return 1;
 		}
 		else
 		{
-			$ok = $d1 eq $d2;
+			$CompareCache->add($d1, $d2)
 		}
+	}
 
-		if (not $ok)
-		{
-			my %data = (type => 'scalar', vals => [$d1, $d2]);
+	$d2 = wrap($d2);
 
-			push(@Stack, \%data);
-		}
-	} 
+	return $d2->descend($d1);
+}
+
+sub wrap
+{
+	my $data = shift;
+
+	return $data if ref($data) and UNIVERSAL::isa($data, "Test::Deep::Cmp");
+
+	my ($class, $base) = class_base($data);
+
+	my $cmp;
+
+	if($base eq '')
+	{
+		$cmp = shallow($data);
+	}
 	else
 	{
-		# d2 is a reference, the fun starts
+		my $addr = Scalar::Util::refaddr($data);
 
-		if (ref $d1)
+		return $WrapCache{$addr} if $WrapCache{$addr};
+		
+		if($base eq 'ARRAY')
 		{
-			my $s1 = Scalar::Util::refaddr($d1);
-			my $s2 = Scalar::Util::refaddr($d2);
-
-			if ($s1 eq $s2)
-			{
-				return 1;
-			}
-			if ($CompareCache->cmp($s1, $s2))
-			{
-				# we've tried comparing these already so either they turned out to
-				# be the same or we must be in a loop and we have to assume they're
-				# the same
-
-				$ok = 1;
-			}
-			else
-			{
-				$CompareCache->add($s1, $s2)
-			}
+			$cmp = array($data);
 		}
-
-		goto break_out if $ok; # avoid yet more indenting
-
-		# find out the class and the base type of each
-		my ($class1, $base1) = class_base($d1);
-		my ($class2, $base2) = class_base($d2);
-
-		if(UNIVERSAL::isa($d2, "Test::Deep::Cmp"))
+		elsif($base eq 'HASH')
 		{
-			if ($Expects)
-			{
-				# we are comparing special 2 expects, this is special and only the
-				# expects know how to compare themselves
-
-				if ($class1 ne $class2 or $base1 ne $base2)
-				{
-					$ok = 0;
-				}
-				else
-				{
-					$ok = $d1->compare($d2);
-				}
-			}
-			else
-			{
-				# special stuff
-				$ok = $d2->descend($d1);
-			}
+			$cmp = hash($data);
 		}
-		elsif($base1 ne $base2 or ($Snobby and $class1 ne $class2))
+		elsif($base eq 'SCALAR' or $base eq 'REF')
 		{
-			my %data = (type => 'scalar', vals => [$d1, $d2]);
-
-			push(@Stack, \%data);
-
-			$ok = 0;
+			$cmp = scalref($data);
 		}
-		elsif($base2 eq 'ARRAY')
+		elsif($base eq 'Regexp')
 		{
-			$ok = descend_array($d1, $d2);
-		}
-		elsif($base2 eq 'HASH')
-		{
-			$ok = descend_hash($d1, $d2);
-		}
-		elsif($base2 eq 'SCALAR' or $base2 eq 'REF')
-		{
-			$ok = descend_ref($d1, $d2);
-		}
-		elsif($base2 eq 'Regexp')
-		{
-			$ok = descend_regexp($d1, $d2);
+			$cmp = regexpref($data);
 		}
 		else
 		{
-			confess "I have no idea how to compare '$d1' and '$d2'";
+			confess "I don't know how to wrap '$base'";
 		}
+
+		$WrapCache{$addr} = $cmp;
 	}
-
-	break_out:
-
-	confess "ok was not set for '$d1' and '$d2'" unless defined($ok);
-
-	return $ok;
-}
-
-sub descend_regexp
-{
-	my ($r1, $r2) = @_;
-
-	my %data = (type => 'regexp', vals => [$r1, $r2]);
-
-	push(@Stack, \%data);
-
-	my $ok = $r1 eq $r2;
-
-	pop @Stack if $ok;
-
-	return $ok;
-}
-
-sub descend_array
-{
-	my ($a1, $a2) = @_;
-
-	my $ok = 1;
-	my $max = $#$a1 < $#$a2 ? $#$a2 : $#$a1;
-
-	my %data = (type => 'array');
-
-	push(@Stack, \%data);
-
-	for my $i (0..$max)
-	{
-		$data{index} = $i;
-
-		my $got = $i > $#$a1 ? $DNE : $a1->[$i];
-		my $expected = $i > $#$a2 ? $DNE : $a2->[$i];
-
-		$ok = descend($got, $expected);
-
-		if (! $ok)
-		{
-			$data{vals} = [$got, $expected];
-			last;
-		}
-	}
-
-	pop @Stack if $ok;
-	return $ok;
-}
-
-sub descend_hash
-{
-	my ($h1, $h2) = @_;
-
-	my $ok = 1;
-
-	my %data = (type => 'hash');
-
-	push(@Stack, \%data);
-
-	my $bigger = keys %$h1 > keys %$h2 ? $h1 : $h2;
-
-	foreach my $key (keys %$bigger)
-	{
-		$data{index} = $key;
-
-		my $got = exists $h1->{$key} ? $h1->{$key} : $DNE;
-		my $expected = exists $h2->{$key} ? $h2->{$key} : $DNE;
-
-		$ok = descend($got, $expected);
-
-		if (! $ok)
-		{
-			$data{vals} = [$got, $expected];
-			last;
-		}
-	}
-
-	pop @Stack if $ok;
-	return $ok;
-}
-
-sub descend_ref
-{
-	my ($r1, $r2) = @_;
-
-	my %data = (type => 'ref', vals => [$$r1, $$r2]);
-
-	push(@Stack, \%data);
-
-	my $ok = descend($$r1, $$r2);
-
-	pop @Stack if $ok;
-
-	return $ok;
+	return $cmp;
 }
 
 sub class_base
@@ -410,38 +278,17 @@ sub render_stack
 {
 	my ($var, @stack) = @_;
 
-	my $did_arrow = 0;
+	local $DidArrow = 0;
 
 	for my $i (0..$#Stack)
 	{
 		my $data = $Stack[$i];
 
-		if (ref $data->{type})
+		if (UNIVERSAL::isa($data->{type}, "Test::Deep::Cmp"))
 		{
 			$var = $data->{type}->render_stack($var, $data);
 
-			# we could end up with anything after this so have to make sure with
-			# start using arrows again
-
-			$did_arrow = 0;
-		}
-		elsif ($data->{type} eq 'array')
-		{
-			$var .= "->" unless $did_arrow++;
-			$var .= "[$data->{index}]";
-		}
-		elsif ($data->{type} eq 'hash')
-		{
-			$var .= "->" unless $did_arrow++;
-			$var .= '{"'.quotemeta($data->{index}).'"}';
-		}
-		elsif ($data->{type} eq 'ref')
-		{
-			$var = "\${$var}";
-		}
-		elsif ($data->{type} eq 'regexp')
-		{
-			$var = "m/$var/";
+			$DidArrow = 0 if $data->{type}->reset_arrow;
 		}
 		elsif ($data->{type} eq 'scalar')
 		{
@@ -588,9 +435,7 @@ sub num
 {
 	require Test::Deep::Number;
 
-	my $val = shift;
-
-	return Test::Deep::Number->new($val);
+	return Test::Deep::Number->new(@_);
 }
 
 sub bool
@@ -600,6 +445,76 @@ sub bool
 	my $val = shift;
 
 	return Test::Deep::Boolean->new($val);
+}
+
+sub scalref
+{
+	require Test::Deep::ScalarRef;
+
+	my $val = shift;
+
+	return Test::Deep::ScalarRef->new($val);
+}
+
+sub array
+{
+	require Test::Deep::Array;
+
+	my $val = shift;
+
+	return Test::Deep::Array->new($val);
+}
+
+sub hash
+{
+	require Test::Deep::Hash;
+
+	my $val = shift;
+
+	return Test::Deep::Hash->new($val);
+}
+
+sub regexpref
+{
+	require Test::Deep::RegexpRef;
+
+	my $val = shift;
+
+	return Test::Deep::RegexpRef->new($val);
+}
+
+sub reftype
+{
+	require Test::Deep::RefType;
+
+	my $val = shift;
+	my $regex = shift;
+	return Test::Deep::RefType->new($val, $regex);
+}
+
+sub blessed
+{
+	require Test::Deep::Blessed;
+
+	my $val = shift;
+
+	return Test::Deep::Blessed->new($val);
+}
+
+sub arraylength
+{
+	require Test::Deep::ArrayLength;
+
+	my $val = shift;
+
+	return Test::Deep::ArrayLength->new($val);
+}
+
+sub hashkeys
+{
+	require Test::Deep::HashKeys;
+
+	return Test::Deep::HashKeys->new(@_);
 }
 
 sub builder

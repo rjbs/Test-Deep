@@ -1,4 +1,5 @@
 use strict;
+use warnings;
 
 package Test::Deep::Shallow;
 use Carp qw( confess );
@@ -9,6 +10,8 @@ use vars qw( @ISA );
 @ISA = qw( Test::Deep::Cmp );
 
 use Data::Dumper qw(Dumper);
+
+use Scalar::Util qw( refaddr );
 
 sub init
 {
@@ -21,17 +24,39 @@ sub init
 sub descend
 {
 	my $self = shift;
+
 	my $d1 = shift;
+	my $d2 = $self->{val};
 
-	my %data = (type => $self);
+	my $ok;
 
-	push(@Test::Deep::Stack, \%data);
+	if (!defined $d1 and !defined $d2)
+	{
+		$ok = 1;
+	}
+	elsif (defined $d1 xor defined $d2)
+	{
+		$ok = 0;
+	}
+	elsif (ref $d1 and ref $d2)
+	{
+		$ok = refaddr($d1) == refaddr($d2);
+	}
+	elsif (ref $d1 xor ref $d2)
+	{
+		$ok = 0;
+	}
+	else
+	{
+		$ok = $d1 eq $d2;
+	}
 
-	local $Test::Deep::Shallow = 1;
+	if (not $ok)
+	{
+		my %data = (type => $self, vals => [$d1, $d2]);
 
-	my $ok = Test::Deep::descend($d1, $self->{val});
-
-	pop @Test::Deep::Stack if $ok;
+		push(@Test::Deep::Stack, \%data);
+	}
 
 	return $ok;
 }
@@ -50,7 +75,7 @@ sub compare
 
 	my $other = shift;
 
-	return $self->{val} eq $other->{val};
+	return $self->descend($other->{val});
 }
 
 1;

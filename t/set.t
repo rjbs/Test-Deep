@@ -9,14 +9,23 @@ use Test::Tester;
 
 Test::Deep::builder(Test::Tester::capture());
 
-use Carp qw(confess);
-
-$SIG{__WARN__} = $SIG{__DIE__} = \&confess;
+use Test::NoWarnings;
 
 {
 	check_test(
 		sub {
 			cmp_deeply([], set());
+		},
+		{
+			actual_ok => 1,
+			diag => "",
+		},
+		"empty eq"
+	);
+
+	check_test(
+		sub {
+			cmp_deeply(["a"], set("a", "a"));
 		},
 		{
 			actual_ok => 1,

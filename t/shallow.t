@@ -9,9 +9,7 @@ use Test::Tester;
 
 Test::Deep::builder(Test::Tester::capture());
 
-use Carp qw(confess);
-
-$SIG{__WARN__} = $SIG{__DIE__} = \&confess;
+use Test::NoWarnings;
 
 {
 	my $a = {};
@@ -70,6 +68,33 @@ Compared \$data->[1][0]
 expect : 'a'
 EOM
 		},
+		"deep after shallow not eq"
+	);
+}
+
+{
+	my $u = shallow(undef);
+	check_tests(
+		sub {
+			cmp_deeply(undef, $u);
+			cmp_deeply("a", $u);
+			cmp_deeply("a", $u);
+			cmp_deeply("a", undef);
+		},
+		[
+			{
+				actual_ok => 1,
+			},
+			{
+				actual_ok => 0,
+			},
+			{
+				actual_ok => 0,
+			},
+			{
+				actual_ok => 0,
+			},
+		],
 		"deep after shallow not eq"
 	);
 }

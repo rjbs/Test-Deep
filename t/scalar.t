@@ -9,9 +9,7 @@ use Test::Tester;
 
 Test::Deep::builder(Test::Tester::capture());
 
-use Carp qw(confess);
-
-$SIG{__WARN__} = $SIG{__DIE__} = \&confess;
+use Test::NoWarnings;
 
 {
 	my $a = [];
@@ -22,9 +20,9 @@ $SIG{__WARN__} = $SIG{__DIE__} = \&confess;
 		{
 			actual_ok => 0,
 			diag => <<EOM,
-Compared \$data
-   got : '$a'
-expect : $a
+Compared reftype(\$data)
+   got : undef
+expect : 'ARRAY'
 EOM
 		},
 		"stringified ref not eq"

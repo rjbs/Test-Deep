@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-package Test::Deep::Regexp;
+package Test::Deep::Blessed;
 use Carp qw( confess );
 
 use Test::Deep::Cmp;
@@ -11,13 +11,13 @@ use vars qw( @ISA );
 
 use Data::Dumper qw(Dumper);
 
+use Scalar::Util qw( blessed );
+
 sub init
 {
 	my $self = shift;
 
 	my $val = shift;
-
-	$val = ref $val ? $val : qr/$val/;
 
 	$self->{val} = $val;
 }
@@ -27,16 +27,18 @@ sub descend
 	my $self = shift;
 	my $d1 = shift;
 
-	my %data = (type => $self, vals => [$d1, $self->{val}]);
+	my $exp = $self->{val};
+	my $blessed = blessed($d1);
 
+	my %data = (type => $self, vals => [$blessed, $exp]);
 	push(@Test::Deep::Stack, \%data);
 
-	my $ok = ($d1 =~ $self->{val}) ? 1 : 0;
-
+	my $cmp = Test::Deep::shallow($exp);
+	my $ok = $cmp->descend($blessed);
+	
 	pop @Test::Deep::Stack if $ok;
 
 	return $ok;
-	scalar ($d1 =~ $self->{val});
 }
 
 sub render_stack
@@ -44,7 +46,7 @@ sub render_stack
 	my $self = shift;
 	my $var = shift;
 
-	return $var;
+	return "blessed($var)"
 }
 
 sub compare
@@ -53,16 +55,11 @@ sub compare
 
 	my $other = shift;
 
+	return 0 if $self->{snobby} != $other->{snobby};
+
+	local $Test::Deep::Snobby = $self->{snobby};
+
 	return Test::Deep::descend($self->{val}, $other->{val});
-}
-
-sub diag_message
-{
-	my $self = shift;
-
-	my $where = shift;
-
-	return "Using Regexp on $where";
 }
 
 1;

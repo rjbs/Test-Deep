@@ -1,4 +1,5 @@
 use strict;
+use warnings;
 
 package Test::Deep::Isa;
 use Carp qw( confess );
