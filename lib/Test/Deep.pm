@@ -19,7 +19,7 @@ use vars qw(
 	$Snobby $Expects $DNE $Shallow
 );
 
-$VERSION = '0.03';
+$VERSION = '0.04';
 
 require Exporter;
 @ISA = qw( Exporter );

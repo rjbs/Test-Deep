@@ -1,4 +1,5 @@
 MANIFEST
+CHANGES
 Makefile.PL
 README
 TODO
@@ -7,6 +8,7 @@ lib/Test/Deep.pod
 lib/Test/Deep/All.pm
 lib/Test/Deep/Any.pm
 lib/Test/Deep/ArrayEach.pm
+lib/Test/Deep/Boolean.pm
 lib/Test/Deep/Cache.pm
 lib/Test/Deep/Cache/Simple.pm
 lib/Test/Deep/Class.pm
@@ -25,6 +27,7 @@ t/all.t
 t/any.t
 t/array_each.t
 t/bag.t
+t/boolean.t
 t/cache.t
 t/circular.t
 t/class.t

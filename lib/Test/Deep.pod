@@ -425,8 +425,16 @@ for checking the stringified value of an overloaded reference.
 
 $number is a number.
 
-This will check C<$got_v eq $number>, even if $got_v is a ref. It is useful
+This will check C<$got_v == $number>, even if $got_v is a ref. It is useful
 for checking the numerical value of an overloaded reference.
+
+=head3 bool($value)
+
+$value is anything you like but it's probably best to use 0 or 1
+
+This will check that C<$got_v> and C<$value> have the same truth value, that
+is they will give the same result when used in boolean context, like in an
+if() statement.
 
 =head2 Example
 

@@ -1,0 +1,19 @@
+0.04
+
+Documented bool and included the files!!
+
+0.03
+
+cmp_deeply(undef, \"") calls overload::StrVal(undef)
+
+added bool test
+
+using Scalar::Util to get reftype and blessed class
+
+0.02
+
+Added prereq to Makefile.PL
+
+0.01
+
+First release
