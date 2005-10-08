@@ -21,7 +21,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.088';
+$VERSION = '0.089';
 
 require Exporter;
 @ISA = qw( Exporter );
@@ -206,13 +206,13 @@ sub render_val
 	 	$rendered = ref($val) ?
 	 		(Scalar::Util::refaddr($val) eq $DNE_ADDR ?
 	 			"Does not exist" :
-	      overload::StrVal($val)
-	    ) :
-      qq('$val');
+				overload::StrVal($val)
+			) :
+			qq('$val');
 	}
 	else
 	{
-	  $rendered = "undef";
+		$rendered = "undef";
 	}
 
 	return $rendered;
@@ -364,6 +364,7 @@ sub render_stack
 
 sub cmp_methods
 {
+	local $Test::Builder::Level = $Test::Builder::Level + 1;
 	return cmp_deeply(shift, methods(@{shift()}), shift);
 }
 
@@ -408,6 +409,7 @@ sub subsetof
 
 sub cmp_set
 {
+	local $Test::Builder::Level = $Test::Builder::Level + 1;
 	return cmp_deeply(shift, set(@{shift()}), shift);
 }
 
@@ -434,6 +436,7 @@ sub subbagof
 
 sub cmp_bag
 {
+	local $Test::Builder::Level = $Test::Builder::Level + 1;
 	return cmp_deeply(shift, bag(@{shift()}), shift);
 }
 

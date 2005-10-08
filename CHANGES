@@ -1,3 +1,10 @@
+0.089
+
+Wasn't corrrectly setting $Test::Builder::Level in cmp_bag, cmp_set and
+cmp_methods, this caused test error messages to include the wrong line/file.
+
+Whitespace changes.
+
 0.088
 
 Slight twiddle to silence warnings from the new Test::Tester thanks to
