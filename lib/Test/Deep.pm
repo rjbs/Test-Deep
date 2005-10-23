@@ -12,6 +12,7 @@ use Scalar::Util;
 my $Test;
 if (defined $Test::Deep::NoTest::NoTest)
 {
+# for people who want eq_deeply but not Test::Builder
 	require Test::Builder;
 	$Test = Test::Builder->new;
 }
@@ -24,7 +25,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.090';
+$VERSION = '0.091';
 
 require Exporter;
 @ISA = qw( Exporter );
