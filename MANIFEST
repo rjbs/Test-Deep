@@ -25,6 +25,7 @@ lib/Test/Deep/Isa.pm
 lib/Test/Deep/ListMethods.pm
 lib/Test/Deep/Methods.pm
 lib/Test/Deep/MM.pm
+lib/Test/Deep/NoTest.pm
 lib/Test/Deep/Number.pm
 lib/Test/Deep/Ref.pm
 lib/Test/Deep/RefType.pm

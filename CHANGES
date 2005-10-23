@@ -1,3 +1,8 @@
+0.090
+
+Added Test::Builder::NoTest so that eq_deeply can be use entirely without
+Test::Builder.
+
 0.089
 
 Wasn't corrrectly setting $Test::Builder::Level in cmp_bag, cmp_set and

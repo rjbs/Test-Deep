@@ -9,9 +9,12 @@ use Test::Deep::Stack;
 require overload;
 use Scalar::Util;
 
-use Test::Builder;
-
-my $Test = Test::Builder->new;
+my $Test;
+if (defined $Test::Deep::NoTest::NoTest)
+{
+	require Test::Builder;
+	$Test = Test::Builder->new;
+}
 
 use Data::Dumper qw(Dumper);
 
@@ -21,7 +24,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.089';
+$VERSION = '0.090';
 
 require Exporter;
 @ISA = qw( Exporter );
