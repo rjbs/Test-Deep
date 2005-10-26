@@ -66,6 +66,7 @@ t/ignore.t
 t/isa.t
 t/listmethods.t
 t/methods.t
+t/notest.t
 t/number.t
 t/over.pm
 t/reftype.t

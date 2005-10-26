@@ -1,3 +1,13 @@
+0.092
+
+Got the if backwards for loading Test::Builder (again for NoTest - simples changes...). No ill effects for most people as they load it via something else any but ApacheSession for example doesn't.
+
+Now tetsing for lack of testing framework.
+
+0.091
+
+Forgot to export lots of stuff via NoTest
+
 0.090
 
 Added Test::Builder::NoTest so that eq_deeply can be use entirely without
