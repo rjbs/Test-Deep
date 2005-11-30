@@ -50,6 +50,7 @@ t/array.t
 t/array_each.t
 t/arraylength.t
 t/bag.t
+t/bagrecursion.t
 t/blessed.t
 t/boolean.t
 t/cache.t

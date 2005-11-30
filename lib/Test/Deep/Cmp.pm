@@ -127,13 +127,4 @@ sub data
 	return $Test::Deep::Stack->getLast;
 }
 
-sub compare
-{
-	my $self = shift;
-
-	my $other = shift;
-
-	return Test::Deep::descend($self, $other);
-}
-
 1;

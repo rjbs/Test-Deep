@@ -25,7 +25,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.092';
+$VERSION = '0.093';
 
 require Exporter;
 @ISA = qw( Exporter );
@@ -101,7 +101,6 @@ foreach my $e (@EXPORT)
 	$count{$e}++;
 }
 
-print join("\n", (grep {$count{$_} > 1} keys %count), "");
 sub cmp_deeply
 {
 	my ($d1, $d2, $name) = @_;
@@ -241,7 +240,10 @@ sub descend
 		{
 			# check they are the same class
 			return 0 unless Test::Deep::blessed(Scalar::Util::blessed($d2))->descend($d1);
-			return $d1->compare($d2);
+			if ($d1->can("compare"))
+			{
+				return $d1->compare($d2);
+			}
 		}
 
 		my $s1 = Scalar::Util::refaddr($d1);

@@ -1,3 +1,9 @@
+0.093
+
+Fixed inifinte recursion when adding comparators into bags. That whole area is unpleasant - conceptually as well as implementation-wise. Comparators no longer inherit a compare method, so we only call the specialised compare if it exists, otherwise we just do normal deep comparison.
+
+Removed a debugging print.
+
 0.092
 
 Got the if backwards for loading Test::Builder (again for NoTest - simples changes...). No ill effects for most people as they load it via something else any but ApacheSession for example doesn't.
