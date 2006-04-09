@@ -1,3 +1,11 @@
+0.094
+
+Changed Set and Bag to no longer issue warnings when undefs are
+present. Needed to make the sort and the diagnotics
+undef-aware. Thanks to Colin Kuskie for pointing this out.
+
+Added tests for this.
+
 0.093
 
 Fixed inifinte recursion when adding comparators into bags. That whole area is unpleasant - conceptually as well as implementation-wise. Comparators no longer inherit a compare method, so we only call the specialised compare if it exists, otherwise we just do normal deep comparison.

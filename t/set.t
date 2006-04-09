@@ -256,3 +256,30 @@ EOM
 		"subsetof no"
 	);
 }
+
+{
+	check_test(
+		sub {
+			cmp_deeply([1, undef, undef], set(undef, 1, undef));
+		},
+		{
+			actual_ok => 1,
+			diag => "",
+		},
+		"undef warnings"
+	);
+
+	check_test(
+		sub {
+			cmp_deeply([1, undef], set(1));
+		},
+		{
+			actual_ok => 0,
+			diag => <<EOM,
+Comparing \$data as a Set
+Extra: undef
+EOM
+		},
+		"warnings extra"
+	);
+}

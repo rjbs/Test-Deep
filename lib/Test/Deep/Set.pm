@@ -148,7 +148,7 @@ sub add
 
 	# so we can compare 2 Test::Deep::Set objects using array comparison
 
-	@$already = sort @$already;
+	@$already = sort {(defined $a ? $a : "") cmp (defined $b ? $b : "")} @$already;
 }
 
 sub nice_list
@@ -164,7 +164,7 @@ sub nice_list
 	# sort them so we can predict the diagnostic output
 
 	return join(", ",
-		(map {"'$_'"} sort @scalars),
+		(map {Test::Deep::render_val($_)} sort {(defined $a ? $a : "") cmp (defined $b ? $b : "")} @scalars),
 		@ref_string
 	);
 }

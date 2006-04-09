@@ -25,7 +25,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.093';
+$VERSION = '0.094';
 
 require Exporter;
 @ISA = qw( Exporter );
