@@ -75,4 +75,24 @@ EOM
 		},
 		"class eq on/off"
 	);
+
+	my $bless_d = bless [$bless_c], "D::Class";
+
+	check_test(
+		sub {
+			cmp_deeply(
+				$bless_d,
+				bless([noclass(bless([useclass(bless({}, "NotA::Class"))], "NotC::Class"))], "D::Class"),
+			);
+		},
+		{
+			actual_ok => 0,
+			diag => <<EOM,
+Compared blessed(\$data->[0]->[0])
+   got : 'A::Class'
+expect : 'NotA::Class'
+EOM
+		},
+		"class eq on/off/on"
+	);
 }

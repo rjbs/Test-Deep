@@ -25,7 +25,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.094';
+$VERSION = '0.095';
 
 require Exporter;
 @ISA = qw( Exporter );
@@ -382,6 +382,10 @@ sub requireclass
 
 	return Test::Deep::Class->new(1, $val);
 }
+
+# docs and export say this is call useclass, doh!
+
+*useclass = \&requireclass;
 
 sub noclass
 {

@@ -1,3 +1,8 @@
+0.095
+
+Docs and code didn't match, useclass was actually requireclass, available as
+both now
+
 0.094
 
 Changed Set and Bag to no longer issue warnings when undefs are
