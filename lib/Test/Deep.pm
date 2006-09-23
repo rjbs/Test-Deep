@@ -21,11 +21,11 @@ use Data::Dumper qw(Dumper);
 
 use vars qw(
 	$VERSION @EXPORT @EXPORT_OK @ISA
-	$Stack %Compared $CompareCache
+	$Stack %Compared $CompareCache %WrapCache
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.095';
+$VERSION = '0.096';
 
 require Exporter;
 @ISA = qw( Exporter );
@@ -43,8 +43,6 @@ $Expects = 0; # are we comparing got vs expect or expect vs expect
 
 $DNE = \"";
 $DNE_ADDR = Scalar::Util::refaddr($DNE);
-
-my %WrapCache;
 
 # if no sub name is supplied then we use the package name in lower case
 my %constructors = (
@@ -107,6 +105,7 @@ sub cmp_deeply
 
 	local $Stack = Test::Deep::Stack->new;
 	local $CompareCache = Test::Deep::Cache->new;
+	local %WrapCache;
 
 	my $ok = descend($d1, $d2);
 
@@ -125,6 +124,7 @@ sub eq_deeply
 
 	local $Stack = Test::Deep::Stack->new;
 	local $CompareCache = Test::Deep::Cache->new;
+	local %WrapCache;
 
 	my $ok = descend($d1, $d2);
 

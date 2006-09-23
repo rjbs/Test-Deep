@@ -66,6 +66,7 @@ t/hashkeys.t
 t/ignore.t
 t/isa.t
 t/listmethods.t
+t/memory.t
 t/methods.t
 t/notest.t
 t/number.t
