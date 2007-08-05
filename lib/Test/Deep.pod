@@ -454,8 +454,9 @@ C<$object>.
 $regexp is either a regular expression reference produced with C<qr/.../> or
 a string which will be used to construct a regular expression.
 
-$capture_data is optional and is used to check the strings captured by an
-regex, for example should either be an array ref
+$capture_data is optional and is used to check the strings captured by
+an regex. This should can be an array ref or a Test::Deep comparator
+that works on array refs.
 
 $flags is an optional string which controls whether the regex runs as a
 global match. If $flags is "g" then the regex will run as m/$regexp/g.

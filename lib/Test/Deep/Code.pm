@@ -32,7 +32,7 @@ sub diagnostics
 	my ($where, $last) = @_;
 
 	my $error = $last->{diag};
-	my $data = Test::Deep::render_val($last->{data});
+	my $data = Test::Deep::render_val($last->{got});
 	my $diag = <<EOM;
 Ran coderef at $where on
 

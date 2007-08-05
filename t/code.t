@@ -40,4 +40,5 @@ sub cmp
 	);
 
 	like($res->{diag}, "/your names not down/", "diagnostics");
+	like($res->{diag}, "/feargal/", "diagnostics");
 }

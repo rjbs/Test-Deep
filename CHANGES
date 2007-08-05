@@ -1,3 +1,10 @@
+0.097
+
+Fixed doc typo for re().
+
+Fix diagnostics for code(), it was always printing undef instead of
+the got value.
+
 0.096
 
 %WrapCache was keeping references to external data. It's now local()ised at the start of a comparison just like the other caches (why I didn't do that when I added it, I don't know). Thanks to Matthijs Bomhoff for reporting the problem.
