@@ -1,3 +1,18 @@
+0.098
+
+Cleaned up Test::Deep::NoTest by making it call Test::Deep's import,
+that way it will always be in sync for exports. Also added some POD
+docs.
+
+Added notest_extra.t to check that things are correctly exported and
+working.
+
+Add cmp_details but left it undocumented. It manages localising the
+stack etc. Factored eq_deeply and cmp_deeply through that. This meant
+adding an icky hack into deep_diag. I should clean that whole thing up.
+
+Remove $name from params of eq_deeply, in code and docs, it was unused.
+
 0.097
 
 Fixed doc typo for re().

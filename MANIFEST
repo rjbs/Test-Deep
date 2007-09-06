@@ -69,6 +69,7 @@ t/listmethods.t
 t/memory.t
 t/methods.t
 t/notest.t
+t/notest_extra.t
 t/number.t
 t/over.pm
 t/reftype.t

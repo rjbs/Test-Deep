@@ -43,7 +43,7 @@ sub render
 	{
 		my $exp = $data->{exp};
 		if (UNIVERSAL::isa($exp, "Test::Deep::Cmp"))
-		{			
+		{
 			$var = $exp->render_stack($var, $data);
 
 			$self->setArrow(0) if $exp->reset_arrow;

@@ -6,19 +6,36 @@ use warnings;
 
 package Test::Deep::NoTest;
 
-use vars qw( $NoTest @ISA @EXPORT );
+use vars qw( $NoTest );
 
-require Exporter;
-@ISA = qw( Exporter );
+{
+  local $NoTest = 1;
+  require Test::Deep;
+}
 
-@EXPORT = qw(
-	eq_deeply useclass noclass set bag subbagof superbagof
-	subsetof supersetof superhashof subhashof
-);
-
-
-local $NoTest = 1;
-require Test::Deep;
-Test::Deep->import( @EXPORT );
+sub import {
+  my $import = Test::Deep->can("import");
+  # make the stack look like it should for use Test::Deep
+  my $pkg = shift;
+  unshift(@_, "Test::Deep");
+  goto &$import;
+}
 
 1;
+
+=head1 NAME
+
+Test::Deep::NoTest - Use Test::Deep outside of the testing framework
+
+=head1 SYNOPSIS
+
+  use Test::Deep::NoTest;
+
+  if eq_deeply($a, $b) {
+    print "they were deeply equal\n";
+  };
+
+=head1 DESCRIPTION
+
+This exports all the same things as Test::Deep but it does not load
+Test::Builder so it can be used in ordinary non-test situations.
