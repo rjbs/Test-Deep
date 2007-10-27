@@ -4,7 +4,21 @@ use warnings;
 package Test::Deep::Cache::Simple;
 use Carp qw( confess );
 
-use Scalar::Util qw( weaken refaddr );
+use Scalar::Util qw( refaddr );
+
+BEGIN
+{
+  if (grep /^weaken$/, @Scalar::Util::EXPORT_FAIL)
+  {
+    # we're running on a version of perl that has no weak refs, so we
+    # just install a no-op sub for weaken instead of importing it
+    *weaken = sub {};
+  }
+  else
+  {
+    Scalar::Util->import('weaken');
+  }
+}
 
 sub new
 {

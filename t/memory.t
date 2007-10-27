@@ -1,6 +1,19 @@
 use strict;
 use warnings;
 
+use Test::Tester;
+use Test::More;
+
+BEGIN
+{
+  require Scalar::Util;
+  if (grep /^weaken$/, @Scalar::Util::EXPORT_FAIL)
+  {
+    plan(skip_all => "no weak refs in this version of perl");
+    exit(0);
+  }
+}
+
 use t::std;
 
 use Scalar::Util qw( isweak weaken);
