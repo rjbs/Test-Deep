@@ -1,3 +1,12 @@
+0.099
+
+Don't explode on perl's that don't have weakrefs. If they're not
+available, just don't weaken the refs. It means refs can be cached for
+longer than desirable but it's better than explodiing.
+
+This doesn't fix all of te problems with perl 5.005 but I'm pushing it
+out because the previous version number upsets CPAN.pm.
+
 0.098
 
 Cleaned up Test::Deep::NoTest by making it call Test::Deep's import,
