@@ -839,7 +839,7 @@ C<$got_v eq $expected_v>, we pass control over to the SC and let it do it's
 thing.
 
 Test::Deep exports lots of SC constructors, to make it easy for you to use
-them in you tests scripts. For example is C<re("hello")> is just a handy way
+them in your test scripts. For example is C<re("hello")> is just a handy way
 of creating a Test::Deep::Regexp object that will match any string containing
 "hello". So
 
@@ -847,7 +847,7 @@ of creating a Test::Deep::Regexp object that will match any string containing
 
 will check C<'a' eq 'a'>, C<'b' eq 'b'> but when it comes to comparing
 C<'hello world'> and C<re("^hello")> it will see that
-$expected_v is an SC and so will pass control to the Test::Deep::Regex class
+$expected_v is an SC and so will pass control to the Test::Deep::Regexp class
 by do something like C<$expected_v->descend($got_v)>. The C<descend()>
 method should just return true or false.
 

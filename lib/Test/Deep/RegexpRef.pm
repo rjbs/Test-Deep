@@ -22,8 +22,12 @@ sub descend
 
 	my $exp = $self->{val};
 
-	return 0 unless $self->test_class($got, "Regexp");
-	return 0 unless $self->test_reftype($got, "SCALAR");
+	if ($] <= 5.010) {
+		return 0 unless $self->test_class($got, "Regexp");
+		return 0 unless $self->test_reftype($got, "SCALAR");
+	} else {
+		return 0 unless $self->test_reftype($got, "REGEXP");
+	}
 
 	return Test::Deep::descend($got, Test::Deep::regexprefonly($exp));
 }

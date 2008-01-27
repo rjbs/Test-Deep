@@ -1,3 +1,8 @@
+0.100
+
+Apply patch from Andreas Koenig (ANDK) to cope with Perl 5.11's new
+REGEXP objects.
+
 0.099
 
 Don't explode on perl's that don't have weakrefs. If they're not

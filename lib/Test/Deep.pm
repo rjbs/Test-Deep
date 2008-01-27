@@ -25,7 +25,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.099';
+$VERSION = '0.100';
 
 require Exporter;
 @ISA = qw( Exporter );
@@ -333,7 +333,7 @@ sub wrap
 		{
 			$cmp = scalref($data);
 		}
-		elsif($base eq 'Regexp')
+		elsif($] <= 5.010 ? ($base eq 'Regexp') : ($base eq 'REGEXP'))
 		{
 			$cmp = regexpref($data);
 		}
@@ -357,11 +357,13 @@ sub class_base
 		$blessed = defined($blessed) ? $blessed : "";
 		my $reftype = Scalar::Util::reftype($val);
 
-		if ($blessed eq "Regexp" and $reftype eq "SCALAR")
-		{
-			$reftype = "Regexp"
-		}
 
+		if ($] <= 5.010) {
+			if ($blessed eq "Regexp" and $reftype eq "SCALAR")
+			{
+				$reftype = "Regexp"
+			}
+		}
 		return ($blessed, $reftype);
 	}
 	else
