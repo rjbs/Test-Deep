@@ -7,6 +7,7 @@ use Test::Deep::Cmp;
 
 use overload
 	'&' => \&add,
+	fallback => 1,
 ;
 
 sub init

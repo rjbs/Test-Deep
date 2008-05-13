@@ -1,3 +1,11 @@
+0.101
+
+Fix an overloading problem with All and Any. Thanks to Kostas
+Chatzikokolakis for reporting the bug and especially for explaining
+how to fix it :)
+
+Added a nasty hack to smooth over a problem in Test::Tester.
+
 0.100
 
 Apply patch from Andreas Koenig (ANDK) to cope with Perl 5.11's new
