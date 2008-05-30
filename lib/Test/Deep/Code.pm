@@ -37,10 +37,20 @@ sub diagnostics
 Ran coderef at $where on
 
 $data
-
+EOM
+  if (defined($error))
+  {
+    $diag .= <<EOM;
 and it said
 $error
 EOM
+  }
+  else
+  {
+    $diag .= <<EOM;
+it failed but it didn't say why.
+EOM
+  }
 
 	return $diag;
 }

@@ -1,3 +1,8 @@
+0.102
+
+Behave well when a code comparator doesn't give diagnostics. Thanks to
+Alex Kapranoff.
+
 0.101
 
 Fix an overloading problem with All and Any. Thanks to Kostas

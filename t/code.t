@@ -11,10 +11,14 @@ sub cmp
 	{
 		return 1;
 	}
-	else
+	elsif ($str eq "feargal")
 	{
-		return (0, "your names not down, you're not coming in");
+		return (0, "your name's not down, you're not coming in");
 	}
+  else
+  {
+    return 0;
+  }
 }
 
 {
@@ -29,7 +33,8 @@ sub cmp
 		"code ok"
 	);
 
-	my ($prem, $res) = check_test(
+  my ($prem, $res);
+	($prem, $res) = check_test(
 		sub {
 			cmp_deeply("feargal", code(\&cmp));
 		},
@@ -39,6 +44,19 @@ sub cmp
 		"code not ok"
 	);
 
-	like($res->{diag}, "/your names not down/", "diagnostics");
+	like($res->{diag}, "/your name's not down/", "diagnostics");
 	like($res->{diag}, "/feargal/", "diagnostics");
+
+	($prem, $res)  = check_test(
+		sub {
+			cmp_deeply("fazzer", code(\&cmp));
+		},
+		{
+			actual_ok => 0,
+		},
+		"code not ok"
+	);
+
+	like($res->{diag}, "/it failed but it didn't say why/", "no diagnostics");
+	like($res->{diag}, "/fazzer/", "no diagnostics");
 }
