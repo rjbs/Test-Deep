@@ -25,7 +25,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.102';
+$VERSION = '0.103';
 
 require Exporter;
 @ISA = qw( Exporter );
@@ -66,7 +66,7 @@ my %constructors = (
 	Shallow => "",
 	Any => "",
 	All => "",
-	Isa => "",
+	Isa => "Isa",
 	RegexpRefOnly => "",
 	RefType => "",
 	Blessed => "",
@@ -98,6 +98,25 @@ foreach my $e (@EXPORT)
 {
 	$count{$e}++;
 }
+
+# this is ugly, I should never have exported a sub called isa now I
+# have to try figure out if the recipient wanted my isa or if a class
+# imported us and UNIVERSAL::isa is being called on that class.
+# Luckily our isa always expects 1 argument and U::isa always expects
+# 2, so we can figure out (assuming the caller is no buggy).
+sub isa
+{
+	if (@_ == 1)
+	{
+		goto &Isa;
+	}
+	else
+	{
+		goto &UNIVERSAL::isa;
+	}
+}
+
+push(@EXPORT, "isa");
 
 sub cmp_deeply
 {

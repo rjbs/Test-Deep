@@ -648,12 +648,20 @@ a test passes then none of the tests after that will be attempted.
 
 You can also use overloading with | similarly to all().
 
-=head3 isa($class)
+=head3 isa($class), Isa($class)
 
 $class is a class name.
 
 This uses UNIVERSAL::isa() to check that $got_v is blessed into the class
 $class.
+
+B<NOTE:> Isa() does exactly as documented here, isa() is slightly
+different. If isa() is called with 1 argument it falls through to
+Isa(). If isa() called with 2 arguments, it falls through to
+UNIVERAL::isa. This is to prevent breakage when you import isa() into
+a package that is used as a class. Without this, anyone calling
+C<Class-E<gt>isa($other_class)> would get the wrong answer. This is a
+hack to patch over the fact that isa is exported by default.
 
 =head3 array_each($thing)
 

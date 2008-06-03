@@ -1,3 +1,9 @@
+0.103
+
+Detect whether isa() is being called with 1 or 2 arguments and
+dispatch to the correct function. This is hacky but fixes the problem
+of clashing with UNIVERSAL::isa().
+
 0.102
 
 Behave well when a code comparator doesn't give diagnostics. Thanks to

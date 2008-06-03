@@ -62,3 +62,14 @@ EOM
 		"isa eq"
 	);
 }
+
+package A;
+
+use Test::Deep;
+@A::ISA = qw( Test::Deep );
+
+{
+	::ok(A->isa("Test::Deep"), "U::isa says yes");
+	::ok(! A->isa("Test"), "U::isa says yes");
+}
+
