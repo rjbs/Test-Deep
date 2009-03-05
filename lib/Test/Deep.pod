@@ -281,6 +281,9 @@ comparison, exactly what it does depends on which special comparison it is.
 
 Is shorthand for cmp_deeply(\@got, bag(@bag), $name)
 
+N.B. Both arguments must be array refs. If they aren't an error will
+be raised via die.
+
 =head3 $ok = cmp_set(\@got, \@set, $name)
 
 Is shorthand for cmp_deeply(\@got, set(@set), $name)
@@ -301,6 +304,17 @@ import it through L<Test::Deep::NoTest>. For example
 
 otherwise the L<Test::Builder> framework will be loaded and testing messages
 will be output when your program ends.
+
+=head3 ($ok, $stack) = cmp_details($got, $expected)
+
+This behaves much like eq_deeply, but it additionally allows you to
+produce diagnostics in case of failure by passing the value in C<$stack>
+to C<deep_diag>.
+
+Do not make assumptions about the structure or content of C<$stack> and
+do not use it if C<$ok> contains a true value.
+
+See L</USING TEST::DEEP WITH TEST::BUILDER> for example uses.
 
 =head1 SPECIAL COMPARISONS PROVIDED
 
@@ -768,6 +782,16 @@ which gives an explanation of why it's a fail.
 
   cmp_deeply("Brian", \&check_name);
 
+=head1 DIAGNOSTIC FUNCTIONS
+
+=head3 my $reason = deep_diag($stack)
+
+C<$stack> is a value returned by cmp_details.  Do not call this function
+if cmp_details returned a true value for C<$ok>.
+
+deep_diag() returns a human readable string describing how the
+comparison failed.
+
 =head1 ANOTHER EXAMPLE
 
 You've written a module to handle people and their film interests. Say you
@@ -827,7 +851,32 @@ other bag comparison, giving us something like
     )
   );
 
-=head1 LIMITITATIONS
+=head1 USING TEST::DEEP WITH TEST::BUILDER
+
+Combining C<cmp_details> and C<test_diag> makes it possible to use
+Test::Deep in your own test classes.
+
+In a L<Test::Builder> subclass, create a test method in the following
+form:
+
+  sub behaves_ok {
+    my $self = shift;
+    my $expected = shift;
+    my $test_name = shift;
+
+    my $got = do_the_important_work_here();
+
+    my ($ok, $stack) = cmp_details($got, $expected);
+    unless ($Test->ok($ok, $test_name)) {
+      my $diag = deep_diag($stack);
+      $Test->diag($diag);
+    }
+  }
+
+As the subclass defines a test class, not tests themselves, make sure it
+uses L<Test::Deep::NoTest>, not C<Test::Deep> itself.
+
+=head1 LIMITATIONS
 
 Currently any CODE, GLOB or IO refs will be compared using shallow(), which
 means only their memory addresses are compared.

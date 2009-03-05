@@ -1,3 +1,11 @@
+0.104
+
+Document behaviour of cmp_bag when a non ARRAY-ref argument is passed
+to it. Explicity test for this a die with a useful message.
+
+Document and export cmp_details and deep_diag, thanks to Tom Hukins
+for the patch.
+
 0.103
 
 Detect whether isa() is being called with 1 or 2 arguments and

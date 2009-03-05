@@ -243,4 +243,12 @@ EOM
 		},
 		"subbagof no"
 	);
+
+  eval {
+    my @res = run_tests(
+      sub { cmp_bag([], {}) }
+    )
+  };
+  like($@, qr/Argument 2 to cmp_bag is not an ARRAY ref \(HASH.*\)/,
+    "check arg 1")
 }
