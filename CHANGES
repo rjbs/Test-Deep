@@ -1,3 +1,12 @@
+0.106
+
+Release after dev.
+
+0.105-dev
+
+Fix for perl 5.010.1 - the code to check the version and act correctly
+on regexp refs treated .1 as behaving like 5.011.
+
 0.104
 
 Document behaviour of cmp_bag when a non ARRAY-ref argument is passed

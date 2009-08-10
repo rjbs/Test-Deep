@@ -28,5 +28,5 @@ use Test::Deep qw( cmp_deeply descend render_stack methods deep_diag class_base 
 
 	my ($class, $base) = class_base($a);
 	is($class, "Regexp", "class_base class regexp");
-	is($base, ($] <= 5.010 ? "Regexp" : "REGEXP"), "class_base base regexp");
+	is($base, ($] < 5.011 ? "Regexp" : "REGEXP"), "class_base base regexp");
 }

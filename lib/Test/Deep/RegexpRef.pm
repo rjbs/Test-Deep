@@ -4,6 +4,7 @@ use warnings;
 package Test::Deep::RegexpRef;
 
 use Test::Deep::Ref;
+use Test::Deep::RegexpVersion;
 
 sub init
 {
@@ -22,7 +23,7 @@ sub descend
 
 	my $exp = $self->{val};
 
-	if ($] <= 5.010) {
+	if ($Test::Deep::RegexpVersion::OldStyle) {
 		return 0 unless $self->test_class($got, "Regexp");
 		return 0 unless $self->test_reftype($got, "SCALAR");
 	} else {

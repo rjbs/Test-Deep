@@ -34,6 +34,7 @@ lib/Test/Deep/RegexpMatches.pm
 lib/Test/Deep/RegexpOnly.pm
 lib/Test/Deep/RegexpRef.pm
 lib/Test/Deep/RegexpRefOnly.pm
+lib/Test/Deep/RegexpVersion.pm
 lib/Test/Deep/ScalarRef.pm
 lib/Test/Deep/ScalarRefOnly.pm
 lib/Test/Deep/Set.pm
