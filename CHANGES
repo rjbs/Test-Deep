@@ -1,6 +1,8 @@
 
 0.170     2009-09-28
 
+          New maintainer:  Ricardo Signes (rjbs)
+
           On 5.10.0 and newer perl, install to the "site" directory, not the
           core perl directory in @INC.  (Prior to 5.10.0, @INC ordering was
           unfortunate, and fixing the install target would make upgrading

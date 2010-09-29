@@ -915,10 +915,18 @@ diagnostics works because it's about to get an overhaul.
 
 L<Test::More>
 
+=head1 MAINTAINER
+
+  Ricardo Signes <rjbs@cpan.org>
+
 =head1 AUTHOR
 
 Fergal Daly E<lt>fergal@esatclear.ieE<gt>, with thanks to Michael G Schwern
 for Test::More's is_deeply function which inspired this.
+
+B<Please> do not bother Fergal Daly with bug reports.  Send them to the
+maintainer (above) or submit them at L<the request
+tracker|https://rt.cpan.org/Dist/Display.html?Queue=Test-Deep>.
 
 =head1 COPYRIGHT
 
