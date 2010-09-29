@@ -29,5 +29,7 @@ WriteMakefile(
 
       # apparently CPAN doesn't get the version of Scalar::Util
       'List::Util'       => '1.09',
-	}
+	},
+
+  ($] < 5.010 ? (INSTALLDIRS => 'perl') : ()),
 );

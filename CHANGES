@@ -1,6 +1,10 @@
 
 0.170     2009-09-28
-          install to site perl, not core perl, @INC entries; we are not core
+
+          On 5.10.0 and newer perl, install to the "site" directory, not the
+          core perl directory in @INC.  (Prior to 5.10.0, @INC ordering was
+          unfortunate, and fixing the install target would make upgrading
+          difficult.)
 
           cope with new stringification of qr{} objects in 5.13.x+ (thanks,
           ANDK)
