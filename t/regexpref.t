@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use t::std;
-
+my $xism = qr/x/=~/\(\?\^/ ? "^" : "-xism";
 {
 	check_test(
 		sub {
@@ -23,8 +23,8 @@ use t::std;
 			actual_ok => 0,
 			diag => <<EOM,
 Compared m/\$data/
-   got : (?-xism:a)
-expect : (?-xism:b)
+   got : (?$xism:a)
+expect : (?$xism:b)
 EOM
 		}
 	);

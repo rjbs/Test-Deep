@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use t::std;
-
+my $xism = qr/x/=~/\(\?\^/ ? "^" : "-xism";
 {
 	my $str = "ferg";
 	my $re = qr/$str/;
@@ -89,7 +89,7 @@ EOM
 		{
 			actual_ok => 0,
 			diag => <<EOM,
-Compared [\$data =~ (?-xism:([ac]))]->[1]
+Compared [\$data =~ (?$xism:([ac]))]->[1]
    got : 'c'
 expect : 'b'
 EOM
@@ -120,7 +120,7 @@ EOM
 		{
 			actual_ok => 0,
 			diag => <<EOM,
-Comparing [\$data =~ (?-xism:(\\D+)=\\d+,?)] as a Set
+Comparing [\$data =~ (?$xism:(\\D+)=\\d+,?)] as a Set
 Extra: 'goat'
 EOM
 		},
