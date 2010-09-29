@@ -164,7 +164,7 @@ C<re($regex)> means that Test::Deep should check that the current piece of
 data matches the regex in C<$regex>. C<array_each($struct)> means that
 Test::Deep should expect the current piece of data to be an array and it
 should check that every element of that array matches C<$struct>.
-In this case, every element of C<$person->{ChildNames}> should look like a
+In this case, every element of C<< $person->{ChildNames} >> should look like a
 name. If say the 3rd one didn't you would get an error message something
 like
 
@@ -244,8 +244,8 @@ saying that a person should also list their parents.
 
   cmp_deeply($person, $person_cmp, "person ok");
 
-So this will check that for each child C<$child> in C<$person->{Children}>
-that the C<$child->{Parents} matches C<$person_cmp> however it is smart
+So this will check that for each child C<$child> in C<< $person->{Children} >>
+that the C<< $child->{Parents} >> matches C<$person_cmp> however it is smart
 enough not to get caught in an infinite loop where it keeps bouncing between
 the same Parent and Child.
 
@@ -568,7 +568,7 @@ There are two things that could happen, hopefully C<re("^fur")> is paired with
 could happen that C<re("^fur")> is paired with "furball" and then C<re("^furb")>
 cannot find a match and so the test fails. Examples of other competing
 comparisons are C<bag(1, 2, 2)> vs C<set(1, 2)> and
-C<methods(m1 => "v1", m2 => "v2")> vs C<methods(m1 => "v1")>
+C<< methods(m1 => "v1", m2 => "v2") >> vs C<< methods(m1 => "v1") >>
 
 This problem is could be solved by using a slower and more complicated
 algorithm for set and bag matching. Something for the future...
@@ -905,7 +905,7 @@ of creating a Test::Deep::Regexp object that will match any string containing
 will check C<'a' eq 'a'>, C<'b' eq 'b'> but when it comes to comparing
 C<'hello world'> and C<re("^hello")> it will see that
 $expected_v is an SC and so will pass control to the Test::Deep::Regexp class
-by do something like C<$expected_v->descend($got_v)>. The C<descend()>
+by do something like C<< $expected_v->descend($got_v) >>. The C<descend()>
 method should just return true or false.
 
 This gives you enough to write your own SCs but I haven't documented how
