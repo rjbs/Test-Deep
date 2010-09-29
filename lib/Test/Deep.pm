@@ -27,7 +27,7 @@ use vars qw(
 	$Snobby $Expects $DNE $DNE_ADDR $Shallow
 );
 
-$VERSION = '0.106';
+$VERSION = '0.107';
 $VERSION = eval $VERSION;
 
 require Exporter;
