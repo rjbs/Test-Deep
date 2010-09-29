@@ -21,7 +21,7 @@ Test::Deep - Extremely flexible deep comparison
 
   cmp_deeply(
     \@array,
-    [$hash1, $hash2, ignore(
+    [$hash1, $hash2, ignore()],
     "first 2 elements are as expected, ignoring 3"
   );
 
