@@ -11,25 +11,25 @@ use ExtUtils::MakeMaker;
 my $tt_prereq = "0.04";
 
 if (eval { require Test::Tester; require Test::Builder; 1 } &&
-    $Test::Tester::VERSION <= 0.106 &&
-    $Test::Builder::VERSION >= 0.78) {
+  $Test::Tester::VERSION <= 0.106 &&
+  $Test::Builder::VERSION >= 0.78) {
 
   $tt_prereq = "0.107";
 }
 
 WriteMakefile(
-	AUTHOR => 'Fergal Daly <fergal@esatclear.ie>',
-	NAME => 'Test::Deep',
-	VERSION_FROM => './lib/Test/Deep.pm',
-	PREREQ_PM    => {
-    'Test::More'         => '0',
-      'Test::Tester'     => $tt_prereq,
-      'Test::NoWarnings' => '0.02',
-      'Scalar::Util'     => '1.09',
+  AUTHOR       => 'Fergal Daly <fergal@esatclear.ie>',
+  NAME         => 'Test::Deep',
+  VERSION_FROM => './lib/Test/Deep.pm',
+  PREREQ_PM    => {
+    'Test::More'       => '0',
+    'Test::Tester'     => $tt_prereq,
+    'Test::NoWarnings' => '0.02',
+    'Scalar::Util'     => '1.09',
 
-      # apparently CPAN doesn't get the version of Scalar::Util
-      'List::Util'       => '1.09',
-	},
+    # apparently CPAN doesn't get the version of Scalar::Util
+    'List::Util'       => '1.09',
+  },
 
   ($] < 5.010 ? (INSTALLDIRS => 'perl') : ()),
 );
