@@ -256,6 +256,19 @@ sub descend
 {
 	my ($d1, $d2) = @_;
 
+	if (!ref $d1 and !ref $d2)
+	{
+    # Shortcut comparison for the non-reference case.
+    if (defined $d1)
+    {
+      return 1 if defined $d2 and $d1 eq $d2;
+    }
+    else
+    {
+      return 1 if !defined $d2;
+    }
+	}
+
 	if (! $Expects and ref($d1) and UNIVERSAL::isa($d1, "Test::Deep::Cmp"))
 	{
 		my $where = $Stack->render('$data');

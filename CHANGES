@@ -1,4 +1,9 @@
 
+0.171     2009-1015
+
+          simple (stringwise) comparison should now be much faster (thanks,
+          NCLEATON)
+
 0.170     2009-09-28
 
           New maintainer:  Ricardo Signes (rjbs)
