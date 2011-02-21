@@ -604,7 +604,7 @@ These do exactly what you'd expect them to do, so for example
 
 checks that @$data contains at most 2 "1"s, 1 "3" and 1 "4" and
 
-  cmp_deeply($data, supsersetof(1, 4));
+  cmp_deeply($data, supersetof(1, 4));
 
 check that @$data contains at least 1 "1" and 1 "4".
 
