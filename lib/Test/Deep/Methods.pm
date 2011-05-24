@@ -4,6 +4,7 @@ use warnings;
 package Test::Deep::Methods;
 
 use Test::Deep::Cmp;
+use Scalar::Util;
 
 sub init
 {
@@ -39,7 +40,7 @@ sub descend
 		my ($call, $exp_res) = @$method;
 		my ($name) = @$call;
 
-		my $got_res = UNIVERSAL::can($got, $name) ?
+		my $got_res = Scalar::Util::blessed($got) && $got->can($name) ?
 			$self->call_method($got, $call) :
 			$Test::Deep::DNE;
 

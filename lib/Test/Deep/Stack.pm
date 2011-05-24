@@ -4,6 +4,7 @@ use warnings;
 package Test::Deep::Stack;
 
 use Carp qw( confess );
+use Scalar::Util;
 
 use Test::Deep::MM qw( new init Stack Arrow );
 
@@ -42,7 +43,7 @@ sub render
 	foreach my $data (@$stack)
 	{
 		my $exp = $data->{exp};
-		if (UNIVERSAL::isa($exp, "Test::Deep::Cmp"))
+		if (Scalar::Util::blessed($exp) and $exp->isa("Test::Deep::Cmp"))
 		{
 			$var = $exp->render_stack($var, $data);
 

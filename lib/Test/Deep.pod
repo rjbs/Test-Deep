@@ -669,13 +669,17 @@ $class is a class name.
 This uses UNIVERSAL::isa() to check that $got_v is blessed into the class
 $class.
 
-B<NOTE:> Isa() does exactly as documented here, isa() is slightly
+B<NOTE:> Isa() does exactly as documented here, but isa() is slightly
 different. If isa() is called with 1 argument it falls through to
 Isa(). If isa() called with 2 arguments, it falls through to
-UNIVERAL::isa. This is to prevent breakage when you import isa() into
+UNIVERSAL::isa. This is to prevent breakage when you import isa() into
 a package that is used as a class. Without this, anyone calling
 C<Class-E<gt>isa($other_class)> would get the wrong answer. This is a
 hack to patch over the fact that isa is exported by default.
+
+However, you really shouldn't be calling C<isa()> as a function - see
+L<UNIVERSAL>, and if you clean your namespaces (e.g. see L<namespace::clean>)
+then this import will no longer be available via C<$class->isa>.
 
 =head3 array_each($thing)
 
