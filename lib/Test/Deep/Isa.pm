@@ -4,6 +4,7 @@ use warnings;
 package Test::Deep::Isa;
 
 use Test::Deep::Cmp;
+use Scalar::Util;
 
 sub init
 {
@@ -18,7 +19,9 @@ sub descend
 	my $self = shift;
 	my $got = shift;
 
-	return UNIVERSAL::isa($got, $self->{val});
+        return Scalar::Util::blessed($got)
+            ? $got->isa($self->{val})
+            : ref($got) eq $self->{val};
 }
 
 sub diag_message

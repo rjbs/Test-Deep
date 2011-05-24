@@ -16,7 +16,7 @@ sub init
 	my $val = shift;
 
 	$val = Test::Deep::array($val) unless
-		blessed($val) and UNIVERSAL::isa($val, "Test::Deep::Cmp");
+		blessed($val) and $val->isa("Test::Deep::Cmp");
 
 	$self->{val} = $val;
 	$self->{regex} = shift;

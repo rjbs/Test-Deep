@@ -1,3 +1,8 @@
+{{$NEXT}}
+
+          Test::Deep now co-exists harmoniously with Test::Mock, by not
+          calling UNIVERSAL::isa and UNIVERAL::can as functions. (RT#74760,
+          Karen Etheridge)
 
 0.108     2010-10-15
 
