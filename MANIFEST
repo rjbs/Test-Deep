@@ -1,6 +1,5 @@
 CHANGES
 lib/Test/Deep.pm
-lib/Test/Deep.pod
 lib/Test/Deep/All.pm
 lib/Test/Deep/Any.pm
 lib/Test/Deep/Array.pm
