@@ -9,6 +9,7 @@ use overload
 	'""' => \&string,
 	fallback => 1,
 ;
+use Scalar::Util;
 
 sub import
 {
@@ -41,12 +42,12 @@ sub make_all
 {
 	my ($e1, $e2) = @_;
 
-	if (UNIVERSAL::isa($e1, "Test::Deep::All"))
+	if (Scalar::Util::blessed($e1) and $e1->isa("Test::Deep::All"))
 	{
 		$e1->add($e2);
 		return $e1;
 	}
-	elsif(UNIVERSAL::isa($e2, "Test::Deep::All"))
+	elsif(Scalar::Util::blessed($e2) and $e2->isa("Test::Deep::All"))
 	{
 		$e2->add($e1);
 		return $e2;
@@ -61,12 +62,12 @@ sub make_any
 {
 	my ($e1, $e2) = @_;
 
-	if (UNIVERSAL::isa($e1, "Test::Deep::Any"))
+	if (Scalar::Util::blessed($e1) and $e1->isa("Test::Deep::Any"))
 	{
 		$e1->add($e2);
 		return $e1;
 	}
-	elsif(UNIVERSAL::isa($e2, "Test::Deep::Any"))
+	elsif(Scalar::Util::blessed($e2) and $e2->isa("Test::Deep::Any"))
 	{
 		$e2->add($e1);
 		return $e2;

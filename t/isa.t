@@ -73,3 +73,23 @@ use Test::Deep;
 	::ok(! A->isa("Test"), "U::isa says yes");
 }
 
+
+{
+    package C;
+    use base 'A';
+}
+package main;
+{
+        my $c = bless {}, "C";
+	check_test(
+		sub {
+			cmp_deeply($c, isa("A"));
+		},
+		{
+			actual_ok => 1,
+			diag => "",
+		},
+		"isa eq"
+	);
+}
+
