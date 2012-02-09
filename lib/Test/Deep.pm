@@ -106,7 +106,7 @@ foreach my $e (@EXPORT)
 # have to try figure out if the recipient wanted my isa or if a class
 # imported us and UNIVERSAL::isa is being called on that class.
 # Luckily our isa always expects 1 argument and U::isa always expects
-# 2, so we can figure out (assuming the caller is no buggy).
+# 2, so we can figure out (assuming the caller is not buggy).
 sub isa
 {
 	if (@_ == 1)
@@ -197,7 +197,7 @@ sub deep_diag
 	my $expected;
 
 	my $exp = $last->{exp};
-	if (ref $exp)
+	if (Scalar::Util::blessed($exp))
 	{
 		if ($exp->can("diagnostics"))
 		{
@@ -269,7 +269,7 @@ sub descend
     }
 	}
 
-	if (! $Expects and ref($d1) and UNIVERSAL::isa($d1, "Test::Deep::Cmp"))
+	if (! $Expects and Scalar::Util::blessed($d1) and $d1->isa("Test::Deep::Cmp"))
 	{
 		my $where = $Stack->render('$data');
 		confess "Found a special comparison in $where\nYou can only the specials in the expects structure";
@@ -280,7 +280,7 @@ sub descend
 		# this check is only done when we're comparing 2 expecteds against each
 		# other
 
-		if ($Expects and UNIVERSAL::isa($d1, "Test::Deep::Cmp"))
+		if ($Expects and Scalar::Util::blessed($d1) and $d1->isa("Test::Deep::Cmp"))
 		{
 			# check they are the same class
 			return 0 unless Test::Deep::blessed(Scalar::Util::blessed($d2))->descend($d1);
@@ -340,7 +340,7 @@ sub wrap
 {
 	my $data = shift;
 
-	return $data if ref($data) and UNIVERSAL::isa($data, "Test::Deep::Cmp");
+	return $data if Scalar::Util::blessed($data) and $data->isa("Test::Deep::Cmp");
 
 	my ($class, $base) = class_base($data);
 
@@ -1201,13 +1201,16 @@ $class is a class name.
 This uses UNIVERSAL::isa() to check that $got_v is blessed into the class
 $class.
 
-B<NOTE:> Isa() does exactly as documented here, isa() is slightly
+B<NOTE:> Isa() does exactly as documented here, but isa() is slightly
 different. If isa() is called with 1 argument it falls through to
 Isa(). If isa() called with 2 arguments, it falls through to
-UNIVERAL::isa. This is to prevent breakage when you import isa() into
+UNIVERSAL::isa. This is to prevent breakage when you import isa() into
 a package that is used as a class. Without this, anyone calling
 C<Class-E<gt>isa($other_class)> would get the wrong answer. This is a
 hack to patch over the fact that isa is exported by default.
+
+However, you really shouldn't be calling C<isa()> as a function, unless you
+really mean Test::Deep's version - see L<UNIVERSAL>.
 
 =head3 array_each($thing)
 

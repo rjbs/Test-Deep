@@ -1,3 +1,7 @@
+{{$NEXT}}
+
+          UNIVERSAL::isa and UNIVERAL::can are no longer called as functions:
+          this was deprecated in UNIVERSAL 1.03. (RT#74760, Karen Etheridge)
 
 0.108     2010-10-15
 
