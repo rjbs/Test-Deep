@@ -1209,10 +1209,6 @@ a package that is used as a class. Without this, anyone calling
 C<Class-E<gt>isa($other_class)> would get the wrong answer. This is a
 hack to patch over the fact that isa is exported by default.
 
-However, you really shouldn't be calling C<isa()> as a function - see
-L<UNIVERSAL>, and if you clean your namespaces (e.g. see L<namespace::clean>)
-then this import will no longer be available via C<< $class->isa >>.
-
 =head3 array_each($thing)
 
 $thing is a structure to be compared against.
