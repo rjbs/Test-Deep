@@ -97,11 +97,6 @@ while (my ($pkg, $name) = each %constructors)
 	}
 	push(@EXPORT, $name);
 }
-my %count;
-foreach my $e (@EXPORT)
-{
-	$count{$e}++;
-}
 
 # this is ugly, I should never have exported a sub called isa now I
 # have to try figure out if the recipient wanted my isa or if a class
