@@ -33,9 +33,10 @@ $VERSION = eval $VERSION;
 require Exporter;
 @ISA = qw( Exporter );
 
-@EXPORT = qw( eq_deeply cmp_deeply cmp_set cmp_bag cmp_methods
-        useclass noclass set bag subbagof superbagof subsetof
-        supersetof superhashof subhashof
+@EXPORT = qw(
+	eq_deeply cmp_deeply cmp_set cmp_bag cmp_methods
+	useclass noclass set bag subbagof superbagof subsetof
+	supersetof superhashof subhashof
 );
 	# plus all the ones generated from %constructors below
 
