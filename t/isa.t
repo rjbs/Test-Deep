@@ -75,12 +75,12 @@ use Test::Deep;
 
 
 {
-    package C;
-    use base 'A';
+	package C;
+	use base 'A';
 }
 package main;
 {
-        my $c = bless {}, "C";
+	my $c = bless {}, "C";
 	check_test(
 		sub {
 			cmp_deeply($c, isa("A"));

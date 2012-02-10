@@ -19,9 +19,9 @@ sub descend
 	my $self = shift;
 	my $got = shift;
 
-        return Scalar::Util::blessed($got)
-            ? $got->isa($self->{val})
-            : ref($got) eq $self->{val};
+	return Scalar::Util::blessed($got)
+		? $got->isa($self->{val})
+		: ref($got) eq $self->{val};
 }
 
 sub diag_message
