@@ -98,6 +98,10 @@ while (my ($pkg, $name) = each %constructors)
 	push(@EXPORT, $name);
 }
 
+our %EXPORT_TAGS = (
+	all => [ @EXPORT ],
+);
+
 # this is ugly, I should never have exported a sub called isa now I
 # have to try figure out if the recipient wanted my isa or if a class
 # imported us and UNIVERSAL::isa is being called on that class.
