@@ -358,7 +358,7 @@ sub wrap
 		my $addr = Scalar::Util::refaddr($data);
 
 		return $WrapCache{$addr} if $WrapCache{$addr};
-		
+
 		if($base eq 'ARRAY')
 		{
 			$cmp = array($data);
@@ -626,7 +626,7 @@ didn't even return a hash? We really need to write
   if (ref($hash) eq "HASH")
   {
     like($hash->{Name}, '/^(Mr|Mrs|Miss) \w+ \w+$/', "name ok");
-    like($hash->{Phone}, '/^0d{6}$/', "phone ok");    
+    like($hash->{Phone}, '/^0d{6}$/', "phone ok");
     is(scalar keys %$hash, 2, "correct number of keys");
   }
   else
@@ -1231,7 +1231,7 @@ for each one.
 
   cmp_deeply($got, array_each($common_tests));
 
-is similar to 
+is similar to
 
   foreach my $got_v (@$got) {
     cmp_deeply($got_v, $common_tests)
@@ -1467,7 +1467,7 @@ tracker|https://rt.cpan.org/Dist/Display.html?Queue=Test-Deep>.
 
 Copyright 2003, 2004 by Fergal Daly E<lt>fergal@esatclear.ieE<gt>.
 
-This program is free software; you can redistribute it and/or 
+This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 See F<http://www.perl.com/perl/misc/Artistic.html>
