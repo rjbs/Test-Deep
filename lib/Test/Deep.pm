@@ -27,17 +27,6 @@ $VERSION = eval $VERSION;
 require Exporter;
 our @ISA = qw( Exporter );
 
-our @EXPORT = qw(
-	eq_deeply cmp_deeply cmp_set cmp_bag cmp_methods
-	useclass noclass set bag subbagof superbagof subsetof
-	supersetof superhashof subhashof
-
-	isa
-);
-# ...plus all the ones generated from %constructors below
-
-our @EXPORT_OK = qw( descend render_stack class_base cmp_details deep_diag );
-
 our $Snobby = 1; # should we compare classes?
 our $Expects = 0; # are we comparing got vs expect or expect vs expect
 
@@ -77,6 +66,8 @@ my %constructors = (
   String            => "str",
 );
 
+our @CONSTRUCTORS_FROM_CLASSES;
+
 while (my ($pkg, $name) = each %constructors)
 {
 	$name = lc($pkg) unless $name;
@@ -91,12 +82,31 @@ while (my ($pkg, $name) = each %constructors)
 		no strict 'refs';
 		*{$name} = $sub;
 	}
-	push(@EXPORT, $name);
+
+  push @CONSTRUCTORS_FROM_CLASSES, $name;
 }
 
-our %EXPORT_TAGS = (
-	all => [ @EXPORT ],
-);
+{
+  our @EXPORT_OK = qw( descend render_stack class_base cmp_details deep_diag );
+
+  our %EXPORT_TAGS;
+  $EXPORT_TAGS{v0} = [
+    qw(
+      Isa
+
+      all any array array_each arrayelementsonly arraylength arraylengthonly
+      bag blessed bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
+      hash hash_each hashkeys hashkeysonly ignore isa listmethods methods
+      noclass num re reftype regexpmatches regexponly regexpref regexprefonly
+      scalarrefonly scalref set shallow str subbagof subhashof subsetof
+      superbagof superhashof supersetof useclass
+    )
+  ];
+
+  our @EXPORT = @{ $EXPORT_TAGS{ v0 } };
+
+  $EXPORT_TAGS{all} = [ @EXPORT, @EXPORT_OK ];
+}
 
 # this is ugly, I should never have exported a sub called isa now I
 # have to try figure out if the recipient wanted my isa or if a class
