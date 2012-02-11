@@ -37,8 +37,10 @@ require Exporter;
 	eq_deeply cmp_deeply cmp_set cmp_bag cmp_methods
 	useclass noclass set bag subbagof superbagof subsetof
 	supersetof superhashof subhashof
+
+	isa
 );
-	# plus all the ones generated from %constructors below
+# ...plus all the ones generated from %constructors below
 
 @EXPORT_OK = qw( descend render_stack class_base cmp_details deep_diag );
 
@@ -118,8 +120,6 @@ sub isa
 		goto &UNIVERSAL::isa;
 	}
 }
-
-push(@EXPORT, "isa");
 
 sub cmp_deeply
 {
