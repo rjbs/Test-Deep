@@ -21,19 +21,15 @@ unless (defined $Test::Deep::NoTest::NoTest)
 
 use Data::Dumper qw(Dumper);
 
-use vars qw(
-	$VERSION @EXPORT @EXPORT_OK @ISA
-	$Stack %Compared $CompareCache %WrapCache
-	$Snobby $Expects $DNE $DNE_ADDR $Shallow
-);
+our ($Stack, %Compared, $CompareCache, %WrapCache, $Shallow);
 
-$VERSION = '0.108';
+our $VERSION = '0.108';
 $VERSION = eval $VERSION;
 
 require Exporter;
-@ISA = qw( Exporter );
+our @ISA = qw( Exporter );
 
-@EXPORT = qw(
+our @EXPORT = qw(
 	eq_deeply cmp_deeply cmp_set cmp_bag cmp_methods
 	useclass noclass set bag subbagof superbagof subsetof
 	supersetof superhashof subhashof
@@ -42,13 +38,13 @@ require Exporter;
 );
 # ...plus all the ones generated from %constructors below
 
-@EXPORT_OK = qw( descend render_stack class_base cmp_details deep_diag );
+our @EXPORT_OK = qw( descend render_stack class_base cmp_details deep_diag );
 
-$Snobby = 1; # should we compare classes?
-$Expects = 0; # are we comparing got vs expect or expect vs expect
+our $Snobby = 1; # should we compare classes?
+our $Expects = 0; # are we comparing got vs expect or expect vs expect
 
-$DNE = \"";
-$DNE_ADDR = Scalar::Util::refaddr($DNE);
+our $DNE = \"";
+our $DNE_ADDR = Scalar::Util::refaddr($DNE);
 
 # if no sub name is supplied then we use the package name in lower case
 my %constructors = (
