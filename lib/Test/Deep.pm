@@ -19,8 +19,6 @@ unless (defined $Test::Deep::NoTest::NoTest)
 	$Test = Test::Builder->new;
 }
 
-use Data::Dumper qw(Dumper);
-
 our ($Stack, %Compared, $CompareCache, %WrapCache, $Shallow);
 
 our $VERSION = '0.108';
@@ -227,7 +225,6 @@ EOM
 
 sub render_val
 {
-	# add in Data::Dumper stuff
 	my $val = shift;
 
 	my $rendered;
