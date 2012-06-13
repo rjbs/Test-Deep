@@ -1,5 +1,8 @@
 Revision history for Test-Deep
 
+          Allow methods() and listmethods() to work again on class methods
+          (RT#77804) (thanks, Ricardo Signes!)
+
 0.109     2012-02-16
 
           UNIVERSAL::isa and UNIVERAL::can are no longer called as functions:
