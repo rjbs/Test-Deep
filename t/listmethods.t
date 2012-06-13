@@ -3,12 +3,11 @@ use warnings;
 
 use t::std;
 
+foreach my $thing (fake->new, 'fake')
 {
-	my $obj = fake->new;
-
 	check_test(
 		sub {
-			cmp_deeply($obj, listmethods(meth1 => ["val1"], meth2 => ['a', 'b']));
+			cmp_deeply($thing, listmethods(meth1 => ["val1"], meth2 => ['a', 'b']));
 		},
 		{
 			actual_ok => 1,
@@ -18,7 +17,7 @@ use t::std;
 	);
 	check_test(
 		sub {
-			cmp_deeply($obj, listmethods(meth1 => ["val1"], meth2 => ['a', 'c']));
+			cmp_deeply($thing, listmethods(meth1 => ["val1"], meth2 => ['a', 'c']));
 		},
 		{
 			actual_ok => 0,
@@ -32,7 +31,7 @@ EOM
 	);
 	check_test(
 		sub {
-			cmp_deeply($obj, listmethods(['plus1', 2] => ["a", "a", "a"]));
+			cmp_deeply($thing, listmethods(['plus1', 2] => ["a", "a", "a"]));
 		},
 		{
 			actual_ok => 1,
@@ -42,7 +41,7 @@ EOM
 	);
 	check_test(
 		sub {
-			cmp_deeply($obj, listmethods(['plus1', 2] => ["a", "b", "a"]));
+			cmp_deeply($thing, listmethods(['plus1', 2] => ["a", "b", "a"]));
 		},
 		{
 			actual_ok => 0,
@@ -58,7 +57,7 @@ EOM
 	my $v3 = ['val3'];
 	check_test(
 		sub {
-			cmp_deeply($obj, listmethods(meth1 => ["val1"], meth3 => $v3));
+			cmp_deeply($thing, listmethods(meth1 => ["val1"], meth3 => $v3));
 		},
 		{
 			actual_ok => 0,
@@ -73,7 +72,7 @@ EOM
 }
 
 {
-	my $obj = fake->new;
+        my $obj = fake->new;
 
 	check_test(
 		sub {

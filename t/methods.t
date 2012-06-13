@@ -3,12 +3,11 @@ use warnings;
 
 use t::std;
 
+foreach my $thing (fake->new, 'fake')
 {
-	my $obj = fake->new;
-
 	check_test(
 		sub {
-			cmp_deeply($obj, methods(meth1 => "val1", meth2 => ['a', 'b']));
+			cmp_deeply($thing, methods(meth1 => "val1", meth2 => ['a', 'b']));
 		},
 		{
 			actual_ok => 1,
@@ -18,7 +17,7 @@ use t::std;
 	);
 	check_test(
 		sub {
-			cmp_deeply($obj, methods(meth1 => "val1", meth2 => ['a', 'c']));
+			cmp_deeply($thing, methods(meth1 => "val1", meth2 => ['a', 'c']));
 		},
 		{
 			actual_ok => 0,
@@ -32,7 +31,7 @@ EOM
 	);
 	check_test(
 		sub {
-			cmp_deeply($obj, methods(['plus1', 2] => 3));
+			cmp_deeply($thing, methods(['plus1', 2] => 3));
 		},
 		{
 			actual_ok => 1,
@@ -42,7 +41,7 @@ EOM
 	);
 	check_test(
 		sub {
-			cmp_deeply($obj, methods(['plus1', 2] => 2));
+			cmp_deeply($thing, methods(['plus1', 2] => 2));
 		},
 		{
 			actual_ok => 0,
@@ -57,7 +56,7 @@ EOM
 
 	check_test(
 		sub {
-			cmp_deeply($obj, methods(meth1 => "val1", meth3 => "val3"));
+			cmp_deeply($thing, methods(meth1 => "val1", meth3 => "val3"));
 		},
 		{
 			actual_ok => 0,
@@ -72,7 +71,7 @@ EOM
 }
 
 {
-	my $obj = fake->new;
+        my $obj = fake->new;
 
 	check_test(
 		sub {
