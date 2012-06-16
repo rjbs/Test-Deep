@@ -1,5 +1,7 @@
 Revision history for Test-Deep
 
+0.110     2012-06-16
+
           Allow methods() and listmethods() to work again on class methods
           (RT#77804) (thanks, Ricardo Signes!)
 
