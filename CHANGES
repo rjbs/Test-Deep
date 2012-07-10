@@ -1,5 +1,9 @@
 Revision history for Test-Deep
 
+          When printing diagnostics, differentiate the type of a blessed object
+          from the name of the class itself (RT#78288, caused by changes to how
+          blessed objects are treated in 0.109) (Karen Etheridge)
+
 0.110     2012-06-16
 
           Allow methods() and listmethods() to work again on class methods
