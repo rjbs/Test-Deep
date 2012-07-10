@@ -42,7 +42,7 @@ use t::std;
 			diag => <<EOM,
 Checking class of \$data with isa()
    got : $b
-expect : 'A'
+expect : blessed into 'A'
 EOM
 		},
 		"isa eq"
