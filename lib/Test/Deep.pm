@@ -275,7 +275,7 @@ sub descend
 	if (! $Expects and Scalar::Util::blessed($d1) and $d1->isa("Test::Deep::Cmp"))
 	{
 		my $where = $Stack->render('$data');
-		confess "Found a special comparison in $where\nYou can only the specials in the expects structure";
+		confess "Found a special comparison in $where\nYou can only use specials in the expects structure";
 	}
 
 	if (ref $d1 and ref $d2)
