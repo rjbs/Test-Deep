@@ -742,7 +742,7 @@ include themselves. Simply do
     # note no mention of Children here
   };
 
-  $person_cmp->{Children} = each_array($person_cmp);
+  $person_cmp->{Children} = array_each($person_cmp);
 
   cmp_deeply($person, $person_cmp, "person ok");
 
@@ -961,7 +961,7 @@ C<$thing> it will go back to it's previous setting for checking class.
 
 This can be useful when you want to check that objects have been
 constructed correctly but you don't want to write lots of
-C<bless>es. If \@people is an array of Person objects then
+C<bless>es. If @people is an array of Person objects then
 
   cmp_deeply(\@people, noclass([
     bless {name => 'John', phone => '555-5555'}, "Person",
@@ -979,7 +979,7 @@ However, this is testing so you should also check that the objects are
 blessed correctly. You could use a map to bless all those hashes or you
 could do a second test like
 
-  cmp_deeply($people, array_each(isa("Person"));
+  cmp_deeply(\@people, array_each(isa("Person"));
 
 =head3 useclass($thing)
 
@@ -1121,10 +1121,10 @@ will be a pass.
 
 The object returned by set() has an add() method.
 
-  my $set = set(1, 2, 3);
-  $set->add(4, 5, 6);
+  my $set = set(1, 2);
+  $set->add(1, 3, 1);
 
-will result in a set containing 1, 2, 3, 4, 5, 5.
+will result in a set containing 1, 2, 3.
 
 C<NOTE> See the NOTE on the bag() comparison for some dangers in using
 special comparisons inside set()
@@ -1139,9 +1139,9 @@ These do exactly what you'd expect them to do, so for example
 
 checks that @$data contains at most 2 "1"s, 1 "3" and 1 "4" and
 
-  cmp_deeply($data, supersetof(1, 4));
+  cmp_deeply($data, supersetof(1, 1, 1, 4));
 
-check that @$data contains at least 1 "1" and 1 "4".
+will check that @$data has at least one "1" and at least one "4".
 
 These are just special cases of the Set and Bag comparisons so they also
 give you an add() method and they also have the same limitations when using
@@ -1168,13 +1168,13 @@ for all failures. When reporting failure, the parts are counted from 1.
 
 Thanks to the magic of overloading, you can write
 
-  all(isa("Person"), methods(name => 'John'), re("^wi"))
+  any( re("^wi"), all(isa("Person"), methods(name => 'John')) )
 
 as
 
-  isa("Person") & methods(name => 'John') | re("^wi")
+   re("^wi") | isa("Person") & methods(name => 'John')
 
-Note B<single> | not double as || cannot be overloaded. This will only work
+Note B<single> | not double, as || cannot be overloaded. This will only work
 when there is a special comparison involved. If you write
 
   "john" | "anne" | "robert"
@@ -1315,7 +1315,7 @@ which gives an explanation of why it's a fail.
     }
   }
 
-  cmp_deeply("Brian", \&check_name);
+  cmp_deeply("Brian", code(\&check_name));
 
 =head1 DIAGNOSTIC FUNCTIONS
 
