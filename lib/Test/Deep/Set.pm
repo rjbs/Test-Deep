@@ -177,7 +177,7 @@ sub compare
 
 	return 0 if $self->{IgnoreDupes} != $other->{IgnoreDupes};
 
-	# this works (kind of) because the the arrays are sorted
+	# this works (kind of) because the arrays are sorted
 
 	return Test::Deep::descend($self->{val}, $other->{val});
 }
