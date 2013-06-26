@@ -320,7 +320,7 @@ sub descend
 
 	if (ref($d1) and (Scalar::Util::refaddr($d1) == $DNE_ADDR))
 	{
-		# whatever it was suposed to be, it didn't exist and so it's an
+		# whatever it was supposed to be, it didn't exist and so it's an
 		# automatic fail
 		return 0;
 	}
@@ -432,7 +432,7 @@ sub requireclass
 	return Test::Deep::Class->new(1, $val);
 }
 
-# docs and export say this is call useclass, doh!
+# docs and export say this is called useclass, doh!
 
 *useclass = \&requireclass;
 
