@@ -1,8 +1,12 @@
 Revision history for Test-Deep
 
-          When printing diagnostics, differentiate the type of a blessed object
+0.111     2013-11-30
+
+        - Typo fixes (thanks, David Steinbrunner)
+
+        - When printing diagnostics, differentiate the type of a blessed object
           from the name of the class itself (RT#78288, caused by changes to how
-          blessed objects are treated in 0.109) (Karen Etheridge)
+          blessed objects are treated in 0.109) (thanks, Karen Etheridge)
 
 0.110     2012-06-16
 
