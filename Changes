@@ -10,6 +10,8 @@ Revision history for Test-Deep
 
         - Fixes to clarity and accuracy of documentation (thanks, Michael Hamlin)
 
+        - Add metadata links to repo and issue tracker
+
 0.110     2012-06-16
 
           Allow methods() and listmethods() to work again on class methods
