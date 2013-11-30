@@ -26,6 +26,7 @@ lib/Test/Deep/Methods.pm
 lib/Test/Deep/MM.pm
 lib/Test/Deep/NoTest.pm
 lib/Test/Deep/Number.pm
+lib/Test/Deep/Obj.pm
 lib/Test/Deep/Ref.pm
 lib/Test/Deep/RefType.pm
 lib/Test/Deep/Regexp.pm
@@ -75,6 +76,7 @@ t/reftype.t
 t/regexp.t
 t/regexp.t.orig
 t/regexpref.t
+t/rt78288_blessed_object.t
 t/scalar.t
 t/scalarref.t
 t/set.t
