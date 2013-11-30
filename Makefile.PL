@@ -17,6 +17,8 @@ if (eval { require Test::Tester; require Test::Builder; 1 } &&
   $tt_prereq = "0.107";
 }
 
+my $mm_ver = ExtUtils::MakeMaker->VERSION;
+
 WriteMakefile(
   AUTHOR       => 'Fergal Daly <fergal@esatclear.ie>',
   NAME         => 'Test::Deep',
@@ -31,5 +33,20 @@ WriteMakefile(
     'List::Util'       => '1.09',
   },
 
+  # This is a dumb mistake.  Why did it get done?  I'm the one who did it and I
+  # don't know.  It only affects perl 5.8, and stopping doing it now would be a
+  # problem, because upgrades wouldn't actually upgrade.  I'll just leave it
+  # here until 5.8 is really and truly dead enough. -- rjbs, 2013-11-30
   ($] < 5.010 ? (INSTALLDIRS => 'perl') : ()),
+
+  ($mm_ver < 6.46 ? () : (META_MERGE => {
+    resources => {
+        license     =>      'http://dev.perl.org/licenses/',
+        homepage    =>      'http://github.com/rjbs/Test-Deep/',
+        bugtracker  =>      'http://github.com/rjbs/Test-Deep/issues/',
+        repository  =>      'http://github.com/rjbs/Test-Deep/',
+        MailingList =>      'http://lists.perl.org/list/perl-qa.html',
+    },
+  })),
+
 );
