@@ -1,5 +1,8 @@
 Revision history for Test-Deep
 
+0.112     2013-11-30
+        - rebuild MANIFEST, adding two forgotten files
+
 0.111     2013-11-30
 
         - When printing diagnostics, differentiate the type of a blessed object
