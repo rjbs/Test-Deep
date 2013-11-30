@@ -66,7 +66,7 @@ my %constructors = (
   String            => "str",
 );
 
-our @CONSTRUCTORS_FROM_CLASSES;
+my @CONSTRUCTORS_FROM_CLASSES;
 
 while (my ($pkg, $name) = each %constructors)
 {
