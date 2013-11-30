@@ -16,6 +16,21 @@ use t::std;
 		},
 		"isa eq"
 	);
+
+	check_test(
+		sub {
+			cmp_deeply($a, obj_isa("HASH"));
+		},
+		{
+			actual_ok => 0,
+			diag => <<EOM,
+Checking class of \$data with isa()
+   got : $a
+expect : blessed into 'HASH' or subclass of 'HASH'
+EOM
+		},
+		"obj_isa eq"
+	);
 }
 
 {
@@ -24,6 +39,17 @@ use t::std;
 	check_test(
 		sub {
 			cmp_deeply($b, isa("B"));
+		},
+		{
+			actual_ok => 1,
+			diag => "",
+		},
+		"isa eq"
+	);
+
+	check_test(
+		sub {
+			cmp_deeply($b, obj_isa("B"));
 		},
 		{
 			actual_ok => 1,
@@ -42,11 +68,27 @@ use t::std;
 			diag => <<EOM,
 Checking class of \$data with isa()
    got : $b
-expect : blessed into 'A'
+expect : blessed into or ref of type 'A'
 EOM
 		},
 		"isa eq"
 	);
+
+	check_test(
+		sub {
+			cmp_deeply($b, obj_isa("A"));
+		},
+		{
+			actual_ok => 0,
+			diag => <<EOM,
+Checking class of \$data with isa()
+   got : $b
+expect : blessed into 'A' or subclass of 'A'
+EOM
+		},
+		"isa eq"
+	);
+
 
 	@A::ISA = ();
 	@B::ISA = ("A");
@@ -54,6 +96,17 @@ EOM
 	check_test(
 		sub {
 			cmp_deeply($b, isa("A"));
+		},
+		{
+			actual_ok => 1,
+			diag => "",
+		},
+		"isa eq"
+	);
+
+	check_test(
+		sub {
+			cmp_deeply($b, obj_isa("A"));
 		},
 		{
 			actual_ok => 1,

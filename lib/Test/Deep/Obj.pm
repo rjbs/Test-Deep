@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-package Test::Deep::Isa;
+package Test::Deep::Obj;
 
 use Test::Deep::Cmp;
 use Scalar::Util;
@@ -20,8 +20,7 @@ sub descend
 	my $got = shift;
 
 	return Scalar::Util::blessed($got)
-		? $got->isa($self->{val})
-		: ref($got) eq $self->{val};
+	  && $got->isa($self->{val});
 }
 
 sub diag_message
@@ -37,7 +36,7 @@ sub renderExp
 {
 	my $self = shift;
 
-	return "blessed into or ref of type '$self->{val}'";
+	return "blessed into '$self->{val}' or subclass of '$self->{val}'";
 }
 
 1;

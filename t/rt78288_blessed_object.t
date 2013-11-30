@@ -10,7 +10,7 @@ check_test(
         diag => <<EOM,
 Checking class of \$data with isa()
    got : 'Foo'
-expect : blessed into 'Foo'
+expect : blessed into or ref of type 'Foo'
 EOM
     },
     'isa on a string'
