@@ -12,6 +12,11 @@ Revision history for Test-Deep
 
         - Add metadata links to repo and issue tracker
 
+        - Added obj_isa for testing ->isa without falling back to ref($x)
+
+        - Added the *experimental* ":v1" export group to skip importing
+          Isa, isa, and blessed
+
 0.110     2012-06-16
 
           Allow methods() and listmethods() to work again on class methods
