@@ -1037,7 +1037,7 @@ is the equivalent of
 
 With $capture_data
 
-  cmp_deeply($got, [re($regex, $capture_data])
+  cmp_deeply($got, [re($regex, $capture_data)])
 
 is the equivalent of
 
@@ -1046,7 +1046,7 @@ is the equivalent of
 
 So you can do something simple like
 
-  cmp_deeply($got, re(qr/(\d\d)(\w\w)/, [25, "ab" ])
+  cmp_deeply($got, re(qr/(\d\d)(\w\w)/, [25, "ab" ]))
 
 to check that (\d\d) was 25 and (\w\w) was "ab" but you can also use
 Test::Deep objects to do more complex testing of the captured values
@@ -1253,7 +1253,7 @@ is similar to
     cmp_deeply($got_v, $common_tests)
   }
 
-Except it will not explode is $got is not an array reference. It will check
+Except it will not explode if $got is not an array reference. It will check
 that each of the objects in @$got is a MyFile and that each one gives the
 correct results for it's methods.
 
