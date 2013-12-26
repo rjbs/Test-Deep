@@ -1037,7 +1037,7 @@ is the equivalent of
 
 With $capture_data
 
-  cmp_deeply($got, [re($regex, $capture_data])
+  cmp_deeply($got, [re($regex, $capture_data)])
 
 is the equivalent of
 
@@ -1046,7 +1046,7 @@ is the equivalent of
 
 So you can do something simple like
 
-  cmp_deeply($got, re(qr/(\d\d)(\w\w)/, [25, "ab" ])
+  cmp_deeply($got, re(qr/(\d\d)(\w\w)/, [25, "ab" ]))
 
 to check that (\d\d) was 25 and (\w\w) was "ab" but you can also use
 Test::Deep objects to do more complex testing of the captured values
