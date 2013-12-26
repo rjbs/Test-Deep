@@ -1253,7 +1253,7 @@ is similar to
     cmp_deeply($got_v, $common_tests)
   }
 
-Except it will not explode is $got is not an array reference. It will check
+Except it will not explode if $got is not an array reference. It will check
 that each of the objects in @$got is a MyFile and that each one gives the
 correct results for it's methods.
 
