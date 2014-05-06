@@ -243,6 +243,33 @@ EOM
 		},
 		"subbagof no"
 	);
+{
+        check_test(
+                sub {
+                        cmp_deeply(['a', 'a', 'b', 'c', 'b'], noneof('d', 'e', 'f'));
+                },
+                {
+                        actual_ok => 1,
+                        diag => "",
+                },
+                "noneof yes"
+        );
+
+        check_test(
+                sub {
+                        cmp_deeply(['a', 'a', 'b', 'c', 'b'], noneof('b', 'c', 'd', 'e'));
+                },
+                {
+                    actual_ok => 0,
+                    diag => <<'EOM',
+Comparing $data as a NoneOf
+Extra: 'b', 'c'
+EOM
+                },
+                "noneof no"
+        );
+}
+
 
   eval {
     my @res = run_tests(
