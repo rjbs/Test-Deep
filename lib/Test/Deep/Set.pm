@@ -46,6 +46,7 @@ EOM
 	if (not $diag)
 	{
 		my @got = @$d1;
+                my @found;
 		my @missing;
 		foreach my $expect (@$d2)
 		{
@@ -56,6 +57,7 @@ EOM
 				if (Test::Deep::eq_deeply_cache($got[$i], $expect))
 				{
 					$found = 1;
+                                        push(@found, $expect);
 					splice(@got, $i, 1);
 
 					last unless $IgnoreDupes;
@@ -67,16 +69,22 @@ EOM
 
 
 		my @diags;
-		if (@missing and $SubSup ne "sub")
+		if (@missing and $SubSup ne "sub" && $SubSup ne "none")
 		{
 			push(@diags, "Missing: ".nice_list(\@missing));
 		}
 
-		if (@got and $SubSup ne "sup")
+		if (@got and $SubSup ne "sup" && $SubSup ne "none")
 		{
 			my $got = __PACKAGE__->new($IgnoreDupes, "", @got);
 			push(@diags, "Extra: ".nice_list($got->{val}));
 		}
+
+                if (@found and $SubSup eq "none")
+                {
+                        my $found = __PACKAGE__->new($IgnoreDupes, "", @found);
+                        push(@diags, "Extra: ".nice_list($found->{val}));
+                }
 
 		$diag = join("\n", @diags);
 	}
@@ -101,6 +109,7 @@ sub diagnostics
 	my $type = $self->{IgnoreDupes} ? "Set" : "Bag";
 	$type = "Sub$type" if $self->{SubSup} eq "sub";
 	$type = "Super$type" if $self->{SubSup} eq "sup";
+        $type = "NoneOf" if $self->{SubSup} eq "none";
 
 	my $error = $last->{diag};
 	my $diag = <<EOM;
