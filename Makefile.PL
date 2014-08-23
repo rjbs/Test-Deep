@@ -33,6 +33,8 @@ WriteMakefile(
     'List::Util'       => '1.09',
   },
 
+  LICENSE => "perl",
+
   # This is a dumb mistake.  Why did it get done?  I'm the one who did it and I
   # don't know.  It only affects perl 5.8, and stopping doing it now would be a
   # problem, because upgrades wouldn't actually upgrade.  I'll just leave it
