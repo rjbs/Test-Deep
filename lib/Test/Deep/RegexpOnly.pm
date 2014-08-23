@@ -25,7 +25,7 @@ sub descend
 
 	my $re = $self->{val};
 
-	return ($got =~ $self->{val} ? 1 : 0;
+	return $got =~ $self->{val} ? 1 : 0;
 }
 
 sub diag_message
