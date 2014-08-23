@@ -1,5 +1,10 @@
 Revision history for Test-Deep
 
+0.113     2004-08-22
+        - fix a compile error (!!) in RegexpOnly
+        - fix some documentation typos (thanks, ZOFFIX)
+        - add license to META file
+
 0.112     2013-11-30
         - rebuild MANIFEST, adding two forgotten files
 
