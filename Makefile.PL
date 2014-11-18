@@ -24,13 +24,17 @@ WriteMakefile(
   NAME         => 'Test::Deep',
   VERSION_FROM => './lib/Test/Deep.pm',
   PREREQ_PM    => {
-    'Test::More'       => '0',
-    'Test::Tester'     => $tt_prereq,
-    'Test::NoWarnings' => '0.02',
+    'Test::Builder'    => '0',
     'Scalar::Util'     => '1.09',
 
     # apparently CPAN doesn't get the version of Scalar::Util
     'List::Util'       => '1.09',
+  },
+
+  ( $ExtUtils::MakeMaker::VERSION < 6.63_03 ? 'BUILD_REQUIRES' : 'TEST_REQUIRES' ) => {
+    'Test::More'       => '0',
+    'Test::Tester'     => $tt_prereq,
+    'Test::NoWarnings' => '0.02',
   },
 
   LICENSE => "perl",
@@ -42,6 +46,8 @@ WriteMakefile(
   ($] < 5.010 ? (INSTALLDIRS => 'perl') : ()),
 
   ($mm_ver < 6.46 ? () : (META_MERGE => {
+    'meta-spec' => { version => 2 },
+    dynamic_config => 1,
     resources => {
         license     =>      'http://dev.perl.org/licenses/',
         homepage    =>      'http://github.com/rjbs/Test-Deep/',
