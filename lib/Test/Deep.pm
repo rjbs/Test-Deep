@@ -615,6 +615,8 @@ don't know exactly what the string should be but you do know some things
 about how it should look, C<eq> is no good and you must use pattern matching
 instead. Test::Deep provides pattern matching for complex data structures
 
+Test::Deep has B<I<a lot>> of exports.  See L</EXPORTS> below.
+
 =head1 EXAMPLES
 
 How Test::Deep works is much easier to understand by seeing some examples.
@@ -1472,6 +1474,26 @@ method should just return true or false.
 
 This gives you enough to write your own SCs but I haven't documented how
 diagnostics works because it's about to get an overhaul.
+
+=head1 EXPORTS
+
+By default, Test::Deep will export everything in its C<v0> tag, as if you had
+written:
+
+  use Test::Deep ':v0';
+
+Those things are:
+
+  all any array array_each arrayelementsonly arraylength arraylengthonly bag
+  blessed bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply hash
+  hash_each hashkeys hashkeysonly ignore Isa isa listmethods methods noclass
+  noneof num obj_isa re reftype regexpmatches regexponly regexpref
+  regexprefonly scalarrefonly scalref set shallow str subbagof subhashof
+  subsetof superbagof superhashof supersetof useclass
+
+A slightly better set of exports is the C<v1> set.  It's all the same things,
+with the exception of C<Isa> and C<blessed>.  If you want to import
+"everything", you probably want to C<< use Test::Deep ':V1'; >>.
 
 =head1 SEE ALSO
 
