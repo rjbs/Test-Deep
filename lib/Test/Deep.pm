@@ -1291,6 +1291,11 @@ size of each one you could do this
   )
   cmp_deeply($got, array_each($structure));
 
+=head3 hash_each($thing)
+
+This test behaves like C<array_each> (see above) but tests that each hash value
+passes its tests.
+
 =head3 str($string)
 
 $string is a string.
