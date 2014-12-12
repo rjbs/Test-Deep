@@ -100,9 +100,9 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
       all any array array_each arrayelementsonly arraylength arraylengthonly
       bag bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
       hash hash_each hashkeys hashkeysonly ignore isa listmethods methods
-      noclass num re reftype regexpmatches regexponly regexpref regexprefonly
-      scalarrefonly scalref set shallow str subbagof subhashof subsetof
-      superbagof superhashof supersetof useclass
+      noclass noneof num re reftype regexpmatches regexponly regexpref
+      regexprefonly scalarrefonly scalref set shallow str subbagof subhashof
+      subsetof superbagof superhashof supersetof useclass
     )
   ];
 
@@ -113,9 +113,9 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
       all any array array_each arrayelementsonly arraylength arraylengthonly
       bag bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
       hash hash_each hashkeys hashkeysonly ignore listmethods methods
-      noclass num re reftype regexpmatches regexponly regexpref regexprefonly
-      scalarrefonly scalref set shallow str subbagof subhashof subsetof
-      superbagof superhashof supersetof useclass
+      noclass noneof num re reftype regexpmatches regexponly regexpref
+      regexprefonly scalarrefonly scalref set shallow str subbagof subhashof
+      subsetof superbagof superhashof supersetof useclass
     )
   ];
 
@@ -480,6 +480,13 @@ sub subsetof
 	require Test::Deep::Set;
 
 	return Test::Deep::Set->new(1, "sub", @_);
+}
+
+sub noneof
+{
+        require Test::Deep::Set;
+
+        return Test::Deep::Set->new(1, "none", @_);
 }
 
 sub cmp_set
@@ -1145,7 +1152,7 @@ will result in a set containing 1, 2, 3.
 C<NOTE> See the NOTE on the bag() comparison for some dangers in using
 special comparisons inside set()
 
-=head3 superbagof(@elements), subbagof(@elements), supersetof(@elements) and subsetof(@elements)
+=head3 superbagof(@elements), subbagof(@elements), supersetof(@elements), subsetof(@elements) and noneof(@elements)
 
 @elements is an array of elements.
 
@@ -1158,6 +1165,10 @@ checks that @$data contains at most 2 "1"s, 1 "3" and 1 "4" and
   cmp_deeply($data, supersetof(1, 1, 1, 4));
 
 will check that @$data has at least one "1" and at least one "4".
+
+  cmp_deeply($data, noneof(1, 2, 3));
+
+will check that @$data does not contain any instances of "1", "2" or "3".
 
 These are just special cases of the Set and Bag comparisons so they also
 give you an add() method and they also have the same limitations when using
