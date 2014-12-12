@@ -1487,8 +1487,8 @@ Fergal Daly E<lt>fergal@esatclear.ieE<gt>, with thanks to Michael G Schwern
 for Test::More's is_deeply function which inspired this.
 
 B<Please> do not bother Fergal Daly with bug reports.  Send them to the
-maintainer (above) or submit them at L<the request
-tracker|https://rt.cpan.org/Dist/Display.html?Queue=Test-Deep>.
+maintainer (above) or submit them at L<the issue
+tracker|https://github.com/rjbs/Test-Deep/issues>.
 
 =head1 COPYRIGHT
 
