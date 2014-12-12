@@ -91,6 +91,7 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
   our @EXPORT_OK = qw( descend render_stack class_base cmp_details deep_diag );
 
   our %EXPORT_TAGS;
+  $EXPORT_TAGS{preload} = [];
   $EXPORT_TAGS{v0} = [
     qw(
       Isa
@@ -122,6 +123,53 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
   our @EXPORT = @{ $EXPORT_TAGS{ v0 } };
 
   $EXPORT_TAGS{all} = [ @EXPORT, @EXPORT_OK ];
+}
+
+sub import {
+  if (grep {; $_ eq ':preload' } @_) {
+    require Test::Deep::All;
+    require Test::Deep::Any;
+    require Test::Deep::Array;
+    require Test::Deep::ArrayEach;
+    require Test::Deep::ArrayElementsOnly;
+    require Test::Deep::ArrayLength;
+    require Test::Deep::ArrayLengthOnly;
+    require Test::Deep::Blessed;
+    require Test::Deep::Boolean;
+    require Test::Deep::Cache::Simple;
+    require Test::Deep::Cache;
+    require Test::Deep::Class;
+    require Test::Deep::Cmp;
+    require Test::Deep::Code;
+    require Test::Deep::Hash;
+    require Test::Deep::HashEach;
+    require Test::Deep::HashElements;
+    require Test::Deep::HashKeys;
+    require Test::Deep::HashKeysOnly;
+    require Test::Deep::Ignore;
+    require Test::Deep::Isa;
+    require Test::Deep::ListMethods;
+    require Test::Deep::Methods;
+    require Test::Deep::MM;
+    require Test::Deep::Number;
+    require Test::Deep::Obj;
+    require Test::Deep::Ref;
+    require Test::Deep::RefType;
+    require Test::Deep::Regexp;
+    require Test::Deep::RegexpMatches;
+    require Test::Deep::RegexpOnly;
+    require Test::Deep::RegexpRef;
+    require Test::Deep::RegexpRefOnly;
+    require Test::Deep::RegexpVersion;
+    require Test::Deep::ScalarRef;
+    require Test::Deep::ScalarRefOnly;
+    require Test::Deep::Set;
+    require Test::Deep::Shallow;
+    require Test::Deep::Stack;
+    require Test::Deep::String;
+  }
+
+  goto &Exporter::import;
 }
 
 # this is ugly, I should never have exported a sub called isa now I
