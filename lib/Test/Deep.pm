@@ -1241,6 +1241,11 @@ a package that is used as a class. Without this, anyone calling
 C<Class-E<gt>isa($other_class)> would get the wrong answer. This is a
 hack to patch over the fact that isa is exported by default.
 
+=head3 obj_isa($class)
+
+This test accepts only objects that are instances of C<$class> or a subclass.
+Unlike the C<Isa> test, this test will never accept class names.
+
 =head3 array_each($thing)
 
 $thing is a structure to be compared against.
