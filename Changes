@@ -1,5 +1,9 @@
 Revision history for Test-Deep
 
+0.114     2014-12-11
+        - improve prereqs metadata (thanks, Karen Etheridge)
+        - add a noneof() set test (thanks, Peter Haworth)
+
 0.113     2014-08-22
         - fix a compile error (!!) in RegexpOnly
         - fix some documentation typos (thanks, ZOFFIX)
