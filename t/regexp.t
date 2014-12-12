@@ -19,6 +19,17 @@ my $xism = qr/x/=~/\(\?\^/ ? "^" : "-xism";
 
 	check_test(
 		sub {
+			cmp_deeply("fergal", regexponly($re));
+		},
+		{
+			actual_ok => 1,
+			diag => "",
+		},
+		"regexponly eq"
+	);
+
+	check_test(
+		sub {
 			cmp_deeply("feargal", re($re));
 		},
 		{
@@ -31,6 +42,22 @@ EOM
 		},
 		"re not eq"
 	);
+
+	check_test(
+		sub {
+			cmp_deeply("feargal", regexponly($re));
+		},
+		{
+			actual_ok => 0,
+			diag => <<EOM,
+Using Regexp on \$data
+   got : 'feargal'
+expect : $re
+EOM
+		},
+		"regexponly not eq"
+	);
+
 
 	check_test(
 		sub {
