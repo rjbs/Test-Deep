@@ -21,7 +21,7 @@ unless (defined $Test::Deep::NoTest::NoTest)
 
 our ($Stack, %Compared, $CompareCache, %WrapCache, $Shallow);
 
-our $VERSION = '0.113';
+our $VERSION = '0.114';
 $VERSION = eval $VERSION;
 
 require Exporter;
@@ -1552,6 +1552,9 @@ Those things are:
 A slightly better set of exports is the C<v1> set.  It's all the same things,
 with the exception of C<Isa> and C<blessed>.  If you want to import
 "everything", you probably want to C<< use Test::Deep ':V1'; >>.
+
+There's another magic export group:  C<:preload>.  If that is specified, all of
+the Test::Deep plugins will be loaded immediately instead of lazily.
 
 =head1 SEE ALSO
 
