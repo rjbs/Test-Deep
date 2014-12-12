@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-package Test::Deep::Regexp;
+package Test::Deep::RegexpOnly;
 
 use Test::Deep::Cmp;
 
