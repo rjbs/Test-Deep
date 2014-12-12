@@ -4,6 +4,9 @@ Revision history for Test-Deep
         - improve prereqs metadata (thanks, Karen Etheridge)
         - add a noneof() set test (thanks, Peter Haworth)
         - regexponly hasn't worked... ever. now it does
+        - passing :preload to import loads all plugins up front
+        - a few more tests have been documented
+        - the many exports of Test::Deep are now documented!
 
 0.113     2014-08-22
         - fix a compile error (!!) in RegexpOnly
