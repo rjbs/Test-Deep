@@ -1,5 +1,8 @@
 Revision history for Test-Deep
 
+0.115     2014-01-09
+        - worked around a bug in chained goto on 5.8.5
+
 0.114     2014-12-11
         - improve prereqs metadata (thanks, Karen Etheridge)
         - add a noneof() set test (thanks, Peter Haworth)
