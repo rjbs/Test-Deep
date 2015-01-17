@@ -51,8 +51,12 @@ WriteMakefile(
     resources => {
         license     =>      'http://dev.perl.org/licenses/',
         homepage    =>      'http://github.com/rjbs/Test-Deep/',
-        bugtracker  =>      'http://github.com/rjbs/Test-Deep/issues/',
-        repository  =>      'http://github.com/rjbs/Test-Deep/',
+        bugtracker  =>      { web => 'https://github.com/rjbs/Test-Deep/issues' },
+        repository  =>      {
+                               type => 'git',
+                               url => 'https://github.com/rjbs/Test-Deep.git',
+                               web => 'https://github.com/rjbs/Test-Deep'
+                            },
         MailingList =>      'http://lists.perl.org/list/perl-qa.html',
     },
   })),
