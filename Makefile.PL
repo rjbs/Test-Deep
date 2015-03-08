@@ -48,12 +48,17 @@ WriteMakefile(
   ($mm_ver < 6.46 ? () : (META_MERGE => {
     'meta-spec' => { version => 2 },
     dynamic_config => 1,
-    resources => {
-        license     =>      'http://dev.perl.org/licenses/',
-        homepage    =>      'http://github.com/rjbs/Test-Deep/',
-        bugtracker  =>      'http://github.com/rjbs/Test-Deep/issues/',
-        repository  =>      'http://github.com/rjbs/Test-Deep/',
-        MailingList =>      'http://lists.perl.org/list/perl-qa.html',
+    resources       => {
+      homepage      => 'http://github.com/rjbs/Test-Deep/',
+      repository    => {
+         url        => 'https://github.com/rjbs/Test-Deep.git',
+         web        => 'https://github.com/rjbs/Test-Deep',
+         type       => 'git',
+      },
+      bugtracker    => {
+         web        => 'http://github.com/rjbs/Test-Deep/issues',
+      },
+      x_MailingList => 'http://lists.perl.org/list/perl-qa.html',
     },
   })),
 
