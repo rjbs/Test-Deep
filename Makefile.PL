@@ -59,6 +59,7 @@ WriteMakefile(
          web        => 'http://github.com/rjbs/Test-Deep/issues',
       },
       x_MailingList => 'http://lists.perl.org/list/perl-qa.html',
+      x_IRC         => 'irc://irc.perl.org/#perl-qa',
     },
   })),
 
