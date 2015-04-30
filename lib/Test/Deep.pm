@@ -941,8 +941,7 @@ is the equivalent of checking
 
   $got->{name} eq 'John';
   exists $got->{random};
-  cmp_deeply($got->{address};
-  ['5 A street', 'a town', 'a country']);
+  cmp_deeply($got->{address}, ['5 A street', 'a town', 'a country']);
 
 =head3 methods(%hash)
 
