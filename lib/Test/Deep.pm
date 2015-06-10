@@ -76,6 +76,7 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
 	my $file = "$full_pkg.pm";
 	$file =~ s#::#/#g;
 	my $sub = sub {
+		local ($!, $^E);
 		require $file;
 		return $full_pkg->new(@_);
 	};
