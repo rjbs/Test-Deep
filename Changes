@@ -1,6 +1,6 @@
 Revision history for Test-Deep
 
-0.116     2016-06-20
+0.116     2015-06-20
         - on its own, :preload options uses default group of exports
 
 0.115     2015-01-09
