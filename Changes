@@ -1,6 +1,9 @@
 Revision history for Test-Deep
 
-0.115     2014-01-09
+0.116     2016-06-20
+        - on its own, :preload options uses default group of exports
+
+0.115     2015-01-09
         - worked around a bug in chained goto on 5.8.5
 
 0.114     2014-12-11

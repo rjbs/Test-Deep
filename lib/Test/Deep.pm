@@ -21,7 +21,7 @@ unless (defined $Test::Deep::NoTest::NoTest)
 
 our ($Stack, %Compared, $CompareCache, %WrapCache, $Shallow);
 
-our $VERSION = '0.115';
+our $VERSION = '0.116';
 $VERSION = eval $VERSION;
 
 require Exporter;
@@ -126,7 +126,9 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
 }
 
 sub import {
-  if (grep {; $_ eq ':preload' } @_) {
+  my $self = shift;
+  my @sans_preload = grep {; $_ ne ':preload' } @_;
+  if (@_ != @sans_preload) {
     require Test::Deep::All;
     require Test::Deep::Any;
     require Test::Deep::Array;
@@ -169,7 +171,7 @@ sub import {
     require Test::Deep::String;
   }
 
-  $_[0]->export_to_level(1, @_);
+  $self->export_to_level(1, @_);
 }
 
 # this is ugly, I should never have exported a sub called isa now I
