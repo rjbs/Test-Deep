@@ -171,7 +171,7 @@ sub import {
     require Test::Deep::String;
   }
 
-  $self->export_to_level(1, @_);
+  $self->export_to_level(1, $self, @_);
 }
 
 # this is ugly, I should never have exported a sub called isa now I

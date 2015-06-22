@@ -64,6 +64,7 @@ t/hash.t
 t/hash_each.t
 t/hashkeys.t
 t/ignore.t
+t/import.t
 t/isa.t
 t/listmethods.t
 t/memory.t
