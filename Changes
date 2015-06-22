@@ -1,5 +1,9 @@
 Revision history for Test-Deep
 
+0.117     2016-06-21
+        - do not lose argument(s) to import
+          (fixes https://github.com/rjbs/Test-Deep/issues/29 )
+
 0.116     2016-06-20
         - on its own, :preload options uses default group of exports
 

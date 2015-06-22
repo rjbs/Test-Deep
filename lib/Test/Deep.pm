@@ -21,7 +21,7 @@ unless (defined $Test::Deep::NoTest::NoTest)
 
 our ($Stack, %Compared, $CompareCache, %WrapCache, $Shallow);
 
-our $VERSION = '0.116';
+our $VERSION = '0.117';
 $VERSION = eval $VERSION;
 
 require Exporter;
