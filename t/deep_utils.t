@@ -1,9 +1,8 @@
 use strict;
 use warnings;
 
-use Test::More qw(no_plan);
-
-use Test::NoWarnings;
+use Test::More 0.88;
+use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 
 use Test::Deep qw( cmp_deeply descend render_stack methods deep_diag class_base );
 
@@ -30,3 +29,5 @@ use Test::Deep qw( cmp_deeply descend render_stack methods deep_diag class_base 
 	is($class, "Regexp", "class_base class regexp");
 	is($base, ($] < 5.011 ? "Regexp" : "REGEXP"), "class_base base regexp");
 }
+
+done_testing;

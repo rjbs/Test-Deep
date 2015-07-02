@@ -1,8 +1,7 @@
 use Test::Tester;
 
 use Test::More qw(no_plan);
-
-use Test::NoWarnings;
+use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 
 use Test::Deep;
 

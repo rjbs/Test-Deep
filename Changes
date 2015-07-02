@@ -1,5 +1,8 @@
 Revision history for Test-Deep
 
+0.119     2015-09-29
+        - remove use of Test::NoWarnings for user-facing tests
+
 0.118     2015-07-27 TRIAL RELEASE
         - overloading of & and | no longer can change All or Any objects
           found as arguments
