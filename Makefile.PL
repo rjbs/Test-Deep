@@ -32,9 +32,8 @@ WriteMakefile(
   },
 
   ( $ExtUtils::MakeMaker::VERSION < 6.63_03 ? 'BUILD_REQUIRES' : 'TEST_REQUIRES' ) => {
-    'Test::More'       => '0',
+    'Test::More'       => '0.88',
     'Test::Tester'     => $tt_prereq,
-    'Test::NoWarnings' => '0.02',
   },
 
   LICENSE => "perl",
