@@ -1,5 +1,7 @@
 Revision history for Test-Deep
 
+        - remove use of Test::NoWarnings for user-facing tests
+
 0.117     2015-06-21
         - do not lose argument(s) to import
           (fixes https://github.com/rjbs/Test-Deep/issues/29 )

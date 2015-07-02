@@ -1,9 +1,8 @@
 use strict;
 use warnings;
 
-use Test::More qw(no_plan);
-
-use Test::NoWarnings;
+use Test::More 0.88;
+use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 
 use Test::Deep::Cache;
 
@@ -38,3 +37,5 @@ use Test::Deep::Cache;
 	$cache->finish(1);
 	ok($cache->cmp($b, $c), "still there");
 }
+
+done_testing;
