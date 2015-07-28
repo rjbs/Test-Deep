@@ -1,5 +1,11 @@
 Revision history for Test-Deep
 
+0.118     2015-07-27 TRIAL RELEASE
+        - overloading of & and | no longer can change All or Any objects
+          found as arguments
+        - an All as an argument to an All constructed is flattened out into its
+          All-ed values; the same goes for Any
+
 0.117     2015-06-21
         - do not lose argument(s) to import
           (fixes https://github.com/rjbs/Test-Deep/issues/29 )
