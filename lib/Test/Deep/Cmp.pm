@@ -42,40 +42,14 @@ sub make_all
 {
 	my ($e1, $e2) = @_;
 
-	if (Scalar::Util::blessed($e1) and $e1->isa("Test::Deep::All"))
-	{
-		$e1->add($e2);
-		return $e1;
-	}
-	elsif(Scalar::Util::blessed($e2) and $e2->isa("Test::Deep::All"))
-	{
-		$e2->add($e1);
-		return $e2;
-	}
-	else
-	{
-		return Test::Deep::all($e1, $e2);
-	}
+  return Test::Deep::all($e1, $e2);
 }
 
 sub make_any
 {
 	my ($e1, $e2) = @_;
 
-	if (Scalar::Util::blessed($e1) and $e1->isa("Test::Deep::Any"))
-	{
-		$e1->add($e2);
-		return $e1;
-	}
-	elsif(Scalar::Util::blessed($e2) and $e2->isa("Test::Deep::Any"))
-	{
-		$e2->add($e1);
-		return $e2;
-	}
-	else
-	{
-		return Test::Deep::any($e1, $e2);
-	}
+  return Test::Deep::any($e1, $e2);
 }
 
 sub cmp

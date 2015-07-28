@@ -5,16 +5,15 @@ package Test::Deep::All;
 
 use Test::Deep::Cmp;
 
-use overload
-	'&' => \&add,
-	fallback => 1,
-;
-
 sub init
 {
 	my $self = shift;
 
-	my @list = map {Test::Deep::wrap($_)} @_;
+	my @list = map {
+	  eval { $_->isa('Test::Deep::All') }
+	  ? @{ $_->{val} }
+	  : Test::Deep::wrap($_)
+	} @_;
 
 	$self->{val} = \@list;
 }
@@ -49,16 +48,6 @@ sub render_stack
 	my $max = @{$self->{val}};
 
 	return "(Part $data->{index} of $max in $var)";
-}
-
-sub add
-{
-	my $self = shift;
-	my $expect = shift;
-
-	push(@{$self->{val}}, Test::Deep::wrap($expect));
-
-	return $self;
 }
 
 1;

@@ -5,16 +5,15 @@ package Test::Deep::Any;
 
 use Test::Deep::Cmp;
 
-use overload
-	'&' => \&add,
-	fallback => 1,
-;
-
 sub init
 {
 	my $self = shift;
 
-	my @list = map {Test::Deep::wrap($_)} @_;
+	my @list = map {
+	  eval { $_->isa('Test::Deep::Any') }
+	  ? @{ $_->{val} }
+	  : Test::Deep::wrap($_)
+	} @_;
 
 	$self->{val} = \@list;
 }
@@ -50,16 +49,6 @@ EOM
 
 	$diag =~ s/\n+$/\n/;
 	return $diag;
-}
-
-sub add
-{
-	my $self = shift;
-	my $expect = shift;
-
-	push(@{$self->{val}}, Test::Deep::wrap($expect));
-
-	return $self;
 }
 
 1;
