@@ -9,7 +9,8 @@ use overload
 	'""' => \&string,
 	fallback => 1,
 ;
-use Scalar::Util;
+
+use Scalar::Util ();
 
 sub import
 {
