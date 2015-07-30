@@ -877,7 +877,9 @@ respectively.
 
 =head1 COMPARISON FUNCTIONS
 
-=head3 $ok = cmp_deeply($got, $expected, $name)
+=head3 cmp_deeply
+
+  my $ok = cmp_deeply($got, $expected, $name)
 
 $got is the result to be checked. $expected is the structure against which
 $got will be check. $name is the test name.
@@ -892,22 +894,30 @@ item, like a C<Test::Deep::Set> object, and encountering such an item at any
 stage may trigger Test::Deep to do something else besides a simple string
 comparison, exactly what it does depends on which special comparison it is.
 
-=head3 $ok = cmp_bag(\@got, \@bag, $name)
+=head3 cmp_bag
+
+  my $ok = cmp_bag(\@got, \@bag, $name)
 
 Is shorthand for cmp_deeply(\@got, bag(@bag), $name)
 
 N.B. Both arguments must be array refs. If they aren't an error will
 be raised via die.
 
-=head3 $ok = cmp_set(\@got, \@set, $name)
+=head3 cmp_set
+
+  my $ok = cmp_set(\@got, \@set, $name)
 
 Is shorthand for cmp_deeply(\@got, set(@set), $name)
 
-=head3 $ok = cmp_methods(\@got, \@methods, $name)
+=head3 cmp_methods
+
+  my $ok = cmp_methods(\@got, \@methods, $name)
 
 Is shorthand for cmp_deeply(\@got, methods(@methods), $name)
 
-=head3 $ok = eq_deeply($got, $expected)
+=head3 eq_deeply
+
+  my $ok = eq_deeply($got, $expected)
 
 This is the same as cmp_deeply() except it just returns true or
 false. It does not create diagnostics or talk to L<Test::Builder>, but
@@ -920,7 +930,9 @@ import it through L<Test::Deep::NoTest>. For example
 otherwise the L<Test::Builder> framework will be loaded and testing messages
 will be output when your program ends.
 
-=head3 ($ok, $stack) = cmp_details($got, $expected)
+=head3 cmp_details
+
+  ($ok, $stack) = cmp_details($got, $expected)
 
 This behaves much like eq_deeply, but it additionally allows you to
 produce diagnostics in case of failure by passing the value in C<$stack>
@@ -933,7 +945,9 @@ See L</USING TEST::DEEP WITH TEST::BUILDER> for example uses.
 
 =head1 SPECIAL COMPARISONS PROVIDED
 
-=head3 ignore()
+=head3 ignore
+
+  cmp_deeply( $got, ignore() );
 
 This makes Test::Deep skip tests on $got_v. No matter what value C<$got_v>
 has, Test::Deep will think it's correct. This is useful if some part of the
@@ -950,7 +964,9 @@ is the equivalent of checking
   exists $got->{random};
   cmp_deeply($got->{address}, ['5 A street', 'a town', 'a country']);
 
-=head3 methods(%hash)
+=head3 methods
+
+  cmp_deeply( $got, methods(%hash) );
 
 %hash is a hash of method call => expected value pairs.
 
@@ -987,7 +1003,9 @@ there is no way to know which if manager and coder will be tested first. If
 the methods you are testing depend on and alter global variables or if
 manager and coder are the same object then you may run into problems.
 
-=head3 listmethods(%hash)
+=head3 listmethods
+
+  cmp_deeply( $got, listmethods(%hash) );
 
 %hash is a hash of method call => expected value pairs.
 
@@ -1012,7 +1030,9 @@ The methods will be called in the order you supply them.
 
 B<NOTE> The same caveats apply as for methods().
 
-=head3 shallow($thing)
+=head3 shallow
+
+  cmp_deeply( $got, shallow($thing) );
 
 $thing is a ref.
 
@@ -1029,7 +1049,9 @@ will pass because @a and @b have the same elements however
 will fail because although \@a and \@b both contain C<1, 2, 3> they are
 references to different arrays.
 
-=head3 noclass($thing)
+=head3 noclass
+
+  cmp_deeply( $got, noclass($thing) );
 
 $thing is a structure to be compared against.
 
@@ -1060,7 +1082,9 @@ could do a second test like
 
   cmp_deeply(\@people, array_each(isa("Person"));
 
-=head3 useclass($thing)
+=head3 useclass
+
+  cmp_deeply( $got, useclass($thing) );
 
 This turns back on the class comparison while inside a noclass().
 
@@ -1077,7 +1101,9 @@ In this example the class of the array reference in C<$got> is ignored but
 the class of C<$object> is checked, as is the class of everything inside
 C<$object>.
 
-=head3 re($regexp, $capture_data, $flags)
+=head3 re
+
+  cmp_deeply( $got, re($regexp, $capture_data, $flags) );
 
 $regexp is either a regular expression reference produced with C<qr/.../> or
 a string which will be used to construct a regular expression.
@@ -1121,7 +1147,9 @@ here, the regex will match the string and will capture the animal names and
 check that they match the specified set, in this case it will fail,
 complaining that "goat" is not in the set.
 
-=head3 superhashof(\%hash)
+=head3 superhashof
+
+  cmp_deeply( \%got, superhashof(\%hash) );
 
 This will check that the hash C<%$got> is a "super-hash" of C<%hash>. That
 is that all the key and value pairs in C<%hash> appear in C<%$got> but
@@ -1137,7 +1165,9 @@ will pass but
 
 will fail.
 
-=head3 subhashof(\%hash)
+=head3 subhashof
+
+  cmp_deeply( \%got, subhashof(\%hash) );
 
 This will check that the hash C<%$got> is a "sub-hash" of C<%hash>. That is
 that all the key and value pairs in C<%$got> also appear in C<%hash>.
@@ -1152,7 +1182,9 @@ will pass but
 
 will fail.
 
-=head3 bag(@elements)
+=head3 bag
+
+  cmp_deeply( \@got, bag(@elements) );
 
 @elements is an array of elements.
 
@@ -1187,7 +1219,9 @@ C<< methods(m1 => "v1", m2 => "v2") >> vs C<< methods(m1 => "v1") >>
 This problem is could be solved by using a slower and more complicated
 algorithm for set and bag matching. Something for the future...
 
-=head3 set(@elements)
+=head3 set
+
+  cmp_deeply( \@got, set(@elements) );
 
 @elements is an array of elements.
 
@@ -1208,7 +1242,25 @@ will result in a set containing 1, 2, 3.
 C<NOTE> See the NOTE on the bag() comparison for some dangers in using
 special comparisons inside set()
 
-=head3 superbagof(@elements), subbagof(@elements), supersetof(@elements), subsetof(@elements) and noneof(@elements)
+=head3 superbagof
+
+  cmp_deeply( \@got, superbagof(@elements) );
+
+=head3 subbagof
+
+  cmp_deeply( \@got, subbagof(@elements) );
+
+=head3 supersetof
+
+  cmp_deeply( \@got, supersetof(@elements) );
+
+=head3 subsetof
+
+  cmp_deeply( \@got, subsetof(@elements) );
+
+=head3 noneof
+
+  cmp_deeply( \@got, noneof(@elements) );
 
 @elements is an array of elements.
 
@@ -1230,7 +1282,9 @@ These are just special cases of the Set and Bag comparisons so they also
 give you an add() method and they also have the same limitations when using
 special comparisons inside them (see the NOTE in the bag() section).
 
-=head3 all(@expecteds)
+=head3 all
+
+  cmp_deeply( $got, all(@expecteds) );
 
 @expecteds is an array of expected structures.
 
@@ -1270,7 +1324,9 @@ which is presumably not what you wanted. This is because Perl |s them
 together as strings before Test::Deep gets a chance to do any overload
 tricks.
 
-=head3 any(@expecteds)
+=head3 any
+
+  cmp_deeply( $got, any(@expecteds) );
 
 @expecteds is an array of expected structures.
 
@@ -1280,7 +1336,13 @@ a test passes then none of the tests after that will be attempted.
 
 You can also use overloading with | similarly to all().
 
-=head3 isa($class), Isa($class)
+=head3 Isa
+
+  cmp_deeply( $got, Isa($class) );
+
+=head3 isa
+
+  cmp_deeply( $got, isa($class) );
 
 $class is a class name.
 
@@ -1295,12 +1357,16 @@ a package that is used as a class. Without this, anyone calling
 C<Class-E<gt>isa($other_class)> would get the wrong answer. This is a
 hack to patch over the fact that isa is exported by default.
 
-=head3 obj_isa($class)
+=head3 obj_isa
+
+  cmp_deeply( $got, obj_isa($class) );
 
 This test accepts only objects that are instances of C<$class> or a subclass.
 Unlike the C<Isa> test, this test will never accept class names.
 
-=head3 array_each($thing)
+=head3 array_each
+
+  cmp_deeply( \@got, array_each($thing) );
 
 $thing is a structure to be compared against.
 
@@ -1345,12 +1411,16 @@ size of each one you could do this
   )
   cmp_deeply($got, array_each($structure));
 
-=head3 hash_each($thing)
+=head3 hash_each
+
+  cmp_deeply( \%got, hash_each($thing) );
 
 This test behaves like C<array_each> (see above) but tests that each hash value
 passes its tests.
 
-=head3 str($string)
+=head3 str
+
+  cmp_deeply( $got, str($string) );
 
 $string is a string.
 
@@ -1358,7 +1428,9 @@ This will stringify C<$got_v> and compare it to C<$string> using C<eq>, even
 if $got_v is a ref. It is useful for checking the stringified value of an
 overloaded reference.
 
-=head3 num($number, $tolerance)
+=head3 num
+
+  cmp_deeply( $got, num($number, $tolerance) );
 
 $number is a number.
 $tolerance is an optional number.
@@ -1378,7 +1450,9 @@ can usually just use the string() comparison to be more strict. This will
 work fine for almost all situations, however it will not work when <$got_v>
 is an overloaded value who's string and numerical values differ.
 
-=head3 bool($value)
+=head3 bool
+
+  cmp_deeply( $got, bool($value) );
 
 $value is anything you like but it's probably best to use 0 or 1
 
@@ -1386,7 +1460,9 @@ This will check that C<$got_v> and C<$value> have the same truth value, that
 is they will give the same result when used in boolean context, like in an
 if() statement.
 
-=head3 code(\&subref)
+=head3 code
+
+  cmp_deeply( $got, code(\&subref) );
 
 \&subref is a reference to a subroutine which will be passed a single
 argument, it then should return a true or false and possibly a string
@@ -1412,7 +1488,9 @@ which gives an explanation of why it's a fail.
 
 =head1 DIAGNOSTIC FUNCTIONS
 
-=head3 my $reason = deep_diag($stack)
+=head3 deep_diag
+
+  my $reason = deep_diag($stack);
 
 C<$stack> is a value returned by cmp_details.  Do not call this function
 if cmp_details returned a true value for C<$ok>.
