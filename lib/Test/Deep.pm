@@ -1355,60 +1355,97 @@ which gives an explanation of why it's a fail.
 
 =head2 SET COMPARISONS
 
+Set comparisons give special semantics to array comparisons:
+
+=over 4
+
+=item * The order of items in a set is irrelevant
+
+=item * The presence of duplicate items in a set is ignored.
+
+=back
+
+As such, in any set comparison, the following arrays are equal:
+
+  [ 1, 2 ]
+  [ 1, 1, 2 ]
+  [ 1, 2, 1 ]
+  [ 2, 1, 1 ]
+  [ 1, 1, 2 ]
+
+All are interpreted by C<set> semantics as if the set was only specified as:
+
+  [ 1, 2 ]
+
+All C<set> functions return an object which can have additional items added to
+it:
+
+  my $set = set( 1, 2 );
+  $set->add(1, 3, 1 );  # Set is now ( 1, 2, 3 )
+
+Special care must be taken when using special comparisons within sets. See
+L</SPECIAL CARE WITH SPECIAL COMPARISONS IN SETS AND BAGS> for details.
+
 =head3 set
 
   cmp_deeply( \@got, set(@elements) );
 
-@elements is an array of elements.
-
 This does a set comparison, that is, it compares two arrays but ignores the
-order of the elements and it ignores duplicate elements, so
+order of the elements and it ignores duplicate elements, but ensures that all
+items in in C<@elements> will be in C<$got> and all items in C<$got> will be
+in C<@elements>.
 
-  cmp_deeply([1, 2, 2, 3], set(3, 2, 1, 1))
+So the following tests will be passes, and will be equivalent:
 
-will be a pass.
-
-The object returned by set() has an add() method.
-
-  my $set = set(1, 2);
-  $set->add(1, 3, 1);
-
-will result in a set containing 1, 2, 3.
-
-C<NOTE> See the NOTE on the bag() comparison for some dangers in using
-special comparisons inside set()
+  cmp_deeply([1, 2, 2, 3], set(3, 2, 1, 1));
+  cmp_deeply([1, 2, 3],    set(3, 2, 1));
 
 =head3 supersetof
 
   cmp_deeply( \@got, supersetof(@elements) );
 
+This function works much like L<< C<set>|/set >>, and performs a set comparison
+of C<$got_v> with the elements of C<@elements>.
+
+C<supersetof> is however slightly relaxed, such that C<$got> may contain things
+not in C<@elements>, but must at least contain all C<@elements>.
+
+These two statements are equivalent, and will be passes:
+
+  cmp_deeply([1,2,3,3,4,5], supersetof(2,2,3));
+  cmp_deeply([1,2,3,4,5],   supersetof(2,3));
+
+But these will be failures:
+
+  cmp_deeply([1,2,3,4,5],   supersetof(2,3,6)); # 6 not in superset
+  cmp_deeply([1],           supersetof(1,2));   # 2 not in superset
+
 =head3 subsetof
 
   cmp_deeply( \@got, subsetof(@elements) );
+
+This function works much like L<< C<set>|/set >>, and performs a set comparison
+of C<$got_v> with the elements of C<@elements>.
+
+This is the inverse of C<supersetof>, which expects all unique elements found
+in C<$got_v> must be in C<@elements>.
+
+  cmp_deeply([1,2,4,5], subsetof(2,3,3)    ) # Fail: 1,4 & 5 extra
+  cmp_deeply([2,3,3],   subsetof(1,2,4,5)  ) # Fail: 3 extra
+  cmp_deeply([2,3,3],   subsetof(1,2,4,5,3)) # Pass
 
 =head3 noneof
 
   cmp_deeply( \@got, noneof(@elements) );
 
-@elements is an array of elements.
+@elements is an array of elements, wherein no elements in C<@elements> may be
+found in C<$got_v>.
 
-These do exactly what you'd expect them to do, so for example
+For example:
 
-  cmp_deeply($data, subbagof(1, 1, 3, 4));
-
-checks that @$data contains at most 2 "1"s, 1 "3" and 1 "4" and
-
-  cmp_deeply($data, supersetof(1, 1, 1, 4));
-
-will check that @$data has at least one "1" and at least one "4".
-
-  cmp_deeply($data, noneof(1, 2, 3));
-
-will check that @$data does not contain any instances of "1", "2" or "3".
-
-These are just special cases of the Set and Bag comparisons so they also
-give you an add() method and they also have the same limitations when using
-special comparisons inside them (see the NOTE in the bag() section).
+  # Got has no 1, no 2, and no 3
+  cmp_deeply( [1], noneof( 1, 2, 3 ) ); # fail
+  cmp_deeply( [5], noneof( 1, 2, 3 ) ); # pass
 
 =head2 BAG COMPARISONS
 
