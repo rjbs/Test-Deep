@@ -883,8 +883,11 @@ $got will be check. $name is the test name.
 This is the main comparison function, the others are just wrappers around
 this. Without any special comparisons, it will descend into $expected,
 following every reference and comparing C<$expected_v> to C<$got_v> (using
-C<eq>) at the same position. If at any stage C<$expected_v> is a special
-comparison then Test::Deep may do something else besides a simple string
+C<eq>) at the same position.
+
+C<$expected> and any contents of the structure C<$expected> can be a special
+item, like a C<Test::Deep::Set> object, and encountering such an item at any
+stage may trigger Test::Deep to do something else besides a simple string
 comparison, exactly what it does depends on which special comparison it is.
 
 =head3 $ok = cmp_bag(\@got, \@bag, $name)
