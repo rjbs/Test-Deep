@@ -892,6 +892,8 @@ item, like a C<Test::Deep::Set> object, and encountering such an item at any
 stage may trigger Test::Deep to do something else besides a simple string
 comparison, exactly what it does depends on which special comparison it is.
 
+See L</WHAT ARE SPECIAL COMPARISONS> for details.
+
 =head3 cmp_bag
 
   my $ok = cmp_bag(\@got, \@bag, $name)
