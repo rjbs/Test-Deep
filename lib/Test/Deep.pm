@@ -1149,41 +1149,6 @@ here, the regex will match the string and will capture the animal names and
 check that they match the specified set, in this case it will fail,
 complaining that "goat" is not in the set.
 
-=head3 superhashof
-
-  cmp_deeply( \%got, superhashof(\%hash) );
-
-This will check that the hash C<%$got> is a "super-hash" of C<%hash>. That
-is that all the key and value pairs in C<%hash> appear in C<%$got> but
-C<%$got> can have extra ones also.
-
-For example
-
-  cmp_deeply({a => 1, b => 2}, superhashof({a => 1}))
-
-will pass but
-
-  cmp_deeply({a => 1, b => 2}, superhashof({a => 1, c => 3}))
-
-will fail.
-
-=head3 subhashof
-
-  cmp_deeply( \%got, subhashof(\%hash) );
-
-This will check that the hash C<%$got> is a "sub-hash" of C<%hash>. That is
-that all the key and value pairs in C<%$got> also appear in C<%hash>.
-
-For example
-
-  cmp_deeply({a => 1}, subhashof({a => 1, b => 2}))
-
-will pass but
-
-  cmp_deeply({a => 1, c => 3}, subhashof({a => 1, b => 2}))
-
-will fail.
-
 
 =head3 set
 
@@ -1491,6 +1456,43 @@ algorithm for set and bag matching. Something for the future...
 =head3 subbagof
 
   cmp_deeply( \@got, subbagof(@elements) );
+
+=head2 HASH COMPARISONS
+
+=head3 superhashof
+
+  cmp_deeply( \%got, superhashof(\%hash) );
+
+This will check that the hash C<%$got> is a "super-hash" of C<%hash>. That
+is that all the key and value pairs in C<%hash> appear in C<%$got> but
+C<%$got> can have extra ones also.
+
+For example
+
+  cmp_deeply({a => 1, b => 2}, superhashof({a => 1}))
+
+will pass but
+
+  cmp_deeply({a => 1, b => 2}, superhashof({a => 1, c => 3}))
+
+will fail.
+
+=head3 subhashof
+
+  cmp_deeply( \%got, subhashof(\%hash) );
+
+This will check that the hash C<%$got> is a "sub-hash" of C<%hash>. That is
+that all the key and value pairs in C<%$got> also appear in C<%hash>.
+
+For example
+
+  cmp_deeply({a => 1}, subhashof({a => 1, b => 2}))
+
+will pass but
+
+  cmp_deeply({a => 1, c => 3}, subhashof({a => 1, b => 2}))
+
+will fail.
 
 =head1 DIAGNOSTIC FUNCTIONS
 
