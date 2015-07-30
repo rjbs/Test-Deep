@@ -1184,42 +1184,6 @@ will pass but
 
 will fail.
 
-=head3 bag
-
-  cmp_deeply( \@got, bag(@elements) );
-
-@elements is an array of elements.
-
-This does a bag comparison, that is, it compares two arrays but ignores the
-order of the elements so
-
-  cmp_deeply([1, 2, 2], bag(2, 2, 1))
-
-will be a pass.
-
-The object returned by bag() has an add() method.
-
-  my $bag = bag(1, 2, 3);
-  $bag->add(2, 3, 4);
-
-will result in a bag containing 1, 2, 2, 3, 3, 4.
-
-C<NOTE> If you use certain special comparisons within a bag or set
-comparison there is a danger that a test will fail when it should have
-passed. It can only happen if two or more special comparisons in the bag are
-competing to match elements. Consider this comparison
-
-  cmp_deeply(['furry', 'furball'], bag(re("^fur"), re("furb")))
-
-There are two things that could happen, hopefully C<re("^fur")> is paired with
-"furry" and C<re("^furb")> is paired with "furb" and everything is fine but it
-could happen that C<re("^fur")> is paired with "furball" and then C<re("^furb")>
-cannot find a match and so the test fails. Examples of other competing
-comparisons are C<bag(1, 2, 2)> vs C<set(1, 2)> and
-C<< methods(m1 => "v1", m2 => "v2") >> vs C<< methods(m1 => "v1") >>
-
-This problem is could be solved by using a slower and more complicated
-algorithm for set and bag matching. Something for the future...
 
 =head3 set
 
@@ -1244,13 +1208,6 @@ will result in a set containing 1, 2, 3.
 C<NOTE> See the NOTE on the bag() comparison for some dangers in using
 special comparisons inside set()
 
-=head3 superbagof
-
-  cmp_deeply( \@got, superbagof(@elements) );
-
-=head3 subbagof
-
-  cmp_deeply( \@got, subbagof(@elements) );
 
 =head3 supersetof
 
@@ -1487,6 +1444,53 @@ which gives an explanation of why it's a fail.
   }
 
   cmp_deeply("Brian", code(\&check_name));
+
+=head2 BAG COMPARISONS
+
+=head3 bag
+
+  cmp_deeply( \@got, bag(@elements) );
+
+@elements is an array of elements.
+
+This does a bag comparison, that is, it compares two arrays but ignores the
+order of the elements so
+
+  cmp_deeply([1, 2, 2], bag(2, 2, 1))
+
+will be a pass.
+
+The object returned by bag() has an add() method.
+
+  my $bag = bag(1, 2, 3);
+  $bag->add(2, 3, 4);
+
+will result in a bag containing 1, 2, 2, 3, 3, 4.
+
+C<NOTE> If you use certain special comparisons within a bag or set
+comparison there is a danger that a test will fail when it should have
+passed. It can only happen if two or more special comparisons in the bag are
+competing to match elements. Consider this comparison
+
+  cmp_deeply(['furry', 'furball'], bag(re("^fur"), re("furb")))
+
+There are two things that could happen, hopefully C<re("^fur")> is paired with
+"furry" and C<re("^furb")> is paired with "furb" and everything is fine but it
+could happen that C<re("^fur")> is paired with "furball" and then C<re("^furb")>
+cannot find a match and so the test fails. Examples of other competing
+comparisons are C<bag(1, 2, 2)> vs C<set(1, 2)> and
+C<< methods(m1 => "v1", m2 => "v2") >> vs C<< methods(m1 => "v1") >>
+
+This problem is could be solved by using a slower and more complicated
+algorithm for set and bag matching. Something for the future...
+
+=head3 superbagof
+
+  cmp_deeply( \@got, superbagof(@elements) );
+
+=head3 subbagof
+
+  cmp_deeply( \@got, subbagof(@elements) );
 
 =head1 DIAGNOSTIC FUNCTIONS
 
