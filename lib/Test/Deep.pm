@@ -1449,33 +1449,102 @@ For example:
 
 =head2 BAG COMPARISONS
 
+Bag comparisons give special semantics to array comparisons, that are similar
+to L<< set comparisons|/SET COMPARISONS >>, but slightly different.
+
+=over 4
+
+=item * The order of items in a bag is irrelevant
+
+=item * The presence of duplicate items in a bag is B<PRESERVED>
+
+=back
+
+As such, in any bag comparison, the following arrays are equal:
+
+  [ 1, 1, 2 ]
+  [ 1, 2, 1 ]
+  [ 2, 1, 1 ]
+  [ 1, 1, 2 ]
+
+However, they are B<NOT> equal to any of the following:
+
+  [ 1, 2 ]
+  [ 1, 2, 2 ]
+  [ 1, 1, 1, 2 ]
+
+All C<bag> functions return an object which can have additional items added to
+it:
+
+  my $bag = bag( 1, 2 );
+  $bag->add(1, 3, 1 );  # Set is now ( 1, 1, 1, 2, 3 )
+
+Special care must be taken when using special comparisons within sets. See
+L</SPECIAL CARE WITH SPECIAL COMPARISONS IN SETS AND BAGS> for details.
+
 =head3 bag
 
   cmp_deeply( \@got, bag(@elements) );
 
-@elements is an array of elements.
+This does an order-insensitive bag comparison between C<$got> and
+C<@elements>, ensuring that:
 
-This does a bag comparison, that is, it compares two arrays but ignores the
-order of the elements so
+=over 4
+
+=item each item in C<@elements> is found in C<$got>
+
+=item the number of times a C<$expected_v> is found in C<@elements> is
+reflected in C<$got>
+
+=item no items are found in C<$got> other than those in C<@elements>.
+
+=back
+
+As such, the following are passes, and are equivalent to each other:
 
   cmp_deeply([1, 2, 2], bag(2, 2, 1))
+  cmp_deeply([2, 1, 2], bag(2, 2, 1))
+  cmp_deeply([2, 2, 1], bag(2, 2, 1))
 
-will be a pass.
+But the following are failures:
 
-The object returned by bag() has an add() method.
-
-  my $bag = bag(1, 2, 3);
-  $bag->add(2, 3, 4);
-
-will result in a bag containing 1, 2, 2, 3, 3, 4.
+  cmp_deeply([1, 2, 2],     bag(2, 2, 1, 1)) # Not enough 1's in Got
+  cmp_deeply([1, 2, 2, 1],  bag(2, 2, 1)   ) # Too many   1's in Got
 
 =head3 superbagof
 
-  cmp_deeply( \@got, superbagof(@elements) );
+  cmp_deeply( \@got, superbagof( @elements ) );
+
+This function works much like L<< C<bag>|/bag >>, and performs a set comparison
+of C<$got_v> with the elements of C<@elements>.
+
+C<supersetof> is however slightly relaxed, such that C<$got> may contain things
+not in C<@elements>, but must at least contain all C<@elements>.
+
+So:
+
+  # pass
+  cmp_deeply( [1, 1, 2], superbagof( 1 )      );
+
+  # fail: not enough 1's in superbag
+  cmp_deeply( [1, 1, 2], superbagof( 1, 1, 1 ));
 
 =head3 subbagof
 
   cmp_deeply( \@got, subbagof(@elements) );
+
+This function works much like L<< C<bag>|/bag >>, and performs a set comparison
+of C<$got_v> with the elements of C<@elements>.
+
+This is the inverse of C<superbagof>, and expects all elements in C<$got> to
+be in C<@elements>, while allowing items to exist in C<@elements> that are not
+in C<$got>
+
+  # pass
+  cmp_deeply( [1],        subbagof( 1, 1, 2 ) );
+
+  # fail: too many 1's in subbag
+  cmp_deeply( [1, 1, 1],  subbagof( 1, 1, 2 ) );
 
 =head2 HASH COMPARISONS
 
