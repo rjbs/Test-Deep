@@ -1148,63 +1148,6 @@ here, the regex will match the string and will capture the animal names and
 check that they match the specified set, in this case it will fail,
 complaining that "goat" is not in the set.
 
-
-=head3 set
-
-  cmp_deeply( \@got, set(@elements) );
-
-@elements is an array of elements.
-
-This does a set comparison, that is, it compares two arrays but ignores the
-order of the elements and it ignores duplicate elements, so
-
-  cmp_deeply([1, 2, 2, 3], set(3, 2, 1, 1))
-
-will be a pass.
-
-The object returned by set() has an add() method.
-
-  my $set = set(1, 2);
-  $set->add(1, 3, 1);
-
-will result in a set containing 1, 2, 3.
-
-C<NOTE> See the NOTE on the bag() comparison for some dangers in using
-special comparisons inside set()
-
-
-=head3 supersetof
-
-  cmp_deeply( \@got, supersetof(@elements) );
-
-=head3 subsetof
-
-  cmp_deeply( \@got, subsetof(@elements) );
-
-=head3 noneof
-
-  cmp_deeply( \@got, noneof(@elements) );
-
-@elements is an array of elements.
-
-These do exactly what you'd expect them to do, so for example
-
-  cmp_deeply($data, subbagof(1, 1, 3, 4));
-
-checks that @$data contains at most 2 "1"s, 1 "3" and 1 "4" and
-
-  cmp_deeply($data, supersetof(1, 1, 1, 4));
-
-will check that @$data has at least one "1" and at least one "4".
-
-  cmp_deeply($data, noneof(1, 2, 3));
-
-will check that @$data does not contain any instances of "1", "2" or "3".
-
-These are just special cases of the Set and Bag comparisons so they also
-give you an add() method and they also have the same limitations when using
-special comparisons inside them (see the NOTE in the bag() section).
-
 =head3 all
 
   cmp_deeply( $got, all(@expecteds) );
@@ -1408,6 +1351,63 @@ which gives an explanation of why it's a fail.
   }
 
   cmp_deeply("Brian", code(\&check_name));
+
+=head2 SET COMPARISONS
+
+=head3 set
+
+  cmp_deeply( \@got, set(@elements) );
+
+@elements is an array of elements.
+
+This does a set comparison, that is, it compares two arrays but ignores the
+order of the elements and it ignores duplicate elements, so
+
+  cmp_deeply([1, 2, 2, 3], set(3, 2, 1, 1))
+
+will be a pass.
+
+The object returned by set() has an add() method.
+
+  my $set = set(1, 2);
+  $set->add(1, 3, 1);
+
+will result in a set containing 1, 2, 3.
+
+C<NOTE> See the NOTE on the bag() comparison for some dangers in using
+special comparisons inside set()
+
+=head3 supersetof
+
+  cmp_deeply( \@got, supersetof(@elements) );
+
+=head3 subsetof
+
+  cmp_deeply( \@got, subsetof(@elements) );
+
+=head3 noneof
+
+  cmp_deeply( \@got, noneof(@elements) );
+
+@elements is an array of elements.
+
+These do exactly what you'd expect them to do, so for example
+
+  cmp_deeply($data, subbagof(1, 1, 3, 4));
+
+checks that @$data contains at most 2 "1"s, 1 "3" and 1 "4" and
+
+  cmp_deeply($data, supersetof(1, 1, 1, 4));
+
+will check that @$data has at least one "1" and at least one "4".
+
+  cmp_deeply($data, noneof(1, 2, 3));
+
+will check that @$data does not contain any instances of "1", "2" or "3".
+
+These are just special cases of the Set and Bag comparisons so they also
+give you an add() method and they also have the same limitations when using
+special comparisons inside them (see the NOTE in the bag() section).
 
 =head2 BAG COMPARISONS
 
