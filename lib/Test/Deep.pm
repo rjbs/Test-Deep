@@ -1432,23 +1432,6 @@ The object returned by bag() has an add() method.
 
 will result in a bag containing 1, 2, 2, 3, 3, 4.
 
-C<NOTE> If you use certain special comparisons within a bag or set
-comparison there is a danger that a test will fail when it should have
-passed. It can only happen if two or more special comparisons in the bag are
-competing to match elements. Consider this comparison
-
-  cmp_deeply(['furry', 'furball'], bag(re("^fur"), re("furb")))
-
-There are two things that could happen, hopefully C<re("^fur")> is paired with
-"furry" and C<re("^furb")> is paired with "furb" and everything is fine but it
-could happen that C<re("^fur")> is paired with "furball" and then C<re("^furb")>
-cannot find a match and so the test fails. Examples of other competing
-comparisons are C<bag(1, 2, 2)> vs C<set(1, 2)> and
-C<< methods(m1 => "v1", m2 => "v2") >> vs C<< methods(m1 => "v1") >>
-
-This problem is could be solved by using a slower and more complicated
-algorithm for set and bag matching. Something for the future...
-
 =head3 superbagof
 
   cmp_deeply( \@got, superbagof(@elements) );
@@ -1601,6 +1584,27 @@ There is a bug in set and bag compare to do with competing SCs. It only
 occurs when you put certain special comparisons inside bag or set
 comparisons you don't need to worry about it. The full details are in the
 bag() docs. It will be fixed in an upcoming version.
+
+=head1 CAVEATS
+
+=head2 SPECIAL CARE WITH SPECIAL COMPARISONS IN SETS AND BAGS
+
+If you use certain special comparisons within a bag or set comparison there is
+a danger that a test will fail when it should have passed. It can only happen
+if two or more special comparisons in the bag are competing to match elements.
+Consider this comparison
+
+  cmp_deeply(['furry', 'furball'], bag(re("^fur"), re("furb")))
+
+There are two things that could happen, hopefully C<re("^fur")> is paired with
+"furry" and C<re("^furb")> is paired with "furb" and everything is fine but it
+could happen that C<re("^fur")> is paired with "furball" and then C<re("^furb")>
+cannot find a match and so the test fails. Examples of other competing
+comparisons are C<bag(1, 2, 2)> vs C<set(1, 2)> and
+C<< methods(m1 => "v1", m2 => "v2") >> vs C<< methods(m1 => "v1") >>
+
+This problem is could be solved by using a slower and more complicated
+algorithm for set and bag matching. Something for the future...
 
 =head1 WHAT ARE SPECIAL COMPARISONS?
 
