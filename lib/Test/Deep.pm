@@ -1547,6 +1547,13 @@ in C<$got>
 
 =head2 HASH COMPARISONS
 
+Typically, if you're doing simple hash comparisons,
+
+  cmp_deeply( \%got, \%expected )
+
+Is suffice. C<cmp_deeply> will ensure C<%got> and C<%hash> have identical
+keys, and each key from either has the same corresponding value.
+
 =head3 superhashof
 
   cmp_deeply( \%got, superhashof(\%hash) );
