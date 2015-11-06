@@ -37,6 +37,8 @@ sub add
 	{
 		local $SIG{__DIE__};
 
+        local $@;
+
 		# cannot weaken read only refs, no harm if we can't as they never
 		# disappear
 		eval{weaken($d1)};
