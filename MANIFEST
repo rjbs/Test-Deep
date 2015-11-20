@@ -24,6 +24,7 @@ lib/Test/Deep/Isa.pm
 lib/Test/Deep/ListMethods.pm
 lib/Test/Deep/Methods.pm
 lib/Test/Deep/MM.pm
+lib/Test/Deep/None.pm
 lib/Test/Deep/NoTest.pm
 lib/Test/Deep/Number.pm
 lib/Test/Deep/Obj.pm
@@ -69,6 +70,7 @@ t/isa.t
 t/listmethods.t
 t/memory.t
 t/methods.t
+t/none.t
 t/notest.t
 t/notest_extra.t
 t/number.t

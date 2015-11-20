@@ -53,6 +53,7 @@ my @constructors = (
   Isa               => "Isa",
   ListMethods       => "",
   Methods           => "",
+  None              => "",
   Number            => "num",
   Obj               => "obj_isa",
   RefType           => "",
@@ -101,7 +102,7 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
       all any array array_each arrayelementsonly arraylength arraylengthonly
       bag bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
       hash hash_each hashkeys hashkeysonly ignore isa listmethods methods
-      noclass noneof num re reftype regexpmatches regexponly regexpref
+      noclass none noneof num re reftype regexpmatches regexponly regexpref
       regexprefonly scalarrefonly scalref set shallow str subbagof subhashof
       subsetof superbagof superhashof supersetof useclass
     )
@@ -114,7 +115,7 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
       all any array array_each arrayelementsonly arraylength arraylengthonly
       bag bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
       hash hash_each hashkeys hashkeysonly ignore listmethods methods
-      noclass noneof num re reftype regexpmatches regexponly regexpref
+      noclass none noneof num re reftype regexpmatches regexponly regexpref
       regexprefonly scalarrefonly scalref set shallow str subbagof subhashof
       subsetof superbagof superhashof supersetof useclass
     )
@@ -153,6 +154,7 @@ sub import {
     require Test::Deep::ListMethods;
     require Test::Deep::Methods;
     require Test::Deep::MM;
+    require Test::Deep::None;
     require Test::Deep::Number;
     require Test::Deep::Obj;
     require Test::Deep::Ref;
@@ -1547,7 +1549,7 @@ Those things are:
   all any array array_each arrayelementsonly arraylength arraylengthonly bag
   blessed bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply hash
   hash_each hashkeys hashkeysonly ignore Isa isa listmethods methods noclass
-  noneof num obj_isa re reftype regexpmatches regexponly regexpref
+  none noneof num obj_isa re reftype regexpmatches regexponly regexpref
   regexprefonly scalarrefonly scalref set shallow str subbagof subhashof
   subsetof superbagof superhashof supersetof useclass
 
