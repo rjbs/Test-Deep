@@ -1,5 +1,9 @@
 Revision history for Test-Deep
 
+0.119_01  2015-11-19
+        - add none() test; it's like any(), but negative
+        - fix stringification of any() expectations
+
 0.119     2015-09-29
         - remove use of Test::NoWarnings for user-facing tests
 
