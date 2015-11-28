@@ -21,7 +21,7 @@ unless (defined $Test::Deep::NoTest::NoTest)
 
 our ($Stack, %Compared, $CompareCache, %WrapCache, $Shallow);
 
-our $VERSION = '0.119_01';
+our $VERSION = '1.120';
 $VERSION =~ tr/_//d;
 
 require Exporter;

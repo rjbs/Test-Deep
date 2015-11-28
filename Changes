@@ -1,5 +1,8 @@
 Revision history for Test-Deep
 
+0.120     2015-11-27
+        - no changes since 0.119_01
+
 0.119_01  2015-11-19
         - add none() test; it's like any(), but negative
         - fix stringification of any() expectations
