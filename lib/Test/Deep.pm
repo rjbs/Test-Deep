@@ -1040,10 +1040,10 @@ This can be useful when you want to check that objects have been
 constructed correctly but you don't want to write lots of
 C<bless>es. If @people is an array of Person objects then
 
-  cmp_deeply(\@people, noclass([
+  cmp_deeply(\@people, [
     bless {name => 'John', phone => '555-5555'}, "Person",
     bless {name => 'Anne', phone => '444-4444'}, "Person",
-  ]));
+  ]);
 
 can be replaced with
 
