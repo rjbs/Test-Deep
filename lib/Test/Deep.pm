@@ -680,7 +680,7 @@ string should be a 7 digit number beginning with 0, C<eq> is no good in this
 situation, you need a regular expression. So you could use Test::More's
 C<like()> function:
 
-  like($string, '/^0d{6}$/', "number looks good");
+  like($string, '/^0[0-9]{6}$/', "number looks good");
 
 Similarly, to check that a string looks like a name, you could do:
 
