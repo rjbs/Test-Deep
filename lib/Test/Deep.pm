@@ -680,11 +680,11 @@ string should be a 7 digit number beginning with 0, C<eq> is no good in this
 situation, you need a regular expression. So you could use Test::More's
 C<like()> function:
 
-  like($string, '/^0[0-9]{6}$/', "number looks good");
+  like($string, qr/^0[0-9]{6}$/, "number looks good");
 
 Similarly, to check that a string looks like a name, you could do:
 
-  like($string, '/^(Mr|Mrs|Miss) \w+ \w+$/',
+  like($string, qr/^(Mr|Mrs|Miss) \w+ \w+$/,
     "got title, first and last name");
 
 Now imagine your function produces a hash with some personal details in it.
@@ -693,8 +693,8 @@ name looks like a name and the phone number looks like a phone number. You
 could do:
 
   $hash = make_person();
-  like($hash->{Name}, '/^(Mr|Mrs|Miss) \w+ \w+$/', "name ok");
-  like($hash->{Phone}, '/^0d{6}$/', "phone ok");
+  like($hash->{Name}, qr/^(Mr|Mrs|Miss) \w+ \w+$/, "name ok");
+  like($hash->{Phone}, qr/^0[0-9]{6}$/, "phone ok");
   is(scalar keys %$hash, 2, "correct number of keys");
 
 But that's not quite right, what if make_person has a serious problem and
@@ -702,8 +702,8 @@ didn't even return a hash? We really need to write
 
   if (ref($hash) eq "HASH")
   {
-    like($hash->{Name}, '/^(Mr|Mrs|Miss) \w+ \w+$/', "name ok");
-    like($hash->{Phone}, '/^0d{6}$/', "phone ok");
+    like($hash->{Name}, qr/^(Mr|Mrs|Miss) \w+ \w+$/, "name ok");
+    like($hash->{Phone}, qr/^0[0-9]{6}$/, "phone ok");
     is(scalar keys %$hash, 2, "correct number of keys");
   }
   else
