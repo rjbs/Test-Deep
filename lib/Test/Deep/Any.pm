@@ -10,7 +10,7 @@ sub init
 	my $self = shift;
 
 	my @list = map {
-	  eval { $_->isa('Test::Deep::Any') }
+	  UNIVERSAL::isa($_, 'Test::Deep::Any')
 	  ? @{ $_->{val} }
 	  : Test::Deep::wrap($_)
 	} @_;

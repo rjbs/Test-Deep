@@ -40,6 +40,8 @@ sub descend
 		my ($call, $exp_res) = @$method;
 		my ($name, @args) = @$call;
 
+    local $@;
+
     my $got_res;
     if (! eval { $got_res = $self->call_method($got, $call); 1 }) {
       die $@ unless $@ =~ /\ACan't locate object method "\Q$name"/;
