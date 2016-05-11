@@ -877,7 +877,9 @@ respectively.
 
 =head1 COMPARISON FUNCTIONS
 
-=head3 $ok = cmp_deeply($got, $expected, $name)
+=head3 cmp_deeply
+
+  my $ok = cmp_deeply($got, $expected, $name)
 
 $got is the result to be checked. $expected is the structure against which
 $got will be check. $name is the test name.
@@ -885,26 +887,39 @@ $got will be check. $name is the test name.
 This is the main comparison function, the others are just wrappers around
 this. Without any special comparisons, it will descend into $expected,
 following every reference and comparing C<$expected_v> to C<$got_v> (using
-C<eq>) at the same position. If at any stage C<$expected_v> is a special
-comparison then Test::Deep may do something else besides a simple string
+C<eq>) at the same position.
+
+C<$expected> and any contents of the structure C<$expected> can be a special
+item, like a C<Test::Deep::Set> object, and encountering such an item at any
+stage may trigger Test::Deep to do something else besides a simple string
 comparison, exactly what it does depends on which special comparison it is.
 
-=head3 $ok = cmp_bag(\@got, \@bag, $name)
+See L</WHAT ARE SPECIAL COMPARISONS> for details.
+
+=head3 cmp_bag
+
+  my $ok = cmp_bag(\@got, \@bag, $name)
 
 Is shorthand for cmp_deeply(\@got, bag(@bag), $name)
 
 N.B. Both arguments must be array refs. If they aren't an error will
 be raised via die.
 
-=head3 $ok = cmp_set(\@got, \@set, $name)
+=head3 cmp_set
+
+  my $ok = cmp_set(\@got, \@set, $name)
 
 Is shorthand for cmp_deeply(\@got, set(@set), $name)
 
-=head3 $ok = cmp_methods(\@got, \@methods, $name)
+=head3 cmp_methods
+
+  my $ok = cmp_methods(\@got, \@methods, $name)
 
 Is shorthand for cmp_deeply(\@got, methods(@methods), $name)
 
-=head3 $ok = eq_deeply($got, $expected)
+=head3 eq_deeply
+
+  my $ok = eq_deeply($got, $expected)
 
 This is the same as cmp_deeply() except it just returns true or
 false. It does not create diagnostics or talk to L<Test::Builder>, but
@@ -917,7 +932,9 @@ import it through L<Test::Deep::NoTest>. For example
 otherwise the L<Test::Builder> framework will be loaded and testing messages
 will be output when your program ends.
 
-=head3 ($ok, $stack) = cmp_details($got, $expected)
+=head3 cmp_details
+
+  ($ok, $stack) = cmp_details($got, $expected)
 
 This behaves much like eq_deeply, but it additionally allows you to
 produce diagnostics in case of failure by passing the value in C<$stack>
@@ -930,7 +947,9 @@ See L</USING TEST::DEEP WITH TEST::BUILDER> for example uses.
 
 =head1 SPECIAL COMPARISONS PROVIDED
 
-=head3 ignore()
+=head3 ignore
+
+  cmp_deeply( $got, ignore() );
 
 This makes Test::Deep skip tests on $got_v. No matter what value C<$got_v>
 has, Test::Deep will think it's correct. This is useful if some part of the
@@ -948,7 +967,9 @@ is the equivalent of checking
   cmp_deeply($got->{address};
   ['5 A street', 'a town', 'a country']);
 
-=head3 methods(%hash)
+=head3 methods
+
+  cmp_deeply( $got, methods(%hash) );
 
 %hash is a hash of method call => expected value pairs.
 
@@ -985,7 +1006,9 @@ there is no way to know which if manager and coder will be tested first. If
 the methods you are testing depend on and alter global variables or if
 manager and coder are the same object then you may run into problems.
 
-=head3 listmethods(%hash)
+=head3 listmethods
+
+  cmp_deeply( $got, listmethods(%hash) );
 
 %hash is a hash of method call => expected value pairs.
 
@@ -1010,7 +1033,9 @@ The methods will be called in the order you supply them.
 
 B<NOTE> The same caveats apply as for methods().
 
-=head3 shallow($thing)
+=head3 shallow
+
+  cmp_deeply( $got, shallow($thing) );
 
 $thing is a ref.
 
@@ -1027,7 +1052,9 @@ will pass because @a and @b have the same elements however
 will fail because although \@a and \@b both contain C<1, 2, 3> they are
 references to different arrays.
 
-=head3 noclass($thing)
+=head3 noclass
+
+  cmp_deeply( $got, noclass($thing) );
 
 $thing is a structure to be compared against.
 
@@ -1058,7 +1085,9 @@ could do a second test like
 
   cmp_deeply(\@people, array_each(isa("Person"));
 
-=head3 useclass($thing)
+=head3 useclass
+
+  cmp_deeply( $got, useclass($thing) );
 
 This turns back on the class comparison while inside a noclass().
 
@@ -1075,7 +1104,9 @@ In this example the class of the array reference in C<$got> is ignored but
 the class of C<$object> is checked, as is the class of everything inside
 C<$object>.
 
-=head3 re($regexp, $capture_data, $flags)
+=head3 re
+
+  cmp_deeply( $got, re($regexp, $capture_data, $flags) );
 
 $regexp is either a regular expression reference produced with C<qr/.../> or
 a string which will be used to construct a regular expression.
@@ -1119,116 +1150,9 @@ here, the regex will match the string and will capture the animal names and
 check that they match the specified set, in this case it will fail,
 complaining that "goat" is not in the set.
 
-=head3 superhashof(\%hash)
+=head3 all
 
-This will check that the hash C<%$got> is a "super-hash" of C<%hash>. That
-is that all the key and value pairs in C<%hash> appear in C<%$got> but
-C<%$got> can have extra ones also.
-
-For example
-
-  cmp_deeply({a => 1, b => 2}, superhashof({a => 1}))
-
-will pass but
-
-  cmp_deeply({a => 1, b => 2}, superhashof({a => 1, c => 3}))
-
-will fail.
-
-=head3 subhashof(\%hash)
-
-This will check that the hash C<%$got> is a "sub-hash" of C<%hash>. That is
-that all the key and value pairs in C<%$got> also appear in C<%hash>.
-
-For example
-
-  cmp_deeply({a => 1}, subhashof({a => 1, b => 2}))
-
-will pass but
-
-  cmp_deeply({a => 1, c => 3}, subhashof({a => 1, b => 2}))
-
-will fail.
-
-=head3 bag(@elements)
-
-@elements is an array of elements.
-
-This does a bag comparison, that is, it compares two arrays but ignores the
-order of the elements so
-
-  cmp_deeply([1, 2, 2], bag(2, 2, 1))
-
-will be a pass.
-
-The object returned by bag() has an add() method.
-
-  my $bag = bag(1, 2, 3);
-  $bag->add(2, 3, 4);
-
-will result in a bag containing 1, 2, 2, 3, 3, 4.
-
-C<NOTE> If you use certain special comparisons within a bag or set
-comparison there is a danger that a test will fail when it should have
-passed. It can only happen if two or more special comparisons in the bag are
-competing to match elements. Consider this comparison
-
-  cmp_deeply(['furry', 'furball'], bag(re("^fur"), re("furb")))
-
-There are two things that could happen, hopefully C<re("^fur")> is paired with
-"furry" and C<re("^furb")> is paired with "furb" and everything is fine but it
-could happen that C<re("^fur")> is paired with "furball" and then C<re("^furb")>
-cannot find a match and so the test fails. Examples of other competing
-comparisons are C<bag(1, 2, 2)> vs C<set(1, 2)> and
-C<< methods(m1 => "v1", m2 => "v2") >> vs C<< methods(m1 => "v1") >>
-
-This problem is could be solved by using a slower and more complicated
-algorithm for set and bag matching. Something for the future...
-
-=head3 set(@elements)
-
-@elements is an array of elements.
-
-This does a set comparison, that is, it compares two arrays but ignores the
-order of the elements and it ignores duplicate elements, so
-
-  cmp_deeply([1, 2, 2, 3], set(3, 2, 1, 1))
-
-will be a pass.
-
-The object returned by set() has an add() method.
-
-  my $set = set(1, 2);
-  $set->add(1, 3, 1);
-
-will result in a set containing 1, 2, 3.
-
-C<NOTE> See the NOTE on the bag() comparison for some dangers in using
-special comparisons inside set()
-
-=head3 superbagof(@elements), subbagof(@elements), supersetof(@elements), subsetof(@elements) and noneof(@elements)
-
-@elements is an array of elements.
-
-These do exactly what you'd expect them to do, so for example
-
-  cmp_deeply($data, subbagof(1, 1, 3, 4));
-
-checks that @$data contains at most 2 "1"s, 1 "3" and 1 "4" and
-
-  cmp_deeply($data, supersetof(1, 1, 1, 4));
-
-will check that @$data has at least one "1" and at least one "4".
-
-  cmp_deeply($data, noneof(1, 2, 3));
-
-will check that @$data does not contain any instances of "1", "2" or "3".
-
-These are just special cases of the Set and Bag comparisons so they also
-give you an add() method and they also have the same limitations when using
-special comparisons inside them (see the NOTE in the bag() section).
-
-=head3 all(@expecteds)
+  cmp_deeply( $got, all(@expecteds) );
 
 @expecteds is an array of expected structures.
 
@@ -1268,7 +1192,9 @@ which is presumably not what you wanted. This is because Perl |s them
 together as strings before Test::Deep gets a chance to do any overload
 tricks.
 
-=head3 any(@expecteds)
+=head3 any
+
+  cmp_deeply( $got, any(@expecteds) );
 
 @expecteds is an array of expected structures.
 
@@ -1278,7 +1204,13 @@ a test passes then none of the tests after that will be attempted.
 
 You can also use overloading with | similarly to all().
 
-=head3 isa($class), Isa($class)
+=head3 Isa
+
+  cmp_deeply( $got, Isa($class) );
+
+=head3 isa
+
+  cmp_deeply( $got, isa($class) );
 
 $class is a class name.
 
@@ -1293,12 +1225,16 @@ a package that is used as a class. Without this, anyone calling
 C<Class-E<gt>isa($other_class)> would get the wrong answer. This is a
 hack to patch over the fact that isa is exported by default.
 
-=head3 obj_isa($class)
+=head3 obj_isa
+
+  cmp_deeply( $got, obj_isa($class) );
 
 This test accepts only objects that are instances of C<$class> or a subclass.
 Unlike the C<Isa> test, this test will never accept class names.
 
-=head3 array_each($thing)
+=head3 array_each
+
+  cmp_deeply( \@got, array_each($thing) );
 
 $thing is a structure to be compared against.
 
@@ -1343,12 +1279,16 @@ size of each one you could do this
   )
   cmp_deeply($got, array_each($structure));
 
-=head3 hash_each($thing)
+=head3 hash_each
+
+  cmp_deeply( \%got, hash_each($thing) );
 
 This test behaves like C<array_each> (see above) but tests that each hash value
 passes its tests.
 
-=head3 str($string)
+=head3 str
+
+  cmp_deeply( $got, str($string) );
 
 $string is a string.
 
@@ -1356,7 +1296,9 @@ This will stringify C<$got_v> and compare it to C<$string> using C<eq>, even
 if $got_v is a ref. It is useful for checking the stringified value of an
 overloaded reference.
 
-=head3 num($number, $tolerance)
+=head3 num
+
+  cmp_deeply( $got, num($number, $tolerance) );
 
 $number is a number.
 $tolerance is an optional number.
@@ -1376,7 +1318,9 @@ can usually just use the string() comparison to be more strict. This will
 work fine for almost all situations, however it will not work when <$got_v>
 is an overloaded value who's string and numerical values differ.
 
-=head3 bool($value)
+=head3 bool
+
+  cmp_deeply( $got, bool($value) );
 
 $value is anything you like but it's probably best to use 0 or 1
 
@@ -1384,7 +1328,9 @@ This will check that C<$got_v> and C<$value> have the same truth value, that
 is they will give the same result when used in boolean context, like in an
 if() statement.
 
-=head3 code(\&subref)
+=head3 code
+
+  cmp_deeply( $got, code(\&subref) );
 
 \&subref is a reference to a subroutine which will be passed a single
 argument, it then should return a true or false and possibly a string
@@ -1408,9 +1354,248 @@ which gives an explanation of why it's a fail.
 
   cmp_deeply("Brian", code(\&check_name));
 
+=head2 SET COMPARISONS
+
+Set comparisons give special semantics to array comparisons:
+
+=over 4
+
+=item * The order of items in a set is irrelevant
+
+=item * The presence of duplicate items in a set is ignored.
+
+=back
+
+As such, in any set comparison, the following arrays are equal:
+
+  [ 1, 2 ]
+  [ 1, 1, 2 ]
+  [ 1, 2, 1 ]
+  [ 2, 1, 1 ]
+  [ 1, 1, 2 ]
+
+All are interpreted by C<set> semantics as if the set was only specified as:
+
+  [ 1, 2 ]
+
+All C<set> functions return an object which can have additional items added to
+it:
+
+  my $set = set( 1, 2 );
+  $set->add(1, 3, 1 );  # Set is now ( 1, 2, 3 )
+
+Special care must be taken when using special comparisons within sets. See
+L</SPECIAL CARE WITH SPECIAL COMPARISONS IN SETS AND BAGS> for details.
+
+=head3 set
+
+  cmp_deeply( \@got, set(@elements) );
+
+This does a set comparison, that is, it compares two arrays but ignores the
+order of the elements and it ignores duplicate elements, but ensures that all
+items in in C<@elements> will be in C<$got> and all items in C<$got> will be
+in C<@elements>.
+
+So the following tests will be passes, and will be equivalent:
+
+  cmp_deeply([1, 2, 2, 3], set(3, 2, 1, 1));
+  cmp_deeply([1, 2, 3],    set(3, 2, 1));
+
+=head3 supersetof
+
+  cmp_deeply( \@got, supersetof(@elements) );
+
+This function works much like L<< C<set>|/set >>, and performs a set comparison
+of C<$got_v> with the elements of C<@elements>.
+
+C<supersetof> is however slightly relaxed, such that C<$got> may contain things
+not in C<@elements>, but must at least contain all C<@elements>.
+
+These two statements are equivalent, and will be passes:
+
+  cmp_deeply([1,2,3,3,4,5], supersetof(2,2,3));
+  cmp_deeply([1,2,3,4,5],   supersetof(2,3));
+
+But these will be failures:
+
+  cmp_deeply([1,2,3,4,5],   supersetof(2,3,6)); # 6 not in superset
+  cmp_deeply([1],           supersetof(1,2));   # 2 not in superset
+
+=head3 subsetof
+
+  cmp_deeply( \@got, subsetof(@elements) );
+
+This function works much like L<< C<set>|/set >>, and performs a set comparison
+of C<$got_v> with the elements of C<@elements>.
+
+This is the inverse of C<supersetof>, which expects all unique elements found
+in C<$got_v> must be in C<@elements>.
+
+  cmp_deeply([1,2,4,5], subsetof(2,3,3)    ) # Fail: 1,4 & 5 extra
+  cmp_deeply([2,3,3],   subsetof(1,2,4,5)  ) # Fail: 3 extra
+  cmp_deeply([2,3,3],   subsetof(1,2,4,5,3)) # Pass
+
+=head3 noneof
+
+  cmp_deeply( \@got, noneof(@elements) );
+
+@elements is an array of elements, wherein no elements in C<@elements> may be
+found in C<$got_v>.
+
+For example:
+
+  # Got has no 1, no 2, and no 3
+  cmp_deeply( [1], noneof( 1, 2, 3 ) ); # fail
+  cmp_deeply( [5], noneof( 1, 2, 3 ) ); # pass
+
+=head2 BAG COMPARISONS
+
+Bag comparisons give special semantics to array comparisons, that are similar
+to L<< set comparisons|/SET COMPARISONS >>, but slightly different.
+
+=over 4
+
+=item * The order of items in a bag is irrelevant
+
+=item * The presence of duplicate items in a bag is B<PRESERVED>
+
+=back
+
+As such, in any bag comparison, the following arrays are equal:
+
+  [ 1, 1, 2 ]
+  [ 1, 2, 1 ]
+  [ 2, 1, 1 ]
+  [ 1, 1, 2 ]
+
+However, they are B<NOT> equal to any of the following:
+
+  [ 1, 2 ]
+  [ 1, 2, 2 ]
+  [ 1, 1, 1, 2 ]
+
+All C<bag> functions return an object which can have additional items added to
+it:
+
+  my $bag = bag( 1, 2 );
+  $bag->add(1, 3, 1 );  # Set is now ( 1, 1, 1, 2, 3 )
+
+Special care must be taken when using special comparisons within sets. See
+L</SPECIAL CARE WITH SPECIAL COMPARISONS IN SETS AND BAGS> for details.
+
+=head3 bag
+
+  cmp_deeply( \@got, bag(@elements) );
+
+This does an order-insensitive bag comparison between C<$got> and
+C<@elements>, ensuring that:
+
+=over 4
+
+=item each item in C<@elements> is found in C<$got>
+
+=item the number of times a C<$expected_v> is found in C<@elements> is
+reflected in C<$got>
+
+=item no items are found in C<$got> other than those in C<@elements>.
+
+=back
+
+As such, the following are passes, and are equivalent to each other:
+
+  cmp_deeply([1, 2, 2], bag(2, 2, 1))
+  cmp_deeply([2, 1, 2], bag(2, 2, 1))
+  cmp_deeply([2, 2, 1], bag(2, 2, 1))
+
+But the following are failures:
+
+  cmp_deeply([1, 2, 2],     bag(2, 2, 1, 1)) # Not enough 1's in Got
+  cmp_deeply([1, 2, 2, 1],  bag(2, 2, 1)   ) # Too many   1's in Got
+
+=head3 superbagof
+
+  cmp_deeply( \@got, superbagof( @elements ) );
+
+This function works much like L<< C<bag>|/bag >>, and performs a set comparison
+of C<$got_v> with the elements of C<@elements>.
+
+C<supersetof> is however slightly relaxed, such that C<$got> may contain things
+not in C<@elements>, but must at least contain all C<@elements>.
+
+So:
+
+  # pass
+  cmp_deeply( [1, 1, 2], superbagof( 1 )      );
+
+  # fail: not enough 1's in superbag
+  cmp_deeply( [1, 1, 2], superbagof( 1, 1, 1 ));
+
+=head3 subbagof
+
+  cmp_deeply( \@got, subbagof(@elements) );
+
+This function works much like L<< C<bag>|/bag >>, and performs a set comparison
+of C<$got_v> with the elements of C<@elements>.
+
+This is the inverse of C<superbagof>, and expects all elements in C<$got> to
+be in C<@elements>, while allowing items to exist in C<@elements> that are not
+in C<$got>
+
+  # pass
+  cmp_deeply( [1],        subbagof( 1, 1, 2 ) );
+
+  # fail: too many 1's in subbag
+  cmp_deeply( [1, 1, 1],  subbagof( 1, 1, 2 ) );
+
+=head2 HASH COMPARISONS
+
+Typically, if you're doing simple hash comparisons,
+
+  cmp_deeply( \%got, \%expected )
+
+Is suffice. C<cmp_deeply> will ensure C<%got> and C<%hash> have identical
+keys, and each key from either has the same corresponding value.
+
+=head3 superhashof
+
+  cmp_deeply( \%got, superhashof(\%hash) );
+
+This will check that the hash C<%$got> is a "super-hash" of C<%hash>. That
+is that all the key and value pairs in C<%hash> appear in C<%$got> but
+C<%$got> can have extra ones also.
+
+For example
+
+  cmp_deeply({a => 1, b => 2}, superhashof({a => 1}))
+
+will pass but
+
+  cmp_deeply({a => 1, b => 2}, superhashof({a => 1, c => 3}))
+
+will fail.
+
+=head3 subhashof
+
+  cmp_deeply( \%got, subhashof(\%hash) );
+
+This will check that the hash C<%$got> is a "sub-hash" of C<%hash>. That is
+that all the key and value pairs in C<%$got> also appear in C<%hash>.
+
+For example
+
+  cmp_deeply({a => 1}, subhashof({a => 1, b => 2}))
+
+will pass but
+
+  cmp_deeply({a => 1, c => 3}, subhashof({a => 1, b => 2}))
+
+will fail.
+
 =head1 DIAGNOSTIC FUNCTIONS
 
-=head3 my $reason = deep_diag($stack)
+=head3 deep_diag
+
+  my $reason = deep_diag($stack);
 
 C<$stack> is a value returned by cmp_details.  Do not call this function
 if cmp_details returned a true value for C<$ok>.
@@ -1513,6 +1698,27 @@ There is a bug in set and bag compare to do with competing SCs. It only
 occurs when you put certain special comparisons inside bag or set
 comparisons you don't need to worry about it. The full details are in the
 bag() docs. It will be fixed in an upcoming version.
+
+=head1 CAVEATS
+
+=head2 SPECIAL CARE WITH SPECIAL COMPARISONS IN SETS AND BAGS
+
+If you use certain special comparisons within a bag or set comparison there is
+a danger that a test will fail when it should have passed. It can only happen
+if two or more special comparisons in the bag are competing to match elements.
+Consider this comparison
+
+  cmp_deeply(['furry', 'furball'], bag(re("^fur"), re("furb")))
+
+There are two things that could happen, hopefully C<re("^fur")> is paired with
+"furry" and C<re("^furb")> is paired with "furb" and everything is fine but it
+could happen that C<re("^fur")> is paired with "furball" and then C<re("^furb")>
+cannot find a match and so the test fails. Examples of other competing
+comparisons are C<bag(1, 2, 2)> vs C<set(1, 2)> and
+C<< methods(m1 => "v1", m2 => "v2") >> vs C<< methods(m1 => "v1") >>
+
+This problem is could be solved by using a slower and more complicated
+algorithm for set and bag matching. Something for the future...
 
 =head1 WHAT ARE SPECIAL COMPARISONS?
 
