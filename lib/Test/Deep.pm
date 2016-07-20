@@ -836,10 +836,11 @@ one easily by doing
   my @a = (1, 2, 3, \@b);
   push(@b, \@a);
 
-now @a contains a reference to be @b and @b contains a reference to @a. This
-causes problems if you have a program that wants to look inside @a and keep
-looking deeper and deeper at every level, it could get caught in an infinite
-loop looking into @a then @b then @a then @b and so on.
+now C<@a> contains a reference to be C<@b> and C<@b> contains a reference to
+C<@a>. This causes problems if you have a program that wants to look inside
+C<@a> and keep looking deeper and deeper at every level, it could get caught
+in an infinite loop looking into C<@a> then C<@b> then C<@a> then C<@b> and
+so on.
 
 Test::Deep avoids this problem so we can extend our example further by
 saying that a person should also list their parents.
@@ -881,18 +882,18 @@ respectively.
 
   my $ok = cmp_deeply($got, $expected, $name)
 
-$got is the result to be checked. $expected is the structure against which
-$got will be check. $name is the test name.
+C<$got> is the result to be checked. C<$expected> is the structure against
+which C<$got> will be check. C<$name> is the test name.
 
 This is the main comparison function, the others are just wrappers around
-this. Without any special comparisons, it will descend into $expected,
-following every reference and comparing C<$expected_v> to C<$got_v> (using
-C<eq>) at the same position.
+this.  C<$got> and C<$expected> are compared recursively.  Each value in
+C<$expected> defines what's expected at the corresponding location in C<$got>.
+Simple scalars are compared with C<eq>.  References to structures like hashes
+and arrays are compared recursively.
 
-C<$expected> and any contents of the structure C<$expected> can be a special
-item, like a C<Test::Deep::Set> object, and encountering such an item at any
-stage may trigger Test::Deep to do something else besides a simple string
-comparison, exactly what it does depends on which special comparison it is.
+Items in C<$expected>, though, can also represent complex tests that check for
+numbers in a given range, hashes with at least a certain set of keys, a string
+matching a regex, or many other things.
 
 See L</WHAT ARE SPECIAL COMPARISONS> for details.
 
@@ -902,8 +903,8 @@ See L</WHAT ARE SPECIAL COMPARISONS> for details.
 
 Is shorthand for cmp_deeply(\@got, bag(@bag), $name)
 
-N.B. Both arguments must be array refs. If they aren't an error will
-be raised via die.
+I<n.b.>: Both arguments must be array refs. If they aren't an exception will be
+thrown.
 
 =head3 cmp_set
 
@@ -947,18 +948,26 @@ See L</USING TEST::DEEP WITH TEST::BUILDER> for example uses.
 
 =head1 SPECIAL COMPARISONS PROVIDED
 
+In the documentation below, C<$got_v> is used to indicate any given value
+within the C<$got> structure.
+
 =head3 ignore
 
   cmp_deeply( $got, ignore() );
 
-This makes Test::Deep skip tests on $got_v. No matter what value C<$got_v>
+This makes Test::Deep skip tests on C<$got_v>. No matter what value C<$got_v>
 has, Test::Deep will think it's correct. This is useful if some part of the
 structure you are testing is very complicated and already tested elsewhere,
-or is unpredictable.
+or if it is unpredictable.
 
-  cmp_deeply($got, { name => 'John', random => ignore(), address => ['5 A
-    street', 'a town', 'a country'],
-  })
+  cmp_deeply(
+    $got,
+    {
+      name    => 'John',
+      rando m => ignore(),
+      address => [ '5 A street', 'a town', 'a country' ],
+    }
+  );
 
 is the equivalent of checking
 
@@ -989,12 +998,12 @@ is roughly the equivalent of checking that
 
 The methods will be called in the order you supply them and will be called
 in scalar context. If you need to test methods called in list context then
-you should use listmethods().
+you should use C<listmethods()>.
 
 B<NOTE> Just as in a normal test script, you need to be careful if the
 methods you call have side effects like changing the object or other objects
 in the structure. Although the order of the methods is fixed, the order of
-some other tests is not so if $expected is
+some other tests is not so if C<$expected> is
 
   {
     manager => methods(@manager_methods),
@@ -1009,11 +1018,11 @@ manager and coder are the same object then you may run into problems.
 
   cmp_deeply( $got, listmethods(%hash) );
 
-%hash is a hash of method call => expected value pairs.
+C<%hash> is a hash of pairs mapping method names to expected return values.
 
 This is almost identical to methods() except the methods are called in list
-context instead of scalar context. This means that the expected values
-supplied must be an array reference.
+context instead of scalar context. This means that the expected return
+values supplied must be in array references.
 
   cmp_deeply(
     $obj,
@@ -1039,16 +1048,16 @@ B<NOTE> The same caveats apply as for methods().
 $thing is a ref.
 
 This prevents Test::Deep from looking inside $thing. It allows you to
-check that $got_v and $thing are references to the same variable. So
+check that C<$got_v> and C<$thing> are references to the same variable. So
 
   my @a = @b = (1, 2, 3);
   cmp_deeply(\@a, \@b);
 
-will pass because @a and @b have the same elements however
+will pass because C<@a> and C<@b> have the same elements however
 
   cmp_deeply(\@a, shallow(\@b))
 
-will fail because although \@a and \@b both contain C<1, 2, 3> they are
+will fail because although C<\@a> and C<\@b> both contain C<1, 2, 3> they are
 references to different arrays.
 
 =head3 noclass
@@ -1064,7 +1073,7 @@ C<$thing> it will go back to it's previous setting for checking class.
 
 This can be useful when you want to check that objects have been
 constructed correctly but you don't want to write lots of
-C<bless>es. If @people is an array of Person objects then
+C<bless>es. If C<@people> is an array of Person objects then
 
   cmp_deeply(\@people, [
     bless {name => 'John', phone => '555-5555'}, "Person",
@@ -1088,7 +1097,7 @@ could do a second test like
 
   cmp_deeply( $got, useclass($thing) );
 
-This turns back on the class comparison while inside a noclass().
+This turns back on the class comparison while inside a C<noclass()>.
 
   cmp_deeply(
     $got,
@@ -1107,18 +1116,18 @@ C<$object>.
 
   cmp_deeply( $got, re($regexp, $capture_data, $flags) );
 
-$regexp is either a regular expression reference produced with C<qr/.../> or
-a string which will be used to construct a regular expression.
+C<$regexp> is either a regular expression reference produced with C<qr/.../>
+or a string which will be used to construct a regular expression.
 
-$capture_data is optional and is used to check the strings captured by
-an regex. This should can be an array ref or a Test::Deep comparator
-that works on array refs.
+C<$capture_data> is optional and is used to check the strings captured by an
+regex. This should can be an array ref or a Test::Deep comparator that works
+on array refs.
 
-$flags is an optional string which controls whether the regex runs as a
-global match. If $flags is "g" then the regex will run as m/$regexp/g.
+C<$flags> is an optional string which controls whether the regex runs as a
+global match. If C<$flags> is "g" then the regex will run as C<m/$regexp/g>.
 
-Without $capture_data, this simply compares $got_v with the regular expression
-provided. So
+Without C<$capture_data>, this simply compares C<$got_v> with the regular
+expression provided. So
 
   cmp_deeply($got, [ re("ferg") ])
 
@@ -1126,7 +1135,7 @@ is the equivalent of
 
   $got->[0] =~ /ferg/
 
-With $capture_data
+With C<$capture_data>,
 
   cmp_deeply($got, [re($regex, $capture_data)])
 
@@ -1139,11 +1148,17 @@ So you can do something simple like
 
   cmp_deeply($got, re(qr/(\d\d)(\w\w)/, [25, "ab" ]))
 
-to check that (\d\d) was 25 and (\w\w) was "ab" but you can also use
+to check that C<(\d\d)> was 25 and C<(\w\w)> was "ab" but you can also use
 Test::Deep objects to do more complex testing of the captured values
 
-  cmp_deeply("cat=2,dog=67,sheep=3,goat=2,dog=5",
-    re(qr/(\D+)=\d+,?/, set(qw( cat sheep dog )), "g"))
+  cmp_deeply(
+    "cat=2,dog=67,sheep=3,goat=2,dog=5",
+    re(
+      qr/(\D+)=\d+,?/,
+      set(qw( cat sheep dog )),
+      "g"
+    ),
+  );
 
 here, the regex will match the string and will capture the animal names and
 check that they match the specified set, in this case it will fail,
@@ -1153,7 +1168,7 @@ complaining that "goat" is not in the set.
 
   cmp_deeply( $got, all(@expecteds) );
 
-@expecteds is an array of expected structures.
+C<@expecteds> is an array of expected structures.
 
 This allows you to compare data against multiple expected results and make
 sure each of them matches.
@@ -1178,8 +1193,8 @@ as
 
    re("^wi") | isa("Person") & methods(name => 'John')
 
-Note B<single> | not double, as || cannot be overloaded. This will only work
-when there is a special comparison involved. If you write
+Note B<single> C<|> not double, as C<||> cannot be overloaded. This will
+only work when there is a special comparison involved. If you write
 
   "john" | "anne" | "robert"
 
@@ -1187,7 +1202,7 @@ Perl will turn this into
 
   "{onort"
 
-which is presumably not what you wanted. This is because Perl |s them
+which is presumably not what you wanted. This is because perl ors them
 together as strings before Test::Deep gets a chance to do any overload
 tricks.
 
@@ -1195,13 +1210,13 @@ tricks.
 
   cmp_deeply( $got, any(@expecteds) );
 
-@expecteds is an array of expected structures.
+C<@expecteds> is an array of expected structures.
 
 This can be used to compare data against multiple expected results and make
 sure that at least one of them matches. This is a short-circuit test so if
 a test passes then none of the tests after that will be attempted.
 
-You can also use overloading with | similarly to all().
+You can also use overloading with C<|> similarly to all().
 
 =head3 Isa
 
@@ -1211,18 +1226,18 @@ You can also use overloading with | similarly to all().
 
   cmp_deeply( $got, isa($class) );
 
-$class is a class name.
+C<$class> is a class name.
 
-This uses UNIVERSAL::isa() to check that $got_v is blessed into the class
-$class.
+This uses C<UNIVERSAL::isa()> to check that C<$got_v> is blessed into the
+class C<$class>.
 
-B<NOTE:> Isa() does exactly as documented here, but isa() is slightly
-different. If isa() is called with 1 argument it falls through to
-Isa(). If isa() called with 2 arguments, it falls through to
-UNIVERSAL::isa. This is to prevent breakage when you import isa() into
+B<NOTE:> C<Isa()> does exactly as documented here, but C<isa()> is slightly
+different. If C<isa()> is called with 1 argument it falls through to
+C<Isa()>. If C<isa()> called with 2 arguments, it falls through to
+C<UNIVERSAL::isa>. This is to prevent breakage when you import C<isa()> into
 a package that is used as a class. Without this, anyone calling
-C<Class-E<gt>isa($other_class)> would get the wrong answer. This is a
-hack to patch over the fact that isa is exported by default.
+C<Class-E<gt>isa($other_class)> would get the wrong answer. This is a hack
+to patch over the fact that C<isa> is exported by default.
 
 =head3 obj_isa
 
@@ -1235,7 +1250,7 @@ Unlike the C<Isa> test, this test will never accept class names.
 
   cmp_deeply( \@got, array_each($thing) );
 
-$thing is a structure to be compared against.
+C<$thing> is a structure to be compared against.
 
 <$got_v> must be an array reference. Each element of it will be compared to
 $thing. This is useful when you have an array of similar things, for example
@@ -1258,9 +1273,9 @@ is similar to
     cmp_deeply($got_v, $common_tests)
   }
 
-Except it will not explode if $got is not an array reference. It will check
-that each of the objects in @$got is a MyFile and that each one gives the
-correct results for it's methods.
+Except it will not explode if C<$got> is not an array reference. It will
+check that each of the objects in C<@$got> is a MyFile and that each one
+gives the correct results for it's methods.
 
 You could go further, if for example there were 3 files and you knew the
 size of each one you could do this
@@ -1282,8 +1297,8 @@ size of each one you could do this
 
   cmp_deeply( \%got, hash_each($thing) );
 
-This test behaves like C<array_each> (see above) but tests that each hash value
-passes its tests.
+This test behaves like C<array_each> (see above) but tests that each hash
+value passes its tests.
 
 =head3 str
 
@@ -1292,27 +1307,29 @@ passes its tests.
 $string is a string.
 
 This will stringify C<$got_v> and compare it to C<$string> using C<eq>, even
-if $got_v is a ref. It is useful for checking the stringified value of an
+if C<$got_v> is a ref. It is useful for checking the stringified value of an
 overloaded reference.
 
 =head3 num
 
   cmp_deeply( $got, num($number, $tolerance) );
 
-$number is a number.
-$tolerance is an optional number.
+C<$number> is a number.
+
+C<$tolerance> is an optional number.
 
 This will add 0 to C<$got_v> and check if it's numerically equal to
-C<$number>, even if $got_v is a ref. It is useful for checking the numerical
-value of an overloaded reference. If $tolerance is supplied then this will
-check that $got_v and $exp_v are less than $tolerance apart. This is useful
-when comparing floating point numbers as rounding errors can make it hard or
-impossible for $got_v to be exactly equal to $exp_v. When $tolerance is
-supplied, the test passes if C<abs($got_v - $exp_v) <= $tolerance>.
+C<$number>, even if C<$got_v> is a ref. It is useful for checking the
+numerical value of an overloaded reference. If C<$tolerance> is supplied
+then this will check that C<$got_v> and C<$exp_v> are less than
+C<$tolerance> apart. This is useful when comparing floating point numbers as
+rounding errors can make it hard or impossible for C<$got_v> to be exactly
+equal to C<$exp_v>. When C<$tolerance> is supplied, the test passes if
+C<abs($got_v - $exp_v) <= $tolerance>.
 
 B<Note> in Perl, C<"12blah" == 12> because Perl will be smart and convert
 "12blah" into 12. You may not want this. There was a strict mode but that is
-now gone. A "lookslike s number" test will replace it soon. Until then you
+now gone. A "looks like a number" test will replace it soon. Until then you
 can usually just use the string() comparison to be more strict. This will
 work fine for almost all situations, however it will not work when <$got_v>
 is an overloaded value who's string and numerical values differ.
@@ -1321,17 +1338,17 @@ is an overloaded value who's string and numerical values differ.
 
   cmp_deeply( $got, bool($value) );
 
-$value is anything you like but it's probably best to use 0 or 1
+C<$value> is anything you like but it's probably best to use 0 or 1
 
 This will check that C<$got_v> and C<$value> have the same truth value, that
 is they will give the same result when used in boolean context, like in an
-if() statement.
+C<if()> statement.
 
 =head3 code
 
   cmp_deeply( $got, code(\&subref) );
 
-\&subref is a reference to a subroutine which will be passed a single
+C<\&subref> is a reference to a subroutine which will be passed a single
 argument, it then should return a true or false and possibly a string
 
 This will pass C<$got_v> to the subroutine which returns true or false to
@@ -1599,7 +1616,7 @@ will fail.
 C<$stack> is a value returned by cmp_details.  Do not call this function
 if cmp_details returned a true value for C<$ok>.
 
-deep_diag() returns a human readable string describing how the
+C<deep_diag()> returns a human readable string describing how the
 comparison failed.
 
 =head1 ANOTHER EXAMPLE
@@ -1696,7 +1713,7 @@ means only their memory addresses are compared.
 There is a bug in set and bag compare to do with competing SCs. It only
 occurs when you put certain special comparisons inside bag or set
 comparisons you don't need to worry about it. The full details are in the
-bag() docs. It will be fixed in an upcoming version.
+C<bag()> docs. It will be fixed in an upcoming version.
 
 =head1 CAVEATS
 
