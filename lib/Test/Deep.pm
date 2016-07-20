@@ -1494,9 +1494,9 @@ All C<bag> functions return an object which can have additional items added to
 it:
 
   my $bag = bag( 1, 2 );
-  $bag->add(1, 3, 1 );  # Set is now ( 1, 1, 1, 2, 3 )
+  $bag->add(1, 3, 1 );  # Bag is now ( 1, 1, 1, 2, 3 )
 
-Special care must be taken when using special comparisons within sets. See
+Special care must be taken when using special comparisons within bags. See
 L</SPECIAL CARE WITH SPECIAL COMPARISONS IN SETS AND BAGS> for details.
 
 =head3 bag
@@ -1532,10 +1532,10 @@ But the following are failures:
 
   cmp_deeply( \@got, superbagof( @elements ) );
 
-This function works much like L<< C<bag>|/bag >>, and performs a set comparison
+This function works much like L<< C<bag>|/bag >>, and performs a bag comparison
 of C<$got_v> with the elements of C<@elements>.
 
-C<supersetof> is however slightly relaxed, such that C<$got> may contain things
+C<superbagof> is however slightly relaxed, such that C<$got> may contain things
 not in C<@elements>, but must at least contain all C<@elements>.
 
 So:
@@ -1550,7 +1550,7 @@ So:
 
   cmp_deeply( \@got, subbagof(@elements) );
 
-This function works much like L<< C<bag>|/bag >>, and performs a set comparison
+This function works much like L<< C<bag>|/bag >>, and performs a bag comparison
 of C<$got_v> with the elements of C<@elements>.
 
 This is the inverse of C<superbagof>, and expects all elements in C<$got> to
