@@ -1,5 +1,10 @@
 Revision history for Test-Deep
 
+1.121_001 2016-07-19
+        - documentation improvements
+        - avoid a few evals, localize $@ in a few places where eval is used
+        - good bye tabs, hello spaces
+
 1.120     2015-11-27
         - no changes since 0.119_01
         - this massive version bump was a mistake
