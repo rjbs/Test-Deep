@@ -3,6 +3,7 @@ use warnings;
 
 package Test::Deep::All;
 
+use Scalar::Util ();
 use Test::Deep::Cmp;
 
 sub init
@@ -10,7 +11,7 @@ sub init
   my $self = shift;
 
   my @list = map {
-    eval { $_->isa('Test::Deep::All') }
+    (Scalar::Util::blessed($_) && $_->isa('Test::Deep::All'))
     ? @{ $_->{val} }
     : Test::Deep::wrap($_)
   } @_;
