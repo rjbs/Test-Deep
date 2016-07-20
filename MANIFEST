@@ -43,7 +43,7 @@ lib/Test/Deep/Shallow.pm
 lib/Test/Deep/Stack.pm
 lib/Test/Deep/String.pm
 Makefile.PL
-MANIFEST			This list of files
+MANIFEST      This list of files
 README
 t/all.t
 t/any.t

@@ -1,7 +1,7 @@
 * compare handlers:
-	hash/array slice
-	can
-	
+  hash/array slice
+  can
+  
 * warn about noclass in a circular structure... dunno now...
 
 * add tests for Sets of various things
