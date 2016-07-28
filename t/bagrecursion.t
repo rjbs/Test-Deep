@@ -1,7 +1,8 @@
 use strict;
 use warnings;
 
-use t::std;
+use lib 't';
+use std;
 
 # just want to make sure this doesn't go into an infitite recursion
 

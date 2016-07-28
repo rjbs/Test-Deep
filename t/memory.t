@@ -14,7 +14,8 @@ BEGIN
   }
 }
 
-use t::std;
+use lib 't';
+use std;
 
 use Scalar::Util qw( isweak weaken);
 
