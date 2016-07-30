@@ -1803,7 +1803,7 @@ written:
 Those things are:
 
   all any array array_each arrayelementsonly arraylength arraylengthonly bag
-  blessed bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply hash
+  blessed bool true false cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply hash
   hash_each hashkeys hashkeysonly ignore Isa isa listmethods methods noclass
   none noneof num obj_isa re reftype regexpmatches regexponly regexpref
   regexprefonly scalarrefonly scalref set shallow str subbagof subhashof
