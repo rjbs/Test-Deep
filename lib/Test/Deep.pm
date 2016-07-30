@@ -100,7 +100,7 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
       obj_isa
 
       all any array array_each arrayelementsonly arraylength arraylengthonly
-      bag bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
+      bag bool true false cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
       hash hash_each hashkeys hashkeysonly ignore isa listmethods methods
       noclass none noneof num re reftype regexpmatches regexponly regexpref
       regexprefonly scalarrefonly scalref set shallow str subbagof subhashof
@@ -113,7 +113,7 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
       obj_isa
 
       all any array array_each arrayelementsonly arraylength arraylengthonly
-      bag bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
+      bag bool true false cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
       hash hash_each hashkeys hashkeysonly ignore listmethods methods
       noclass none noneof num re reftype regexpmatches regexponly regexpref
       regexprefonly scalarrefonly scalref set shallow str subbagof subhashof
@@ -593,6 +593,14 @@ sub subhashof
   my $val = shift;
 
   return Test::Deep::SubHash->new($val);
+}
+
+sub true {
+  return bool(1);
+}
+
+sub false {
+  return bool(0);
 }
 
 sub builder
@@ -1334,9 +1342,11 @@ can usually just use the string() comparison to be more strict. This will
 work fine for almost all situations, however it will not work when <$got_v>
 is an overloaded value who's string and numerical values differ.
 
-=head3 bool
+=head3 bool, true, false
 
   cmp_deeply( $got, bool($value) );
+  cmp_deeply( $got, true );
+  cmp_deeply( $got, false );
 
 C<$value> is anything you like but it's probably best to use 0 or 1
 
