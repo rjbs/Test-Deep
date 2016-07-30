@@ -1218,6 +1218,24 @@ a test passes then none of the tests after that will be attempted.
 
 You can also use overloading with C<|> similarly to all().
 
+=head3 none
+
+  cmp_deeply( $got, none(@non_expecteds) );
+
+C<@non_expecteds> is an array of non-expected structures.
+
+This can be used to compare data against multiple non-expected results and
+make sure that no one of them matches.
+
+You can also use overloading with C<~> similarly to C<none($non_expected)>.
+So you can write
+
+  any( re("^wi"), none( isa("Person"), methods(name => 'John') ) )
+
+as
+
+   re("^wi") | ^( isa("Person") | methods(name => 'John') )
+
 =head3 Isa
 
   cmp_deeply( $got, Isa($class) );

@@ -6,6 +6,7 @@ package Test::Deep::Cmp;
 use overload
   '&' => \&make_all,
   '|' => \&make_any,
+  '~' => \&make_not,
   '""' => \&string,
   fallback => 1,
 ;
@@ -51,6 +52,13 @@ sub make_any
   my ($e1, $e2) = @_;
 
   return Test::Deep::any($e1, $e2);
+}
+
+sub make_not
+{
+  my ($e) = @_;
+
+  return Test::Deep::none($e);
 }
 
 sub cmp
