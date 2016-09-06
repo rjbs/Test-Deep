@@ -1,10 +1,11 @@
 Revision history for Test-Deep
 
 1.122     2016-09-07
-        - added $Test::Deep::EqObj to control the behavior when the value beign
-          tested is an object and the expected value is a string; when $EqObj
-          is true, they will be compared with `eq`; the default behavior is
-          that any such comparison fails unconditionally
+        - added $Test::Deep::LeafWrapper to control the behavior of simple
+          values in the "expected" definition; by default, they are treated as
+          shallow($x) tests, but you can now say (for example)
+          C<< $Test::Deep::LeafWrapper = \&str >> to always treat the got value
+          as a string, even if blessed, etc.
 
 1.121_001 2016-07-19
         - documentation improvements

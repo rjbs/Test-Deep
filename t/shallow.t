@@ -102,7 +102,7 @@ EOM
     "comparing a plain scalar leaf against obj without eq"
   );
 
-  local $Test::Deep::EqObjs = 1;
+  local $Test::Deep::LeafWrapper = \&str;
   check_tests(
     sub {
       cmp_deeply( Test::Deep::EqOverloaded->new, 5);
