@@ -1,5 +1,11 @@
 Revision history for Test-Deep
 
+1.122     2016-09-07
+        - added $Test::Deep::EqObj to control the behavior when the value beign
+          tested is an object and the expected value is a string; when $EqObj
+          is true, they will be compared with `eq`; the default behavior is
+          that any such comparison fails unconditionally
+
 1.121_001 2016-07-19
         - documentation improvements
         - avoid a few evals, localize $@ in a few places where eval is used

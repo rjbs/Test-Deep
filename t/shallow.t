@@ -90,3 +90,38 @@ EOM
     "deep after shallow not eq"
   );
 }
+
+{
+  check_test(
+    sub {
+      cmp_deeply( Test::Deep::EqOverloaded->new, 5);
+    },
+    {
+      actual_ok => 0,
+    },
+    "comparing a plain scalar leaf against obj without eq"
+  );
+
+  local $Test::Deep::EqObjs = 1;
+  check_tests(
+    sub {
+      cmp_deeply( Test::Deep::EqOverloaded->new, 5);
+      cmp_deeply( Test::Deep::EqOverloaded->new, 6);
+    },
+    [
+      {
+        actual_ok => 1,
+      },
+      {
+        actual_ok => 0,
+      },
+    ],
+    "comparing a plain scalar leaf against obj with eq"
+  );
+}
+
+{
+  package Test::Deep::EqOverloaded;
+  use overload q{""} => sub { "5" }, fallback => 1;
+  sub new { my $self = {}; bless $self; }
+}

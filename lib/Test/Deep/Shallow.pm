@@ -36,9 +36,19 @@ sub descend
   {
     $ok = refaddr($got) == refaddr($exp);
   }
-  elsif (ref $got xor ref $exp)
+  elsif (! ref $got && ref $exp)
   {
     $ok = 0;
+  }
+  elsif (ref $got && ! ref $exp)
+  {
+    if ($Test::Deep::EqObjs && Scalar::Util::blessed($got))
+    {
+      $ok = $got eq $exp;
+    }
+    else {
+      $ok = 0;
+    }
   }
   else
   {

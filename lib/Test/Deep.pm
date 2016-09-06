@@ -29,6 +29,8 @@ our @ISA = qw( Exporter );
 
 our $Snobby = 1; # should we compare classes?
 our $Expects = 0; # are we comparing got vs expect or expect vs expect
+our $EqObjs = 0;  # should we compare str/num leafs to objs with eq? (to
+                  # respect possible object overloading, for example)
 
 our $DNE = \"";
 our $DNE_ADDR = Scalar::Util::refaddr($DNE);
