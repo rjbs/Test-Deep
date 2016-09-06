@@ -1,7 +1,8 @@
 use strict;
 use warnings;
+use lib 't/lib';
 
-use t::std;
+use Std;
 
 foreach my $thing (fake->new, 'fake')
 {
