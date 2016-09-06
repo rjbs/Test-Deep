@@ -1,7 +1,8 @@
 use strict;
 use warnings;
+use lib 't/lib';
 
-use t::std;
+use Std;
 my $xism = qr/x/=~/\(\?\^/ ? "^" : "-xism";
 {
   my $str = "ferg";
@@ -157,7 +158,7 @@ EOM
 }
 
 {
-  require "t/over.pm";
+  require Over;
   my $o = Over->new("hi mom");
 
   is("$o", "hi mom", "we make a stringifiable object");

@@ -12,9 +12,9 @@ BEGIN
     plan(skip_all => "no weak refs in this version of perl");
     exit(0);
   }
-}
+}use lib 't/lib';
 
-use t::std;
+use Std;
 
 use Scalar::Util qw( isweak weaken);
 

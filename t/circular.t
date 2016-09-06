@@ -1,7 +1,8 @@
 use strict;
 use warnings;
+use lib 't/lib';
 
-use t::std;
+use Std;
 
 {
   my $a1 = gen_layers(2);

@@ -1,7 +1,8 @@
 use strict;
 use warnings FATAL => 'all';
+use lib 't/lib';
 
-use t::std;
+use Std;
 
 check_test(
     sub { cmp_deeply('Foo', isa('Foo')) },

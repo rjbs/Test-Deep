@@ -1,7 +1,8 @@
 use strict;
 use warnings;
+use lib 't/lib';
 
-use t::std;
+use Std;
 
 {
   check_test(
@@ -32,7 +33,7 @@ EOM
 }
 
 {
-  require "t/over.pm";
+  require Over;
 
   my $o = Over->new("wine");
 
