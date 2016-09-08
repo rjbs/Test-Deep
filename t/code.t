@@ -1,7 +1,8 @@
 use strict;
 use warnings;
 
-use t::std;
+use lib 't';
+use std;
 
 sub cmp
 {

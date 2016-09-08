@@ -1,7 +1,8 @@
 use strict;
 use warnings;
 
-use t::std;
+use lib 't';
+use std;
 my $xism = qr/x/=~/\(\?\^/ ? "^" : "-xism";
 {
   my $str = "ferg";
