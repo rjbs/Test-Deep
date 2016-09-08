@@ -19,7 +19,7 @@ sub init
   if (my $matches = shift)
   {
     $self->{matches} = Test::Deep::regexpmatches($matches, $val);
-    
+
     $self->{flags} = shift || "";
   }
 }
@@ -80,6 +80,23 @@ sub renderExp
   my $self = shift;
 
   return "$self->{val}";
+}
+
+sub renderGot
+{
+  my $self = shift;
+  my $got  = shift;
+
+  if (defined (my $class = Scalar::Util::blessed($got)))
+  {
+    my $ostr = qq{$got};
+    if ($ostr ne overload::StrVal($got))
+    {
+      return qq{'$ostr' (instance of $class)};
+    }
+  }
+
+  return Test::Deep::render_val($got);
 }
 
 1;

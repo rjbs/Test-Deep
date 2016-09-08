@@ -155,3 +155,32 @@ EOM
   );
 
 }
+
+{
+  require "t/over.pm";
+  my $o = Over->new("hi mom");
+
+  is("$o", "hi mom", "we make a stringifiable object");
+
+  check_test(
+    sub { cmp_deeply($o, re(qr/mom/)); },
+    { actual_ok => 1 },
+    "re() tests objects via overloading",
+  );
+
+  # Remember, Regexp stringification changes over time. -- rjbs, 2016-09-08
+  my $re     = qr/dad/;
+  my $re_str = "$re";
+  check_test(
+    sub { cmp_deeply($o, re($re)); },
+    {
+      actual_ok => 0,
+      diag => <<EOM,
+Using Regexp on \$data
+   got : 'hi mom' (instance of Over)
+expect : $re_str
+EOM
+    },
+    "re() tests objects via overloading",
+  );
+}
