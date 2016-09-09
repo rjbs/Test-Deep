@@ -1,5 +1,11 @@
 Revision history for Test-Deep
 
+1.123     2016-09-09
+        - remove test suite reliance on "." appearing @INC (thanks, Graham Knop
+          and Karen Etheridge!)
+        - when an object with stringification overloading fails to match a
+          "re" test, its stringification is included in the diagnostics
+
 1.122     2016-09-07
         - added $Test::Deep::LeafWrapper to control the behavior of simple
           values in the "expected" definition; by default, they are treated as
