@@ -67,6 +67,8 @@ t/hashkeys.t
 t/ignore.t
 t/import.t
 t/isa.t
+t/lib/Over.pm
+t/lib/Std.pm
 t/listmethods.t
 t/memory.t
 t/methods.t
@@ -74,7 +76,6 @@ t/none.t
 t/notest.t
 t/notest_extra.t
 t/number.t
-t/over.pm
 t/reftype.t
 t/regexp.t
 t/regexp.t.orig
@@ -84,6 +85,5 @@ t/scalar.t
 t/scalarref.t
 t/set.t
 t/shallow.t
-t/std.pm
 t/string.t
 TODO
