@@ -1,5 +1,9 @@
 Revision history for Test-Deep
 
+1.124     2016-11-05
+        - avoid an uninitialized warning when array_each() compares to a
+          non-reference (thanks, Максим Вуец!)
+
 1.123     2016-09-09
         - remove test suite reliance on "." appearing @INC (thanks, Graham Knop
           and Karen Etheridge!)

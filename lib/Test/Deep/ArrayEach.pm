@@ -20,7 +20,7 @@ sub descend
   my $self = shift;
   my $got = shift;
 
-  return unless Scalar::Util::reftype($got) eq 'ARRAY';
+  return unless ref $got && Scalar::Util::reftype($got) eq 'ARRAY';
   my $exp = [ ($self->{val}) x @$got ];
 
   return Test::Deep::descend($got, $exp);
