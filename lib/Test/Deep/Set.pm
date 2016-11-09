@@ -67,7 +67,6 @@ EOM
       push(@missing, $expect) unless $found;
     }
 
-
     my @diags;
     if (@missing and $SubSup ne "sub" && $SubSup ne "none")
     {
