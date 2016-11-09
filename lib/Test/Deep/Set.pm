@@ -46,7 +46,7 @@ EOM
   if (not $diag)
   {
     my @got = @$d1;
-                my @found;
+    my @found;
     my @missing;
     foreach my $expect (@$d2)
     {
@@ -57,7 +57,7 @@ EOM
         if (Test::Deep::eq_deeply_cache($got[$i], $expect))
         {
           $found = 1;
-                                        push(@found, $expect);
+          push(@found, $expect);
           splice(@got, $i, 1);
 
           last unless $IgnoreDupes;
@@ -80,11 +80,11 @@ EOM
       push(@diags, "Extra: ".nice_list($got->{val}));
     }
 
-                if (@found and $SubSup eq "none")
-                {
-                        my $found = __PACKAGE__->new($IgnoreDupes, "", @found);
-                        push(@diags, "Extra: ".nice_list($found->{val}));
-                }
+    if (@found and $SubSup eq "none")
+    {
+      my $found = __PACKAGE__->new($IgnoreDupes, "", @found);
+      push(@diags, "Extra: ".nice_list($found->{val}));
+    }
 
     $diag = join("\n", @diags);
   }
