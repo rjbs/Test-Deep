@@ -415,11 +415,11 @@ sub wrap
 
   return $data if Scalar::Util::blessed($data) and $data->isa("Test::Deep::Cmp");
 
-  my ($class, $base) = class_base($data);
+  my ($class, $reftype) = class_base($data);
 
   my $cmp;
 
-  if($base eq '')
+  if($reftype eq '')
   {
     $cmp = $Test::Deep::LeafWrapper
          ? $Test::Deep::LeafWrapper->($data)
@@ -431,19 +431,19 @@ sub wrap
 
     return $WrapCache{$addr} if $WrapCache{$addr};
 
-    if($base eq 'ARRAY')
+    if($reftype eq 'ARRAY')
     {
       $cmp = array($data);
     }
-    elsif($base eq 'HASH')
+    elsif($reftype eq 'HASH')
     {
       $cmp = hash($data);
     }
-    elsif($base eq 'SCALAR' or $base eq 'REF')
+    elsif($reftype eq 'SCALAR' or $reftype eq 'REF')
     {
       $cmp = scalref($data);
     }
-    elsif(($base eq 'Regexp') or ($base eq 'REGEXP'))
+    elsif(($reftype eq 'Regexp') or ($reftype eq 'REGEXP'))
     {
       $cmp = regexpref($data);
     }
