@@ -449,7 +449,9 @@ sub wrap
     }
     else
     {
-      $cmp = shallow($data);
+      $cmp = $Test::Deep::LeafWrapper
+           ? $Test::Deep::LeafWrapper->($data)
+           : shallow($data);
     }
 
     $WrapCache{$addr} = $cmp;
