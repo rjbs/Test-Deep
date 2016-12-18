@@ -463,24 +463,20 @@ sub _td_reftype
 {
   my $val = shift;
 
-  if (ref $val)
-  {
-    my $reftype = Scalar::Util::reftype($val);
-    my $blessed = Scalar::Util::blessed($val);
-    return $reftype unless defined $blessed;
+  my $reftype = Scalar::Util::reftype($val);
+  return '' unless defined $reftype;
 
-    if ($Test::Deep::RegexpVersion::OldStyle) {
-      if ($blessed eq "Regexp" and $reftype eq "SCALAR")
-      {
-        $reftype = "Regexp"
-      }
-    }
-    return $reftype;
-  }
-  else
+  return $reftype unless $Test::Deep::RegexpVersion::OldStyle;
+
+  my $blessed = Scalar::Util::blessed($val);
+  return $reftype unless defined $blessed;
+
+  if ($blessed && $blessed eq "Regexp" and $reftype eq "SCALAR")
   {
-    return "";
+    $reftype = "Regexp"
   }
+
+  return $reftype;
 }
 
 sub render_stack
