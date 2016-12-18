@@ -91,7 +91,7 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
 }
 
 {
-  our @EXPORT_OK = qw( descend render_stack class_base cmp_details deep_diag );
+  our @EXPORT_OK = qw( descend render_stack cmp_details deep_diag );
 
   our %EXPORT_TAGS;
   $EXPORT_TAGS{preload} = [];
@@ -415,7 +415,7 @@ sub wrap
 
   return $data if Scalar::Util::blessed($data) and $data->isa("Test::Deep::Cmp");
 
-  my ($class, $reftype) = class_base($data);
+  my $reftype = _td_reftype($data);
 
   my $cmp;
 
@@ -459,16 +459,15 @@ sub wrap
   return $cmp;
 }
 
-sub class_base
+sub _td_reftype
 {
   my $val = shift;
 
   if (ref $val)
   {
-    my $blessed = Scalar::Util::blessed($val);
-    $blessed = defined($blessed) ? $blessed : "";
     my $reftype = Scalar::Util::reftype($val);
-
+    my $blessed = Scalar::Util::blessed($val);
+    return $reftype unless defined $blessed;
 
     if ($Test::Deep::RegexpVersion::OldStyle) {
       if ($blessed eq "Regexp" and $reftype eq "SCALAR")
@@ -476,11 +475,11 @@ sub class_base
         $reftype = "Regexp"
       }
     }
-    return ($blessed, $reftype);
+    return $reftype;
   }
   else
   {
-    return ("", "");
+    return "";
   }
 }
 
