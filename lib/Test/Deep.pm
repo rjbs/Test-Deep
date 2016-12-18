@@ -413,7 +413,14 @@ sub wrap
 {
   my $data = shift;
 
-  return $data if Scalar::Util::blessed($data) and $data->isa("Test::Deep::Cmp");
+  my $class = Scalar::Util::blessed($data);
+  return $data if defined $class and $data->isa("Test::Deep::Cmp");
+
+  if (defined $class and $data->can('as_test_deep_cmp')) {
+    my $cmp = $data->as_test_deep_cmp;
+    return $cmp if $cmp->isa('Test::Deep::Cmp');
+    Carp::confess("object in expected structure provides as_test_deep_cmp but it did not return a Test::Deep::Cmp");
+  }
 
   my $reftype = _td_reftype($data);
 
