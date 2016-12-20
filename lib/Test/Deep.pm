@@ -12,12 +12,6 @@ require overload;
 use Scalar::Util;
 
 my $Test;
-unless (defined $Test::Deep::NoTest::NoTest)
-{
-# for people who want eq_deeply but not Test::Builder
-  require Test::Builder;
-  $Test = Test::Builder->new;
-}
 
 our ($Stack, %Compared, $CompareCache, %WrapCache, $Shallow);
 
@@ -173,6 +167,13 @@ sub import {
     require Test::Deep::Shallow;
     require Test::Deep::Stack;
     require Test::Deep::String;
+  }
+
+  unless (defined $Test::Deep::NoTest::NoTest)
+  {
+  # for people who want eq_deeply but not Test::Builder
+    require Test::Builder;
+    $Test = Test::Builder->new;
   }
 
   $self->export_to_level(1, $self, @_);
