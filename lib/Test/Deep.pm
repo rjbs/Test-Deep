@@ -12,6 +12,12 @@ require overload;
 use Scalar::Util;
 
 my $Test;
+unless (defined $Test::Deep::NoTest::NoTest)
+{
+# for people who want eq_deeply but not Test::Builder
+  require Test::Builder;
+  $Test = Test::Builder->new;
+}
 
 our ($Stack, %Compared, $CompareCache, %WrapCache, $Shallow);
 
