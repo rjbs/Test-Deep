@@ -1,5 +1,15 @@
 Revision history for Test-Deep
 
+1.25_001  2016-12-27
+        - if objects in the "expected" structured have an as_test_deep_cmp
+          method, it will be called and its return (which should be a
+          Test::Deep::Cmp object) will be used as the test for that location in
+          the structure
+        - internal undocumented class_base routine has been replaced
+          with a different, clearly private routine
+        - the LeafWrapper is also used for objects with an unknown reftype
+          (like LVALUE or other weird ones)
+
 1.124     2016-11-05
         - avoid an uninitialized warning when array_each() compares to a
           non-reference (thanks, Максим Вуец!)
