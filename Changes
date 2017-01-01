@@ -1,6 +1,9 @@
 Revision history for Test-Deep
 
-1.25_001  2016-12-27
+1.126     2016-12-27
+        - no changes since v1.125_001
+
+1.125_001 2016-12-27
         - if objects in the "expected" structured have an as_test_deep_cmp
           method, it will be called and its return (which should be a
           Test::Deep::Cmp object) will be used as the test for that location in
