@@ -1688,7 +1688,7 @@ other bag comparison, giving us something like
 
 =head1 USING TEST::DEEP WITH TEST::BUILDER
 
-Combining C<cmp_details> and C<test_diag> makes it possible to use
+Combining C<cmp_details> and C<deep_diag> makes it possible to use
 Test::Deep in your own test classes.
 
 In a L<Test::Builder> subclass, create a test method in the following
