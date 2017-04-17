@@ -12,7 +12,7 @@ sub init
   my @list = map {
     eval { $_->isa('Test::Deep::None') }
     ? @{ $_->{val} }
-    : Test::Deep::wrap($_)
+    : $_
   } @_;
 
   $self->{val} = \@list;
@@ -35,8 +35,8 @@ sub renderExp
 {
   my $self = shift;
 
-  my $expect = $self->{val};
-  my $things = join(", ", map {$_->renderExp} @$expect);
+  my @expect = map {; Test::Deep::wrap($_) } @{ $self->{val} };
+  my $things = join(", ", map {$_->renderExp} @expect);
 
   return "None of ( $things )";
 }

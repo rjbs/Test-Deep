@@ -13,7 +13,7 @@ sub init
   my @list = map {
     (Scalar::Util::blessed($_) && $_->isa('Test::Deep::All'))
     ? @{ $_->{val} }
-    : Test::Deep::wrap($_)
+    : $_
   } @_;
 
   $self->{val} = \@list;
