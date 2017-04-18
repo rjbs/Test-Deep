@@ -67,6 +67,7 @@ t/hashkeys.t
 t/ignore.t
 t/import.t
 t/isa.t
+t/leaf-wrapper.t
 t/lib/Over.pm
 t/lib/Std.pm
 t/listmethods.t
