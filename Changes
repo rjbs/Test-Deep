@@ -1,5 +1,9 @@
 Revision history for Test-Deep
 
+1.126_001 2017-04-17
+        - do not eagerly convert simple scalars into tests in the all, any, and
+          none tests; this was breaking LeafWrapper application
+
 1.126     2016-12-27
         - no changes since v1.125_001
 
