@@ -658,8 +658,8 @@ Test::Deep - Extremely flexible deep comparison
 =head1 DESCRIPTION
 
 If you don't know anything about automated testing in Perl then you should
-probably read about Test::Simple and Test::More before preceding.
-Test::Deep uses the Test::Builder framework.
+probably read about L<Test::Simple> and L<Test::More> before preceding.
+Test::Deep uses the L<Test::Builder> framework.
 
 Test::Deep gives you very flexible ways to check that the result you got is
 the result you were expecting. At it's simplest it compares two structures
