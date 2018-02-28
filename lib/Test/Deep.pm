@@ -1459,6 +1459,13 @@ in C<$got_v> must be in C<@elements>.
   cmp_deeply([2,3,3],   subsetof(1,2,4,5)  ) # Fail: 3 extra
   cmp_deeply([2,3,3],   subsetof(1,2,4,5,3)) # Pass
 
+=head3 none
+
+  cmp_deeply( $got, none(@elements) );
+
+@elements is an array of elements, wherein no elements in C<@elements> may
+be equal to C<$got_v>.
+
 =head3 noneof
 
   cmp_deeply( \@got, noneof(@elements) );
