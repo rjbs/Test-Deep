@@ -972,7 +972,7 @@ or if it is unpredictable.
     $got,
     {
       name    => 'John',
-      rando m => ignore(),
+      random  => ignore(),
       address => [ '5 A street', 'a town', 'a country' ],
     }
   );
