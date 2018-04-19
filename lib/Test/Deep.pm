@@ -646,7 +646,7 @@ Test::Deep - Extremely flexible deep comparison
   cmp_deeply(
     $object,
     noclass({value => 5}),
-    "object looks ok, not checking it's class"
+    "object looks ok, not checking its class"
   );
 
   cmp_deeply(
@@ -662,7 +662,7 @@ probably read about L<Test::Simple> and L<Test::More> before preceding.
 Test::Deep uses the L<Test::Builder> framework.
 
 Test::Deep gives you very flexible ways to check that the result you got is
-the result you were expecting. At it's simplest it compares two structures
+the result you were expecting. At its simplest it compares two structures
 by going through each level, ensuring that the values match, that arrays and
 hashes have the same elements and that references are blessed into the
 correct class. It also handles circular data structures without getting
@@ -833,7 +833,7 @@ include themselves. Simply do
 
 This will now check that $person->{Children} is an array and that every
 element of that array also matches C<$person_cmp>, this includes checking
-that it's children also match the same pattern and so on.
+that its children also match the same pattern and so on.
 
 =head2 Circular data structures
 
@@ -1077,7 +1077,7 @@ C<$thing> is a structure to be compared against.
 This makes Test::Deep ignore the class of objects, so it just looks at the
 data they contain. Class checking will be turned off until Test::Deep is
 finished comparing C<$got_v> against C<$thing>. Once Test::Deep comes out of
-C<$thing> it will go back to it's previous setting for checking class.
+C<$thing> it will go back to its previous setting for checking class.
 
 This can be useful when you want to check that objects have been
 constructed correctly but you don't want to write lots of
@@ -1283,7 +1283,7 @@ is similar to
 
 Except it will not explode if C<$got> is not an array reference. It will
 check that each of the objects in C<@$got> is a MyFile and that each one
-gives the correct results for it's methods.
+gives the correct results for its methods.
 
 You could go further, if for example there were 3 files and you knew the
 size of each one you could do this
@@ -1755,7 +1755,7 @@ algorithm for set and bag matching. Something for the future...
 
 A special comparison (SC) is simply an object that inherits from
 Test::Deep::Cmp. Whenever C<$expected_v> is an SC then instead of checking
-C<$got_v eq $expected_v>, we pass control over to the SC and let it do it's
+C<$got_v eq $expected_v>, we pass control over to the SC and let it do its
 thing.
 
 Test::Deep exports lots of SC constructors, to make it easy for you to use
@@ -1772,7 +1772,7 @@ by do something like C<< $expected_v->descend($got_v) >>. The C<descend()>
 method should just return true or false.
 
 This gives you enough to write your own SCs but I haven't documented how
-diagnostics works because it's about to get an overhaul.
+diagnostics works because it's about to get an overhaul (theoretically).
 
 =head1 EXPORTS
 
