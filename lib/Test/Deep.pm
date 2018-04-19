@@ -201,10 +201,18 @@ sub cmp_deeply
 
   my ($ok, $stack) = cmp_details($d1, $d2);
 
-  if (not $Test->ok($ok, $name))
-  {
-    my $diag = deep_diag($stack);
-    $Test->diag($diag);
+  if($Test) {
+    if (not $Test->ok($ok, $name))
+    {
+      my $diag = deep_diag($stack);
+      $Test->diag($diag);
+    }
+  } else {
+    if (not $ok)
+    {
+      my $diag = deep_diag($stack);
+      print $diag;
+    }
   }
 
   return $ok;
