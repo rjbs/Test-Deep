@@ -658,8 +658,8 @@ Test::Deep - Extremely flexible deep comparison
 =head1 DESCRIPTION
 
 If you don't know anything about automated testing in Perl then you should
-probably read about Test::Simple and Test::More before preceding.
-Test::Deep uses the Test::Builder framework.
+probably read about L<Test::Simple> and L<Test::More> before preceding.
+Test::Deep uses the L<Test::Builder> framework.
 
 Test::Deep gives you very flexible ways to check that the result you got is
 the result you were expecting. At it's simplest it compares two structures
@@ -1053,9 +1053,9 @@ B<NOTE> The same caveats apply as for methods().
 
   cmp_deeply( $got, shallow($thing) );
 
-$thing is a ref.
+C<$thing> is a ref.
 
-This prevents Test::Deep from looking inside $thing. It allows you to
+This prevents Test::Deep from looking inside C<$thing>. It allows you to
 check that C<$got_v> and C<$thing> are references to the same variable. So
 
   my @a = @b = (1, 2, 3);
@@ -1072,7 +1072,7 @@ references to different arrays.
 
   cmp_deeply( $got, noclass($thing) );
 
-$thing is a structure to be compared against.
+C<$thing> is a structure to be compared against.
 
 This makes Test::Deep ignore the class of objects, so it just looks at the
 data they contain. Class checking will be turned off until Test::Deep is
@@ -1261,7 +1261,7 @@ Unlike the C<Isa> test, this test will never accept class names.
 C<$thing> is a structure to be compared against.
 
 <$got_v> must be an array reference. Each element of it will be compared to
-$thing. This is useful when you have an array of similar things, for example
+C<$thing>. This is useful when you have an array of similar things, for example
 objects of a known type and you don't want to have to repeat the same test
 for each one.
 
