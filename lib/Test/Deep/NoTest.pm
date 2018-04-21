@@ -5,6 +5,7 @@ use warnings;
 # use eq_deeply. It's a bit hacky...
 
 package Test::Deep::NoTest;
+# ABSTRACT: Use Test::Deep outside of the testing framework
 
 our $NoTest;
 
