@@ -1417,7 +1417,7 @@ L</SPECIAL CARE WITH SPECIAL COMPARISONS IN SETS AND BAGS> for details.
 
 This does a set comparison, that is, it compares two arrays but ignores the
 order of the elements and it ignores duplicate elements, but ensures that all
-items in in C<@elements> will be in C<$got> and all items in C<$got> will be
+items in C<@elements> will be in C<$got> and all items in C<$got> will be
 in C<@elements>.
 
 So the following tests will be passes, and will be equivalent:
