@@ -130,6 +130,15 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
 
 sub import {
   my $self = shift;
+
+  my $from_notest = grep {$_ eq '_notest'} @_;
+  if ($from_notest) {
+      @_ = grep {$_ ne '_notest'} @_;
+  } else {
+    require Test::Builder;
+    $Test = Test::Builder->new;
+  }
+
   my @sans_preload = grep {; $_ ne ':preload' } @_;
   if (@_ != @sans_preload) {
     require Test::Deep::All;
