@@ -553,9 +553,9 @@ sub subsetof
 
 sub noneof
 {
-        require Test::Deep::Set;
+  require Test::Deep::Set;
 
-        return Test::Deep::Set->new(1, "none", @_);
+  return Test::Deep::Set->new(1, "none", @_);
 }
 
 sub cmp_set
