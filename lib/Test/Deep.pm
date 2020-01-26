@@ -1035,14 +1035,14 @@ values supplied must be in array references.
   cmp_deeply(
     $obj,
     listmethods(
-      name => "John",
+      name => [ "John" ],
       ["favourites", "food"] => ["Mapo tofu", "Gongbao chicken"]
     )
   );
 
 is the equivalent of checking that
 
-  $obj->name eq "John"
+  cmp_deeply([$obj->name], ["John"]);
   cmp_deeply([$obj->favourites("food")], ["Mapo tofu", "Gongbao chicken"]);
 
 The methods will be called in the order you supply them.
