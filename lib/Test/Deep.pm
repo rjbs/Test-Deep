@@ -91,7 +91,10 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
 }
 
 {
-  our @EXPORT_OK = qw( descend render_stack cmp_details deep_diag );
+  our @EXPORT_OK = qw( 
+    descend render_stack cmp_details deep_diag
+    true false
+  );
 
   our %EXPORT_TAGS;
   $EXPORT_TAGS{preload} = [];
@@ -102,7 +105,7 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
       obj_isa
 
       all any array array_each arrayelementsonly arraylength arraylengthonly
-      bag bool true false cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
+      bag bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
       hash hash_each hashkeys hashkeysonly ignore isa listmethods methods
       noclass none noneof num re reftype regexpmatches regexponly regexpref
       regexprefonly scalarrefonly scalref set shallow str subbagof subhashof
@@ -115,7 +118,7 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
       obj_isa
 
       all any array array_each arrayelementsonly arraylength arraylengthonly
-      bag bool true false cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
+      bag bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
       hash hash_each hashkeys hashkeysonly ignore listmethods methods
       noclass none noneof num re reftype regexpmatches regexponly regexpref
       regexprefonly scalarrefonly scalref set shallow str subbagof subhashof
@@ -612,12 +615,14 @@ sub subhashof
   return Test::Deep::SubHash->new($val);
 }
 
-sub true {
-  return bool(1);
+sub true
+{
+  bool(1);
 }
 
-sub false {
-  return bool(0);
+sub false
+{
+  bool(0);
 }
 
 sub builder
@@ -1371,6 +1376,8 @@ This will check that C<$got_v> and C<$value> have the same truth value, that
 is they will give the same result when used in boolean context, like in an
 C<if()> statement.
 
+B<Note:> C<true> and C<false> are only imported by special request.
+
 =head3 code
 
   cmp_deeply( $got, code(\&subref) );
@@ -1803,7 +1810,7 @@ written:
 Those things are:
 
   all any array array_each arrayelementsonly arraylength arraylengthonly bag
-  blessed bool true false cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply hash
+  blessed bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply hash
   hash_each hashkeys hashkeysonly ignore Isa isa listmethods methods noclass
   none noneof num obj_isa re reftype regexpmatches regexponly regexpref
   regexprefonly scalarrefonly scalref set shallow str subbagof subhashof

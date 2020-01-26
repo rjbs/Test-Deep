@@ -4,6 +4,8 @@ use lib 't/lib';
 
 use Std;
 
+use Test::Deep qw(true false);
+
 {
   check_tests(
     sub {
