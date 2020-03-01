@@ -21,7 +21,7 @@ unless (defined $Test::Deep::NoTest::NoTest)
 
 our ($Stack, %Compared, $CompareCache, %WrapCache, $Shallow);
 
-our $VERSION = '1.129';
+our $VERSION = '1.130';
 $VERSION =~ tr/_//d;
 
 require Exporter;
@@ -91,7 +91,7 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
 }
 
 {
-  our @EXPORT_OK = qw( 
+  our @EXPORT_OK = qw(
     descend render_stack cmp_details deep_diag
     true false
   );
