@@ -2,6 +2,9 @@ Revision history for Test-Deep
 
 {{$NEXT}}
         - converted to Dist::Zilla
+        - Test::Deep will now require v5.10, and this may go up.  This change
+          allows simplification of the Makefile.PL, which was coping with a
+          mistake made twelve years ago.
 
 1.130     2020-03-01
         - no changes since 1.129
