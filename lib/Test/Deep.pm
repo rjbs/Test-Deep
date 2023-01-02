@@ -301,9 +301,9 @@ sub deep_diag
 
   if (not defined $diag)
   {
-    $got = $exp->renderGot($last->{got}) unless defined $got;
-    $expected = $exp->renderExp unless defined $expected;
-    $message = "Compared $where" unless defined $message;
+    $got //= $exp->renderGot($last->{got});
+    $expected //= $exp->renderExp;
+    $message //= "Compared $where";
 
     $diag = <<EOM
 $message
