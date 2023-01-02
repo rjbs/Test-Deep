@@ -2,6 +2,8 @@ use strict;
 use warnings;
 
 package Test::Deep;
+# ABSTRACT: Extremely flexible deep comparison
+
 use Carp qw( confess );
 
 use Test::Deep::Cache;
@@ -20,9 +22,6 @@ unless (defined $Test::Deep::NoTest::NoTest)
 }
 
 our ($Stack, %Compared, $CompareCache, %WrapCache, $Shallow);
-
-our $VERSION = '1.130';
-$VERSION =~ tr/_//d;
 
 require Exporter;
 our @ISA = qw( Exporter );
