@@ -25,10 +25,6 @@ sub import {
 
 1;
 
-=head1 NAME
-
-Test::Deep::NoTest - Use Test::Deep outside of the testing framework
-
 =head1 SYNOPSIS
 
   use Test::Deep::NoTest;

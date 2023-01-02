@@ -637,10 +637,6 @@ sub builder
 
 __END__
 
-=head1 NAME
-
-Test::Deep - Extremely flexible deep comparison
-
 =head1 SYNOPSIS
 
   use Test::More tests => $Num_Tests;
@@ -1826,26 +1822,9 @@ the Test::Deep plugins will be loaded immediately instead of lazily.
 
 L<Test::More>
 
-=head1 MAINTAINER
+=head1 THANKS
 
-  Ricardo Signes <rjbs@cpan.org>
-
-=head1 AUTHOR
-
-Fergal Daly E<lt>fergal@esatclear.ieE<gt>, with thanks to Michael G Schwern
-for Test::More's is_deeply function which inspired this.
-
-B<Please> do not bother Fergal Daly with bug reports.  Send them to the
-maintainer (above) or submit them at L<the issue
-tracker|https://github.com/rjbs/Test-Deep/issues>.
-
-=head1 COPYRIGHT
-
-Copyright 2003, 2004 by Fergal Daly E<lt>fergal@esatclear.ieE<gt>.
-
-This program is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
-
-See F<http://www.perl.com/perl/misc/Artistic.html>
+Thanks to Michael G Schwern for Test::More's is_deeply function which inspired
+this library.
 
 =cut
