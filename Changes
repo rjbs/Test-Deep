@@ -1,10 +1,11 @@
 Revision history for Test-Deep
 
 {{$NEXT}}
+        - correct Changes entry about which version version of perl is required
 
 1.200     2023-01-02 16:55:10-05:00 America/New_York (TRIAL RELEASE)
         - converted to Dist::Zilla
-        - Test::Deep will now require v5.10, and this may go up.  This change
+        - Test::Deep will now require v5.12, and this may go up.  This change
           allows simplification of the Makefile.PL, which was coping with a
           mistake made twelve years ago.
 
