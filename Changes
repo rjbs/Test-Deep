@@ -1,6 +1,8 @@
 Revision history for Test-Deep
 
 {{$NEXT}}
+        - try to avoid clobbering global error variables when loading test
+          libraries (thanks, Felipe Gasper)
         - hash_each now enumates keys in sort() order, to make errors more
           consistent
 
