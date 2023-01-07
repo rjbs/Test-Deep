@@ -26,7 +26,7 @@ sub descend
 
   my $master = $self->getMaster($got, $exp);
 
-  foreach my $key (keys %$master)
+  foreach my $key (sort keys %$master)
   {
     $data->{index} = $key;
 
