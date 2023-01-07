@@ -1,6 +1,8 @@
 Revision history for Test-Deep
 
 {{$NEXT}}
+
+1.203     2023-01-07 11:38:14-05:00 America/New_York
         - try to avoid clobbering global error variables when loading test
           libraries (thanks, Felipe Gasper)
         - hash_each now enumates keys in sort() order, to make errors more
