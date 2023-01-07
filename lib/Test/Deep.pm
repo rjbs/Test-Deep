@@ -79,7 +79,15 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
   my $file = "$full_pkg.pm";
   $file =~ s#::#/#g;
   my $sub = sub {
+    # We might be in the middle of testing one of the globals that require()
+    # overwrites. To simplify test authorship, we'll preserve any existing
+    # value.
+    local $@;
+    local $!;
+    local $^E;
+
     require $file;
+
     return $full_pkg->new(@_);
   };
   {
