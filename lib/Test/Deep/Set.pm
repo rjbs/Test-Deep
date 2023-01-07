@@ -119,6 +119,12 @@ EOM
   return $diag;
 }
 
+sub _is_cmp {
+  my ($value) = @_;
+  return unless Scalar::Util::blessed($value);
+  return $value->isa('Test::Deep::Cmp');
+}
+
 sub add
 {
   # this takes an array.
@@ -128,7 +134,7 @@ sub add
   # added to the set. If a B is found and IgnoreDupes is true, then A will
   # be discarded, if IgnoreDupes is false, then B will be added to the set
   # again.
-  
+
   my $self = shift;
 
   my @array = @_;
@@ -142,15 +148,43 @@ sub add
   {
     my $want_push = 1;
     my $push_this = $new_elem;
-    foreach my $old_elem (@$already)
+
+    # Say you've written this:
+    #
+    #   set(1,2,2,3,4)
+    #
+    # You want the actual values stored to be (1,2,3,4).  What, though, if you
+    # wrote this:
+    #
+    #   set(re($x), re($y));
+    #
+    # It's hard to say!  The two re() objects (Test::Deep::Regexp objects) will
+    # be distinct objects.  Their wrapped patterns *may* be the same (if $x and
+    # $y refer to the same qr object).  At some level, the equivalence of two
+    # tests can't be decided.  Meanwhile, eq_deeply (used below, although rjbs
+    # thinks it's possibly a bad choice) will end up testing one test object
+    # against the other's test.  This is madness, as demonstrated by the case
+    # that brought this up:
+    #
+    #   set(qr{1}, qr{2});
+    #
+    # If the refaddr of the first item has a 2 in it, we will end up with a set
+    # containing only the first item.  So, to avoid this, we will never
+    # deduplicate Test::Deep::Cmp objects, meaning that all this commentary
+    # just explains why the foreach below is wrapped in this unless:
+    unless (_is_cmp($new_elem))
     {
-      if (Test::Deep::eq_deeply($new_elem, $old_elem))
+      foreach my $old_elem (@$already)
       {
-        $push_this = $old_elem;
-        $want_push = ! $IgnoreDupes;
-        last;
+        if (Test::Deep::eq_deeply($new_elem, $old_elem))
+        {
+          $push_this = $old_elem;
+          $want_push = ! $IgnoreDupes;
+          last;
+        }
       }
     }
+
     push(@$already, $push_this) if $want_push;
   }
 
