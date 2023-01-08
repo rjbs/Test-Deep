@@ -69,15 +69,11 @@ jobs:
       - name: Extract tarball
         run: tar zxvf Dist-To-Test.tar.gz
       - name: Install dependencies
-        run: |
-          cd Dist-To-Test
-          cpanm --installdeps --notest .
+        working-directory: ./Dist-To-Test
+        run: cpanm --installdeps --notest .
       - name: Makefile.PL
-        run: |
-          cd Dist-To-Test
-          perl Makefile.PL
+        working-directory: ./Dist-To-Test
+        run: perl Makefile.PL
       - name: Run the tests
-        run: |
-          cd Dist-To-Test
-          make test
-
+        working-directory: ./Dist-To-Test
+        run: make test
