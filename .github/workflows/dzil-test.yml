@@ -2,7 +2,7 @@ name: "dzil build & multitest"
 on: push
 
 jobs:
-  build-it:
+  build-tarball:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -15,8 +15,15 @@ jobs:
           chmod u+x /tmp/cpanm
       - name: Install Dist::Zilla
         run: sudo apt-get install -y libdist-zilla-perl
-      - name: build tarball
+      - name: Build tarball
         run: |
           dzil authordeps --missing | /tmp/cpanm --notest -S
           dzil listdeps --author --missing | /tmp/cpanm --notest -S
           dzil build
+          mv Test-Deep-*.tar.gz Test-Deep.tar.gz
+      - name: Upload tarball
+        uses: actions/upload-artifact@v3
+        with:
+          name: Test-Deep.tar.gz
+          path: Test-Deep.tar.gz
+
