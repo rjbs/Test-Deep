@@ -16,6 +16,9 @@ jobs:
       - name: Install Dist::Zilla
         run: sudo apt-get install -y libdist-zilla-perl
       - name: Install prereqs
+        # This could probably be made more efficient by looking at what it's
+        # installing via cpanm that could, instead, be installed from apt.  I
+        # may do that later, but for now, it's fine! -- rjbs, 2023-01-07
         run: |
           dzil authordeps --missing | /tmp/cpanm --notest -S
           dzil listdeps --author --missing | /tmp/cpanm --notest -S
