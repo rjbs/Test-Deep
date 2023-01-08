@@ -21,13 +21,13 @@ jobs:
           dzil listdeps --author --missing | /tmp/cpanm --notest -S
       - name: Build tarball
         run: |
-          V=1.234 dzil build
-          mv Test-Deep-*.tar.gz Test-Deep.tar.gz
+          dzil build --in Dist-To-Test
+          tar zcvf Dist-To-Test.tar.gz Dist-To-Test
       - name: Upload tarball
         uses: actions/upload-artifact@v3
         with:
-          name: Test-Deep.tar.gz
-          path: Test-Deep.tar.gz
+          name: Dist-To-Test.tar.gz
+          path: Dist-To-Test.tar.gz
 
   multiperl-test:
     needs: build-tarball
@@ -65,19 +65,19 @@ jobs:
       - name: Download tarball
         uses: actions/download-artifact@v3
         with:
-          name: Test-Deep.tar.gz
+          name: Dist-To-Test.tar.gz
       - name: Extract tarball
-        run: tar zxvf Test-Deep.tar.gz
+        run: tar zxvf Dist-To-Test.tar.gz
       - name: Install dependencies
         run: |
-          cd Test-Deep-1*
+          cd Dist-To-Test
           cpanm --installdeps --notest .
       - name: Makefile.PL
         run: |
-          cd Test-Deep-1*
+          cd Dist-To-Test
           perl Makefile.PL
       - name: Run the tests
         run: |
-          cd Test-Deep-1*
+          cd Dist-To-Test
           make test
 
