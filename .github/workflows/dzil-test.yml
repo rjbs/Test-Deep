@@ -19,7 +19,7 @@ jobs:
         run: |
           dzil authordeps --missing | /tmp/cpanm --notest -S
           dzil listdeps --author --missing | /tmp/cpanm --notest -S
-          dzil build
+          V=1.234 dzil build
           mv Test-Deep-*.tar.gz Test-Deep.tar.gz
       - name: Upload tarball
         uses: actions/upload-artifact@v3
