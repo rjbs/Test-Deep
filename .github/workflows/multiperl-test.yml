@@ -1,4 +1,4 @@
-name: "dzil build & multitest"
+name: "multiperl test"
 on: push
 
 jobs:
