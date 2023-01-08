@@ -1,0 +1,22 @@
+name: "dzil build & multitest"
+on: push
+
+jobs:
+  build-it:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+      - name: Install cpanminus
+        run: |
+          curl https://cpanmin.us/ > /tmp/cpanm
+          chmod u+x /tmp/cpanm
+      - name: Install Dist::Zilla
+        run: sudo apt-get install -y libdist-zilla-perl
+      - name: build tarball
+        run: |
+          dzil authordeps --missing | /tmp/cpanm --notest -S
+          dzil listdeps --author --missing | /tmp/cpanm --notest -S
+          dzil build
