@@ -1,6 +1,11 @@
 name: "multiperl test"
 on: push
 
+# FUTURE ENHANCEMENT(s):
+# * install faster (see below)
+# * use github.event.repository.name or ${GITHUB_REPOSITORY#*/} as the
+#   tarball/build name instead of Dist-To-Test
+
 jobs:
   build-tarball:
     runs-on: ubuntu-latest
@@ -77,6 +82,16 @@ jobs:
       - name: Makefile.PL
         working-directory: ./Dist-To-Test
         run: perl Makefile.PL
+      - name: Install yath
+        run: cpanm --notest Test2::Harness
+      - name: Install testing libraries
+        run: cpanm --notest Test2::Harness::Renderer::JUnit
       - name: Run the tests
         working-directory: ./Dist-To-Test
-        run: make test
+        run: |
+          JUNIT_TEST_FILE="/tmp/test-output.xml" ALLOW_PASSING_TODOS=1 yath test --renderer=Formatter --renderer=JUnit -D
+      - name: Publish test report
+        uses: mikepenz/action-junit-report@v3
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: /tmp/test-output.xml
