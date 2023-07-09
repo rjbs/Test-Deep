@@ -1,6 +1,7 @@
 Revision history for Test-Deep
 
 {{$NEXT}}
+        - add "use v5.12" to Test::Deep, just for clarity
 
 1.204     2023-01-07 18:01:37-05:00 America/New_York
         - restore v5.12 compatibility (see commit 66b79eb for the amusing
