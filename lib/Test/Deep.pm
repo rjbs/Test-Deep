@@ -1281,6 +1281,13 @@ to patch over the fact that C<isa> is exported by default.
 This test accepts only objects that are instances of C<$class> or a subclass.
 Unlike the C<Isa> test, this test will never accept class names.
 
+=head3 reftype
+
+  cmp_deeply( $got, reftype('CODE') );
+
+This test only accepts values that are of the reftype passed to the subroutine,
+for example C<HASH>, C<ARRAY>, C<SCALAR>, C<GLOB> or C<CODE>.
+
 =head3 array_each
 
   cmp_deeply( \@got, array_each($thing) );
