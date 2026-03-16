@@ -1,6 +1,8 @@
 Revision history for Test-Deep
 
 {{$NEXT}}
+        - when loading the various test modules, preserve global variables like
+          $@; thanks, Felipe Gasper
 
 1.205     2025-04-01 11:01:50-04:00 America/New_York
         - add "use v5.12" to Test::Deep, just for clarity
